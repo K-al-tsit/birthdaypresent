@@ -154,16 +154,25 @@
             -webkit-filter: blur(2px);
         }
 
-        /* 中间内容容器 - 更明显的变化 */
+        /* 英雄区域添加纯色背景 */
+        .hero-content-wrapper {
+            background-color: #FFF1F2; /* 使用love.light纯色背景 */
+            border-radius: 3xl;
+            padding: 3rem 2rem;
+            margin: 0 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 中间内容容器 - 更高透明度 */
         .main-content {
-            max-width: 3xl; /* 进一步缩小中间区域宽度 */
+            max-width: 3xl; /* 保持较小的宽度 */
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.75); /* 进一步降低透明度 */
+            background-color: rgba(255, 255, 255, 0.65); /* 提高透明度（数值越小越透明） */
             backdrop-filter: blur(12px); /* 增强虚化效果 */
             -webkit-backdrop-filter: blur(12px);
             border-radius: 3xl;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2); /* 增强阴影效果 */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* 添加边框增强区分感 */
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             overflow: hidden;
             margin-top: 3rem;
             margin-bottom: 3rem;
@@ -177,6 +186,10 @@
                 margin-left: 1rem;
                 margin-right: 1rem;
                 max-width: calc(100% - 2rem);
+            }
+            
+            .hero-content-wrapper {
+                padding: 2rem 1rem;
             }
         }
     </style>
@@ -210,24 +223,27 @@
                 <div class="absolute bottom-1/3 right-1/4 w-40 h-40 bg-love-purple/20 rounded-full blur-3xl"></div>
             </div>
             
+            <!-- 英雄区域内容 - 包裹在纯色背景容器中 -->
             <div class="container mx-auto px-4 z-10 text-center">
-                <div class="fade-in opacity-0" style="animation-delay: 0.3s">
-                    <h1 class="font-romantic text-[clamp(2.5rem,8vw,5rem)] text-love-dark font-bold mb-4 text-shadow">
-                        祝禾呈20岁生日快乐！
-                    </h1>
-                </div>
-                
-                <!-- 主视觉动图 -->
-                <div class="fade-in opacity-0 max-w-md mx-auto mb-8" style="animation-delay: 1.5s">
-                    <div class="gif-container shadow-2xl">
-                        <img src="mmexport1758228356805.gif" alt="浪漫生日蛋糕动图" class="w-full h-auto rounded-lg">
+                <div class="hero-content-wrapper max-w-3xl mx-auto">
+                    <div class="fade-in opacity-0" style="animation-delay: 0.3s">
+                        <h1 class="font-romantic text-[clamp(2.5rem,8vw,5rem)] text-love-dark font-bold mb-4 text-shadow">
+                            祝禾呈20岁生日快乐！
+                        </h1>
                     </div>
-                </div>
-                
-                <div class="fade-in opacity-0" style="animation-delay: 1.8s">
-                    <a href="#message" class="inline-block bg-love-pink hover:bg-love-pink/90 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-                        点击查看我的祝福 <i class="fa fa-arrow-down ml-2"></i>
-                    </a>
+                    
+                    <!-- 主视觉动图 -->
+                    <div class="fade-in opacity-0 max-w-md mx-auto mb-8" style="animation-delay: 1.5s">
+                        <div class="gif-container shadow-2xl">
+                            <img src="mmexport1758228356805.gif" alt="浪漫生日蛋糕动图" class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div class="fade-in opacity-0" style="animation-delay: 1.8s">
+                        <a href="#message" class="inline-block bg-love-pink hover:bg-love-pink/90 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                            点击查看我的祝福 <i class="fa fa-arrow-down ml-2"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
             
