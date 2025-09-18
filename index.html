@@ -139,7 +139,7 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* 背景图片样式 */
+        /* 背景图片样式 - 模糊效果 */
         .bg-image-container {
             position: fixed;
             top: 0;
@@ -154,10 +154,18 @@
             -webkit-filter: blur(8px);
         }
 
-        /* 内容容器样式 - 确保内容清晰显示 */
-        .content-wrapper {
+        /* 中间内容容器 - 与背景明显分隔 */
+        .main-content {
+            max-width: 5xl;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 3xl;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
     </style>
 </head>
@@ -197,7 +205,6 @@
                     </h1>
                 </div>
                 
-                
                 <!-- 主视觉动图 -->
                 <div class="fade-in opacity-0 max-w-md mx-auto mb-8" style="animation-delay: 1.5s">
                     <div class="gif-container shadow-2xl">
@@ -218,186 +225,189 @@
             <div class="absolute bottom-40 right-20 w-24 h-24 bg-love-pink/10 rounded-full float" style="animation-delay: 4s"></div>
         </section>
 
-        <!-- 祝福信息区域 -->
-        <section id="message" class="py-20 bg-white/80 backdrop-blur-sm relative">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto bg-love-light/90 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
-                    <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-8 slide-up opacity-0" style="animation-delay: 0.2s">
-                        致我最爱的人
+        <!-- 中间主要内容区域 - 整体容器 -->
+        <div class="main-content">
+            <!-- 祝福信息区域 -->
+            <section id="message" class="py-16 px-4 md:px-8">
+                <div class="container mx-auto">
+                    <div class="max-w-3xl mx-auto">
+                        <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-8 slide-up opacity-0" style="animation-delay: 0.2s">
+                            致我最爱的人
+                        </h2>
+                        
+                        <div class="space-y-6 text-lg slide-up opacity-0" style="animation-delay: 0.5s">
+                            <p>亲爱的，</p>
+                            
+                            <p>今天是你的生日，一个属于你的特别日子。回想起我们在一起的点点滴滴，每一个瞬间都充满了幸福和欢笑。</p>
+                            
+                            <p>你是我生命中最美的遇见，你的笑容能驱散我所有的烦恼，你的陪伴是我最大的幸福。感谢你出现在我的生命里，带给我那么多温暖和快乐。</p>
+                            
+                            <p>在这个特别的日子里，我想告诉你：我爱你，胜过一切。愿你永远开心、健康、美丽，愿我们一起创造更多美好的回忆。</p>
+                            
+                            <p class="font-romantic text-2xl text-love-pink mt-8 text-right">永远爱你的人</p>
+                        </div>
+                        
+                        <!-- 倒计时部分 - 包含秒数显示 -->
+                        <div class="mt-12 pt-8 border-t border-love-pink/30 slide-up opacity-0" style="animation-delay: 0.8s">
+                            <h3 class="font-romantic text-2xl text-center text-love-dark mb-6">我们已经在一起</h3>
+                            <div class="flex justify-center space-x-4 md:space-x-6">
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                        <span id="days" class="block text-3xl md:text-4xl font-bold text-love-purple">822</span>
+                                        <span class="text-sm text-gray-600">天</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                        <span id="hours" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span class="text-sm text-gray-600">时</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                        <span id="minutes" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span class="text-sm text-gray-600">分</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                        <span id="seconds" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span class="text-sm text-gray-600">秒</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 动图展示区域 -->
+            <section id="moments" class="py-16 px-4 md:px-8 bg-love-light/30">
+                <div class="container mx-auto">
+                    <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-12">
+                        我们的精彩瞬间
                     </h2>
                     
-                    <div class="space-y-6 text-lg slide-up opacity-0" style="animation-delay: 0.5s">
-                        <p>亲爱的，</p>
-                        
-                        <p>今天是你的生日，一个属于你的特别日子。回想起我们在一起的点点滴滴，每一个瞬间都充满了幸福和欢笑。</p>
-                        
-                        <p>你是我生命中最美的遇见，你的笑容能驱散我所有的烦恼，你的陪伴是我最大的幸福。感谢你出现在我的生命里，带给我那么多温暖和快乐。</p>
-                        
-                        <p>在这个特别的日子里，我想告诉你：我爱你，胜过一切。愿你永远开心、健康、美丽，愿我们一起创造更多美好的回忆。</p>
-                        
-                        <p class="font-romantic text-2xl text-love-pink mt-8 text-right">永远爱你的人</p>
-                    </div>
-                    
-                    <!-- 倒计时部分 - 增加了秒数显示 -->
-                    <div class="mt-12 pt-8 border-t border-love-pink/30 slide-up opacity-0" style="animation-delay: 0.8s">
-                        <h3 class="font-romantic text-2xl text-center text-love-dark mb-6">我们已经在一起</h3>
-                        <div class="flex justify-center space-x-4 md:space-x-6">
-                            <div class="text-center">
-                                <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
-                                    <span id="days" class="block text-3xl md:text-4xl font-bold text-love-purple">822</span>
-                                    <span class="text-sm text-gray-600">天</span>
-                                </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                        <!-- 动图项 -->
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="庆祝生日的动图" class="w-full h-64 object-cover">
                             </div>
-                            <div class="text-center">
-                                <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
-                                    <span id="hours" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
-                                    <span class="text-sm text-gray-600">时</span>
-                                </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">开心时刻</p>
                             </div>
-                            <div class="text-center">
-                                <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
-                                    <span id="minutes" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
-                                    <span class="text-sm text-gray-600">分</span>
-                                </div>
+                        </div>
+                        
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/l46CjOg8GpQ8pWZDO/giphy.gif" alt="一起旅行的动图" class="w-full h-64 object-cover">
                             </div>
-                            <div class="text-center">
-                                <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
-                                    <span id="seconds" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
-                                    <span class="text-sm text-gray-600">秒</span>
-                                </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">一起旅行</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="甜蜜瞬间的动图" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">甜蜜瞬间</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/3oEduQV5qVut3Dn6Cw/giphy.gif" alt="庆祝节日的动图" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">节日庆祝</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/l41lI3Q9p5x6Gp67e/giphy.gif" alt="一起欢笑的动图" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">快乐时光</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
+                            <div class="gif-container">
+                                <img src="https://media.giphy.com/media/26FLdm51WZQZO4nm0/giphy.gif" alt="未来展望的动图" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="p-4 text-center">
+                                <p class="font-romantic text-xl text-love-pink">未来可期</p>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="text-center mt-12">
+                        <button id="add-gif" class="bg-love-purple hover:bg-love-purple/90 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                            <i class="fa fa-plus mr-2"></i> 添加更多瞬间
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 动图展示区域 -->
-        <section id="moments" class="py-20 bg-gradient-to-b from-white/80 to-love-light/90 backdrop-blur-sm">
-            <div class="container mx-auto px-4">
-                <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-12">
-                    我们的精彩瞬间
-                </h2>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                    <!-- 动图项 -->
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="庆祝生日的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">开心时刻</p>
-                        </div>
-                    </div>
+            <!-- 心愿区域 -->
+            <section id="wishes" class="py-16 px-4 md:px-8">
+                <div class="container mx-auto">
+                    <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-12">
+                        生日心愿
+                    </h2>
                     
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/l46CjOg8GpQ8pWZDO/giphy.gif" alt="一起旅行的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">一起旅行</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="甜蜜瞬间的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">甜蜜瞬间</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/3oEduQV5qVut3Dn6Cw/giphy.gif" alt="庆祝节日的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">节日庆祝</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/l41lI3Q9p5x6Gp67e/giphy.gif" alt="一起欢笑的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">快乐时光</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gif-item rounded-xl overflow-hidden shadow-lg bg-white/90">
-                        <div class="gif-container">
-                            <img src="https://media.giphy.com/media/26FLdm51WZQZO4nm0/giphy.gif" alt="未来展望的动图" class="w-full h-64 object-cover">
-                        </div>
-                        <div class="p-4 text-center">
-                            <p class="font-romantic text-xl text-love-pink">未来可期</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-12">
-                    <button id="add-gif" class="bg-love-purple hover:bg-love-purple/90 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <i class="fa fa-plus mr-2"></i> 添加更多瞬间
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 心愿区域 -->
-        <section id="wishes" class="py-20 bg-white/80 backdrop-blur-sm">
-            <div class="container mx-auto px-4">
-                <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-dark text-center mb-12">
-                    生日心愿
-                </h2>
-                
-                <div class="max-w-3xl mx-auto">
-                    <div class="bg-love-light/90 rounded-2xl p-8 shadow-lg mb-8">
-                        <h3 class="font-romantic text-2xl text-love-purple mb-4">我为你准备的惊喜</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <i class="fa fa-gift text-love-pink mt-1 mr-3"></i>
-                                <span>一份精心准备的礼物，希望你会喜欢</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa fa-cutlery text-love-pink mt-1 mr-3"></i>
-                                <span>一顿你最爱的餐厅晚餐</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa fa-film text-love-pink mt-1 mr-3"></i>
-                                <span>一起看一场浪漫的电影</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa fa-plane text-love-pink mt-1 mr-3"></i>
-                                <span>一次说走就走的短途旅行</span>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <!-- 互动留言区 -->
-                    <div class="bg-white/90 border-2 border-love-pink/30 rounded-2xl p-8 shadow-md">
-                        <h3 class="font-romantic text-2xl text-love-purple mb-6 text-center">你的愿望是什么？</h3>
-                        
-                        <textarea id="wish-input" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-love-pink/50 focus:border-love-pink resize-none" rows="4" placeholder="写下你的生日愿望吧..."></textarea>
-                        
-                        <div class="mt-4 flex justify-end">
-                            <button id="submit-wish" class="bg-love-pink hover:bg-love-pink/90 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                                许下心愿 <i class="fa fa-paper-plane ml-1"></i>
-                            </button>
+                    <div class="max-w-3xl mx-auto">
+                        <div class="bg-love-light/90 rounded-2xl p-8 shadow-lg mb-8">
+                            <h3 class="font-romantic text-2xl text-love-purple mb-4">我为你准备的惊喜</h3>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <i class="fa fa-gift text-love-pink mt-1 mr-3"></i>
+                                    <span>一份精心准备的礼物，希望你会喜欢</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-cutlery text-love-pink mt-1 mr-3"></i>
+                                    <span>一顿你最爱的餐厅晚餐</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-film text-love-pink mt-1 mr-3"></i>
+                                    <span>一起看一场浪漫的电影</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-plane text-love-pink mt-1 mr-3"></i>
+                                    <span>一次说走就走的短途旅行</span>
+                                </li>
+                            </ul>
                         </div>
                         
-                        <div id="wish-display" class="mt-6 hidden">
-                            <div class="p-4 bg-love-light rounded-lg border border-love-pink/20">
-                                <p class="text-center font-romantic text-xl" id="wish-text"></p>
+                        <!-- 互动留言区 -->
+                        <div class="bg-white/90 border-2 border-love-pink/30 rounded-2xl p-8 shadow-md">
+                            <h3 class="font-romantic text-2xl text-love-purple mb-6 text-center">你的愿望是什么？</h3>
+                            
+                            <textarea id="wish-input" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-love-pink/50 focus:border-love-pink resize-none" rows="4" placeholder="写下你的生日愿望吧..."></textarea>
+                            
+                            <div class="mt-4 flex justify-end">
+                                <button id="submit-wish" class="bg-love-pink hover:bg-love-pink/90 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                                    许下心愿 <i class="fa fa-paper-plane ml-1"></i>
+                                </button>
                             </div>
-                            <div class="text-center mt-4 text-love-purple">
-                                <i class="fa fa-star"></i> 希望你的愿望能够实现 <i class="fa fa-star"></i>
+                            
+                            <div id="wish-display" class="mt-6 hidden">
+                                <div class="p-4 bg-love-light rounded-lg border border-love-pink/20">
+                                    <p class="text-center font-romantic text-xl" id="wish-text"></p>
+                                </div>
+                                <div class="text-center mt-4 text-love-purple">
+                                    <i class="fa fa-star"></i> 希望你的愿望能够实现 <i class="fa fa-star"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div> <!-- 中间内容容器结束 -->
 
         <!-- 页脚 -->
         <footer class="bg-love-dark/90 text-white py-8 backdrop-blur-sm">
@@ -426,7 +436,7 @@
             }
         });
         
-        // 倒计时功能 - 添加了秒数计算
+        // 倒计时功能 - 包含秒数计算
         function updateCountdown() {
             // 设置你们的纪念日 - 年, 月(0-11), 日, 时, 分, 秒
             const anniversary = new Date(2024, 2, 14, 2, 0, 0);
@@ -533,6 +543,4 @@
             }, 3000);
         });
     </script>
-
-
 </body></html>
