@@ -139,7 +139,7 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* 背景图片样式 - 模糊效果 */
+        /* 背景图片样式 - 降低模糊度让背景更清晰 */
         .bg-image-container {
             position: fixed;
             top: 0;
@@ -150,22 +150,23 @@
             background-image: url('https://picsum.photos/id/1068/1920/1080'); /* 替换为你的背景图片URL */
             background-size: cover;
             background-position: center;
-            filter: blur(4px);
-            -webkit-filter: blur(4px);
+            filter: blur(2px); /* 降低模糊度，让背景更清晰可见 */
+            -webkit-filter: blur(2px);
         }
 
-        /* 中间内容容器 - 更小且带虚化效果 */
+        /* 中间内容容器 - 更明显的变化 */
         .main-content {
-            max-width: 4xl; /* 缩小中间区域宽度 */
+            max-width: 3xl; /* 进一步缩小中间区域宽度 */
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.85); /* 增加透明度 */
-            backdrop-filter: blur(8px); /* 背景虚化效果 */
-            -webkit-backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.75); /* 进一步降低透明度 */
+            backdrop-filter: blur(12px); /* 增强虚化效果 */
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 3xl;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2); /* 增强阴影效果 */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* 添加边框增强区分感 */
             overflow: hidden;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
             position: relative;
             z-index: 2;
         }
@@ -175,6 +176,7 @@
             .main-content {
                 margin-left: 1rem;
                 margin-right: 1rem;
+                max-width: calc(100% - 2rem);
             }
         }
     </style>
