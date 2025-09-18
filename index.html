@@ -150,15 +150,17 @@
             background-image: url('https://picsum.photos/id/1068/1920/1080'); /* 替换为你的背景图片URL */
             background-size: cover;
             background-position: center;
-            filter: blur(8px);
-            -webkit-filter: blur(8px);
+            filter: blur(4px);
+            -webkit-filter: blur(4px);
         }
 
-        /* 中间内容容器 - 与背景明显分隔 */
+        /* 中间内容容器 - 更小且带虚化效果 */
         .main-content {
-            max-width: 5xl;
+            max-width: 4xl; /* 缩小中间区域宽度 */
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.85); /* 增加透明度 */
+            backdrop-filter: blur(8px); /* 背景虚化效果 */
+            -webkit-backdrop-filter: blur(8px);
             border-radius: 3xl;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             overflow: hidden;
@@ -166,6 +168,14 @@
             margin-bottom: 2rem;
             position: relative;
             z-index: 2;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
         }
     </style>
 </head>
@@ -252,25 +262,25 @@
                             <h3 class="font-romantic text-2xl text-center text-love-dark mb-6">我们已经在一起</h3>
                             <div class="flex justify-center space-x-4 md:space-x-6">
                                 <div class="text-center">
-                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 w-20">
                                         <span id="days" class="block text-3xl md:text-4xl font-bold text-love-purple">822</span>
                                         <span class="text-sm text-gray-600">天</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 w-20">
                                         <span id="hours" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">时</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 w-20">
                                         <span id="minutes" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">分</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="bg-white rounded-lg shadow-md p-3 md:p-5 w-20">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 w-20">
                                         <span id="seconds" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">秒</span>
                                     </div>
@@ -361,7 +371,7 @@
                     </h2>
                     
                     <div class="max-w-3xl mx-auto">
-                        <div class="bg-love-light/90 rounded-2xl p-8 shadow-lg mb-8">
+                        <div class="bg-love-light/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg mb-8">
                             <h3 class="font-romantic text-2xl text-love-purple mb-4">我为你准备的惊喜</h3>
                             <ul class="space-y-4">
                                 <li class="flex items-start">
@@ -384,7 +394,7 @@
                         </div>
                         
                         <!-- 互动留言区 -->
-                        <div class="bg-white/90 border-2 border-love-pink/30 rounded-2xl p-8 shadow-md">
+                        <div class="bg-white/70 backdrop-blur-sm border-2 border-love-pink/30 rounded-2xl p-8 shadow-md">
                             <h3 class="font-romantic text-2xl text-love-purple mb-6 text-center">你的愿望是什么？</h3>
                             
                             <textarea id="wish-input" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-love-pink/50 focus:border-love-pink resize-none" rows="4" placeholder="写下你的生日愿望吧..."></textarea>
@@ -396,7 +406,7 @@
                             </div>
                             
                             <div id="wish-display" class="mt-6 hidden">
-                                <div class="p-4 bg-love-light rounded-lg border border-love-pink/20">
+                                <div class="p-4 bg-love-light/60 backdrop-blur-sm rounded-lg border border-love-pink/20">
                                     <p class="text-center font-romantic text-xl" id="wish-text"></p>
                                 </div>
                                 <div class="text-center mt-4 text-love-purple">
@@ -544,3 +554,4 @@
         });
     </script>
 </body></html>
+    
