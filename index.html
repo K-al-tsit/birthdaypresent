@@ -5,7 +5,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     
-    <!-- 配置Tailwind自定义颜色和字体 -->
+    <!-- 配置Tailwindwind自定义颜色和字体 -->
     <script>
         tailwind.config = {
             theme: {
@@ -16,8 +16,7 @@
                             purple: '#C084FC',
                             blue: '#93C5FD',
                             light: '#FFF1F2',
-                            dark: '#7C3AED',
-                            brown: '#F8EDE3' // 新增偏棕黄色
+                            dark: '#7C3AED'
                         }
                     },
                     fontFamily: {
@@ -130,7 +129,7 @@
             scroll-behavior: smooth;
         }
         
-        /* 动图容器器悬停效果 */
+        /* 动图容器悬停效果 */
         .gif-item {
             transition: all 0.3s ease;
         }
@@ -140,7 +139,7 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* 背景图片样式 - 降低模糊度让背景更清晰 */
+        /* 背景图片样式 */
         .bg-image-container {
             position: fixed;
             top: 0;
@@ -148,32 +147,27 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-image: url('1758231270638.jpeg'); /* 替换为你的背景图片URL */
+            background-image: url('https://picsum.photos/id/1068/1920/1080');
             background-size: cover;
             background-position: center;
-            filter: blur(2px); /* 降低模糊度，让背景更清晰可见 */
+            filter: blur(2px);
             -webkit-filter: blur(2px);
         }
 
-        /* 英雄区域添加偏棕黄色背景 */
-        .hero-content-wrapper {
-            background-color: #F8EDE3; /* 偏棕的黄色背景 */
-            border-radius: 3xl;
-            padding: 3rem 2rem;
-            margin: 0 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 中间内容容器 - 更高透明度 */
-        .main-content {
-            max-width: 3xl; /* 保持较小的宽度 */
-            margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.65); /* 提高透明度（数值越小越透明） */
-            backdrop-filter: blur(12px); /* 增强虚化效果 */
+        /* 统一透明度的内容容器样式 */
+        .translucent-container {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 3xl;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* 中间内容容器 */
+        .main-content {
+            max-width: 3xl;
+            margin: 0 auto;
             overflow: hidden;
             margin-top: 3rem;
             margin-bottom: 3rem;
@@ -181,35 +175,45 @@
             z-index: 2;
         }
 
-        /* 倒计时卡片样式优化 - 解决移动端显示问题 */
+        /* 倒计时卡片样式优化 */
         .countdown-container {
-            padding: 0 0.5rem; /* 增加容器内边距 */
+            padding: 0 0.5rem;
             box-sizing: border-box;
         }
         
         .countdown-item {
-            width: 22vw; /* 使用视窗宽度百分比，确保在手机上合适 */
-            max-width: 80px; /* 限制最大宽度 */
+            width: 22vw;
+            max-width: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .countdown-value {
+            display: block;
+            width: 100%;
+            text-align: center;
+            line-height: 1; /* 确保数字垂直居中 */
         }
 
         /* 响应式调整 */
         @media (max-width: 768px) {
-            .main-content {
+            .main-content, .hero-content {
                 margin-left: 1rem;
                 margin-right: 1rem;
                 max-width: calc(100% - 2rem);
             }
             
-            .hero-content-wrapper {
+            .hero-content {
                 padding: 2rem 1rem;
             }
             
-            /* 移动端进一步优化倒计时卡片 */
             .countdown-item {
                 padding: 2px !important;
             }
             
-            .countdown-item span:first-child {
+            .countdown-value {
                 font-size: 1.5rem !important;
             }
         }
@@ -244,9 +248,9 @@
                 <div class="absolute bottom-1/3 right-1/4 w-40 h-40 bg-love-purple/20 rounded-full blur-3xl"></div>
             </div>
             
-            <!-- 英雄区域内容 - 包裹在偏棕黄色背景容器中 -->
+            <!-- 英雄区域内容 - 使用统一透明度容器 -->
             <div class="container mx-auto px-4 z-10 text-center">
-                <div class="hero-content-wrapper max-w-3xl mx-auto">
+                <div class="hero-content translucent-container max-w-3xl mx-auto py-8 px-6 md:px-10">
                     <div class="fade-in opacity-0" style="animation-delay: 0.3s">
                         <h1 class="font-romantic text-[clamp(2.5rem,8vw,5rem)] text-love-dark font-bold mb-4 text-shadow">
                             祝禾呈20岁生日快乐！
@@ -274,8 +278,8 @@
             <div class="absolute bottom-40 right-20 w-24 h-24 bg-love-pink/10 rounded-full float" style="animation-delay: 4s"></div>
         </section>
 
-        <!-- 中间主要内容区域 - 整体容器 -->
-        <div class="main-content">
+        <!-- 中间主要内容区域 -->
+        <div class="main-content translucent-container">
             <!-- 祝福信息区域 -->
             <section id="message" class="py-16 px-4 md:px-8">
                 <div class="container mx-auto">
@@ -296,31 +300,31 @@
                             <p class="font-romantic text-2xl text-love-pink mt-8 text-right">永远爱你的人</p>
                         </div>
                         
-                        <!-- 倒计时部分 - 优化移动端显示 -->
+                        <!-- 倒计时部分 -->
                         <div class="mt-12 pt-8 border-t border-love-pink/30 slide-up opacity-0 countdown-container" style="animation-delay: 0.8s">
                             <h3 class="font-romantic text-2xl text-center text-love-dark mb-6">我们已经在一起</h3>
                             <div class="flex justify-center space-x-2 md:space-x-6">
                                 <div class="text-center">
                                     <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 countdown-item">
-                                        <span id="days" class="block text-3xl md:text-4xl font-bold text-love-purple">822</span>
+                                        <span id="days" class="countdown-value text-3xl md:text-4xl font-bold text-love-purple">822</span>
                                         <span class="text-sm text-gray-600">天</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
                                     <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 countdown-item">
-                                        <span id="hours" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span id="hours" class="countdown-value text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">时</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
                                     <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 countdown-item">
-                                        <span id="minutes" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span id="minutes" class="countdown-value text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">分</span>
                                     </div>
                                 </div>
                                 <div class="text-center">
                                     <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-3 md:p-5 countdown-item">
-                                        <span id="seconds" class="block text-3xl md:text-4xl font-bold text-love-purple">00</span>
+                                        <span id="seconds" class="countdown-value text-3xl md:text-4xl font-bold text-love-purple">00</span>
                                         <span class="text-sm text-gray-600">秒</span>
                                     </div>
                                 </div>
@@ -485,27 +489,23 @@
             }
         });
         
-        // 倒计时功能 - 包含秒数计算
+        // 倒计时功能
         function updateCountdown() {
-            // 设置你们的纪念日 - 年, 月(0-11), 日, 时, 分, 秒
             const anniversary = new Date(2024, 2, 14, 2, 0, 0);
             const now = new Date();
             const diff = now - anniversary;
             
-            // 计算天数、小时、分钟、秒
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             
-            // 显示倒计时
             document.getElementById('days').textContent = days.toString().padStart(2, '0');
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
         
-        // 初始更新倒计时并设置定时器（每秒更新一次）
         updateCountdown();
         setInterval(updateCountdown, 1000);
         
@@ -521,8 +521,6 @@
                 wishInput.disabled = true;
                 this.disabled = true;
                 this.classList.add('opacity-50', 'cursor-not-allowed');
-                
-                // 添加庆祝效果
                 createHearts(20);
             }
         });
@@ -543,20 +541,17 @@
             const heart = document.createElement('div');
             heart.classList.add('heart');
             
-            // 定位爱心到点击位置
             heart.style.left = `${x - 10}px`;
             heart.style.top = `${y - 10}px`;
             
             heartsContainer.appendChild(heart);
             
-            // 爱心动画
             setTimeout(() => {
                 heart.style.transition = 'all 1s ease';
                 heart.style.opacity = '1';
                 heart.style.transform = 'rotate(45deg) translateY(-50px)';
             }, 10);
             
-            // 移除爱心元素
             setTimeout(() => {
                 heart.style.opacity = '0';
                 setTimeout(() => {
@@ -578,7 +573,6 @@
         
         // 页面加载完成后显示动画
         window.addEventListener('load', function() {
-            // 显示初始动画元素
             document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
                 el.style.opacity = '0';
                 setTimeout(() => {
@@ -586,7 +580,6 @@
                 }, 100);
             });
             
-            // 随机生成一些爱心
             setTimeout(() => {
                 createHearts(10);
             }, 3000);
