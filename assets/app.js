@@ -1,182 +1,168 @@
-const tracks = Array.from({ length: 21 }, function (_, index) {
-  const no = String(index + 1).padStart(2, "0");
-  return {
-    no: no,
-    title: "Track " + no,
-    subtitle: "这首歌的位置还空着",
-    note: "等待把属于我们的这首歌放进来",
-    src: ""
-  };
-});
+/* Replace these placeholders with the songs and audio URLs when the playlist is ready. */
+const tracks = Array.from({ length: 21 }, (_, index) => ({
+  no: String(index + 1).padStart(2, "0"),
+  title: "Track " + String(index + 1).padStart(2, "0"),
+  subtitle: "这首歌的位置还空着",
+  note: "等待把属于我们的这首歌放进来。",
+  src: ""
+}));
 
-/*
-以后把上面的 tracks 替换成真实歌曲即可，例如：
-{
-  no: "01",
-  title: "歌曲名",
-  subtitle: "歌手 · 这一首为什么重要",
-  note: "可以写一句只有你们懂的话",
-  src: "https://你的音频地址/01.mp3"
-}
-*/
-
-const grid = document.getElementById("trackGrid");
-const playerShell = document.getElementById("playerShell");
-const playerIndex = document.getElementById("playerIndex");
-const playerTitle = document.getElementById("playerTitle");
-const playerNote = document.getElementById("playerNote");
-const playPause = document.getElementById("playPause");
-const playIcon = document.getElementById("playIcon");
-const audio = document.getElementById("audio");
-const progress = document.getElementById("progress");
-const currentTime = document.getElementById("currentTime");
-const duration = document.getElementById("duration");
-const toast = document.getElementById("toast");
-const shuffleBtn = document.getElementById("shuffleBtn");
-const soundToggle = document.getElementById("soundToggle");
-const memoryTrigger = document.getElementById("memoryTrigger");
-const memoryModal = document.getElementById("memoryModal");
-
-let activeIndex = -1;
+const $ = (id) => document.getElementById(id);
+const audio = $("audio");
+const grid = $("trackGrid");
+const progress = $("progress");
+const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+let activeIndex = 0;
 let toastTimer;
+let selectionVersion = 0;
+let motionEnabled = !motionPreference.matches;
 
 function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return "0:00";
-  const min = Math.floor(seconds / 60);
-  const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
-  return min + ":" + sec;
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  return Math.floor(seconds / 60) + ":" + String(Math.floor(seconds % 60)).padStart(2, "0");
 }
-
 function showToast(message) {
   clearTimeout(toastTimer);
-  toast.textContent = message;
-  toast.classList.add("show");
-  toastTimer = setTimeout(function () {
-    toast.classList.remove("show");
-  }, 2200);
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 3000);
 }
-
+function setMotion(enabled) {
+  motionEnabled = enabled && !motionPreference.matches;
+  document.body.classList.toggle("motion-on", motionEnabled);
+  $("motionToggle").setAttribute("aria-pressed", String(motionEnabled));
+  $("motionToggle").setAttribute("aria-label", motionEnabled ? "关闭画面微风" : "开启画面微风");
+  $("motionLabel").textContent = "微风 · " + (motionEnabled ? "开" : "关");
+}
+function setPlaybackState(playing) {
+  document.body.classList.toggle("is-playing", playing);
+  $("playPause").setAttribute("aria-label", playing ? "暂停" : "播放");
+  $("playIcon").innerHTML = playing ? '<path d="M7 5h4v14H7zM15 5h4v14h-4z"/>' : '<path d="m9 5 11 7-11 7Z"/>';
+  $("playbackStatus").textContent = !tracks[activeIndex].src ? "等待一首歌" : playing ? "正在播放" : "按下播放，慢慢听";
+}
 function renderTracks() {
-  grid.innerHTML = "";
-  tracks.forEach(function (track, index) {
+  tracks.forEach((track, index) => {
     const card = document.createElement("button");
     card.className = "track-card";
     card.type = "button";
-    card.setAttribute("aria-label", "打开第 " + track.no + " 首歌");
-    card.innerHTML =
-      '<span class="track-no">TRACK ' + track.no + '</span>' +
-      '<span class="track-title">' + track.title + '</span>' +
-      '<span class="track-subtitle">' + track.subtitle + '</span>' +
-      '<span class="track-arrow">↗</span>';
-
-    card.addEventListener("click", function () {
-      selectTrack(index);
-    });
-
-    grid.appendChild(card);
+    card.setAttribute("aria-label", "选择第 " + track.no + " 首：" + track.title);
+    const no = document.createElement("span");
+    no.className = "track-no";
+    no.textContent = track.no;
+    const copy = document.createElement("span");
+    copy.className = "track-copy";
+    const title = document.createElement("span");
+    title.className = "track-title";
+    title.textContent = track.title;
+    const subtitle = document.createElement("span");
+    subtitle.className = "track-subtitle";
+    subtitle.textContent = track.subtitle;
+    copy.append(title, subtitle);
+    const arrow = document.createElement("span");
+    arrow.className = "track-arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "↗";
+    card.append(no, copy, arrow);
+    card.addEventListener("click", () => selectTrack(index, { notify: true }));
+    grid.append(card);
   });
 }
-
-function selectTrack(index) {
-  const track = tracks[index];
-  activeIndex = index;
-
-  document.querySelectorAll(".track-card").forEach(function (card, cardIndex) {
-    card.classList.toggle("active", cardIndex === index);
-  });
-
-  playerIndex.textContent = track.no;
-  playerTitle.textContent = track.title;
-  playerNote.textContent = track.note;
-  playerShell.classList.add("visible");
-  playerShell.setAttribute("aria-hidden", "false");
-
-  audio.pause();
-  playIcon.textContent = "▶";
-  progress.value = 0;
-  currentTime.textContent = "0:00";
-  duration.textContent = "0:00";
-
-  if (track.src) {
-    audio.src = track.src;
-    audio.load();
-  } else {
-    audio.removeAttribute("src");
-    showToast("第 " + track.no + " 首还没有放进来，播放器框架已经准备好了。");
-  }
-}
-
-playPause.addEventListener("click", function () {
-  if (activeIndex < 0) return;
+function selectTrack(index, { notify = false, autoplay = false } = {}) {
+  activeIndex = (index + tracks.length) % tracks.length;
+  selectionVersion += 1;
   const track = tracks[activeIndex];
-
-  if (!track.src) {
-    showToast("音频还没接入，等你把歌单给我后这里就能直接播放。");
+  audio.pause();
+  audio.removeAttribute("src");
+  progress.value = 0;
+  progress.disabled = true;
+  $("currentTime").textContent = "0:00";
+  $("duration").textContent = "0:00";
+  $("playerIndex").textContent = track.no + " / 21";
+  $("playerTitle").textContent = $("noteTitle").textContent = track.title;
+  $("playerNote").textContent = track.src ? track.subtitle : "歌曲待加入";
+  $("noteIndex").textContent = track.no;
+  $("noteText").textContent = track.note;
+  Array.from(grid.children).forEach((card, i) => {
+    card.classList.toggle("active", i === activeIndex);
+    card.setAttribute("aria-pressed", String(i === activeIndex));
+    card.querySelector(".track-arrow").textContent = i === activeIndex ? "♪" : "↗";
+  });
+  if (track.src) audio.src = track.src;
+  audio.load();
+  setPlaybackState(false);
+  if (!track.src && notify) showToast("第 " + track.no + " 首还在准备中，先把这一页留给你。");
+  if (track.src && autoplay) playCurrent();
+}
+function playCurrent() {
+  if (!tracks[activeIndex].src) {
+    showToast("这首歌还没有加入音频，再等一等。可以先翻翻其他页。");
     return;
   }
-
-  if (audio.paused) {
-    audio.play().catch(function () {
-      showToast("浏览器阻止了自动播放，请再点一次播放。");
-    });
-  } else {
-    audio.pause();
+  const version = selectionVersion;
+  audio.play().catch((error) => {
+    if (version !== selectionVersion || error.name === "AbortError") return;
+    setPlaybackState(false);
+    showToast(error.name === "NotAllowedError" ? "请再按一下播放，让音乐开始。" : "这首歌暂时无法播放，请稍后重试。");
+  });
+}
+function moveTrack(offset) {
+  const wasPlaying = !audio.paused;
+  selectTrack(activeIndex + offset, { notify: true, autoplay: wasPlaying });
+  const selected = grid.children[activeIndex];
+  // Keep the selection visible inside the list without moving the whole page.
+  grid.scrollTo({ top: selected.offsetTop - grid.offsetTop - grid.clientHeight / 2 + selected.clientHeight / 2, behavior: motionPreference.matches ? "instant" : "smooth" });
+}
+$("playPause").addEventListener("click", () => audio.paused ? playCurrent() : audio.pause());
+$("prevTrack").addEventListener("click", () => moveTrack(-1));
+$("nextTrack").addEventListener("click", () => moveTrack(1));
+$("shuffleBtn").addEventListener("click", () => {
+  const offset = 1 + Math.floor(Math.random() * (tracks.length - 1));
+  moveTrack(offset);
+});
+$("repeatToggle").addEventListener("click", () => {
+  audio.loop = !audio.loop;
+  $("repeatToggle").setAttribute("aria-pressed", String(audio.loop));
+  $("repeatToggle").setAttribute("aria-label", audio.loop ? "关闭单曲循环" : "开启单曲循环");
+  showToast(audio.loop ? "单曲循环已开启。" : "按歌单顺序播放。");
+});
+audio.addEventListener("play", () => setPlaybackState(true));
+audio.addEventListener("pause", () => setPlaybackState(false));
+audio.addEventListener("loadedmetadata", () => {
+  progress.disabled = !(Number.isFinite(audio.duration) && audio.duration > 0);
+  $("duration").textContent = formatTime(audio.duration);
+});
+audio.addEventListener("timeupdate", () => {
+  progress.value = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.currentTime / audio.duration * 100 : 0;
+  $("currentTime").textContent = formatTime(audio.currentTime);
+});
+progress.addEventListener("input", () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(progress.value) / 100 * audio.duration;
+});
+audio.addEventListener("ended", () => {
+  const next = tracks.findIndex((_, i) => i > activeIndex && tracks[i].src);
+  if (next >= 0) selectTrack(next, { autoplay: true });
+  else setPlaybackState(false);
+});
+audio.addEventListener("error", () => {
+  if (!audio.getAttribute("src")) return;
+  setPlaybackState(false);
+  progress.disabled = true;
+  $("playbackStatus").textContent = "暂时无法播放";
+  showToast("这首歌暂时无法加载，请检查网络后重试。");
+});
+$("motionToggle").addEventListener("click", () => {
+  if (motionPreference.matches) showToast("已遵循你设备的“减少动态效果”设置。");
+  setMotion(!motionEnabled);
+});
+motionPreference.addEventListener("change", () => setMotion(!motionPreference.matches));
+$("memoryTrigger").addEventListener("click", () => $("memoryModal").showModal());
+$("memoryClose").addEventListener("click", () => $("memoryModal").close());
+$("memoryModal").addEventListener("click", (event) => {
+  if (event.target === $("memoryModal")) {
+    const box = event.target.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close();
   }
 });
-
-audio.addEventListener("play", function () {
-  playIcon.textContent = "❚❚";
-});
-
-audio.addEventListener("pause", function () {
-  playIcon.textContent = "▶";
-});
-
-audio.addEventListener("loadedmetadata", function () {
-  duration.textContent = formatTime(audio.duration);
-});
-
-audio.addEventListener("timeupdate", function () {
-  const ratio = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-  progress.value = ratio;
-  currentTime.textContent = formatTime(audio.currentTime);
-});
-
-progress.addEventListener("input", function () {
-  if (!audio.duration) return;
-  audio.currentTime = (Number(progress.value) / 100) * audio.duration;
-});
-
-shuffleBtn.addEventListener("click", function () {
-  const index = Math.floor(Math.random() * tracks.length);
-  selectTrack(index);
-  document.getElementById("playlist").scrollIntoView({ behavior: "smooth", block: "start" });
-});
-
-soundToggle.addEventListener("click", function () {
-  const enabled = document.body.classList.toggle("sound-on");
-  soundToggle.classList.toggle("active", enabled);
-  soundToggle.querySelector("span:last-child").textContent = enabled ? "sound on" : "sound off";
-});
-
-function openMemory() {
-  memoryModal.classList.add("open");
-  memoryModal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-}
-
-function closeMemory() {
-  memoryModal.classList.remove("open");
-  memoryModal.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-}
-
-memoryTrigger.addEventListener("click", openMemory);
-document.querySelectorAll("[data-close-memory]").forEach(function (el) {
-  el.addEventListener("click", closeMemory);
-});
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") closeMemory();
-});
-
 renderTracks();
+selectTrack(0);
+setMotion(motionEnabled);
