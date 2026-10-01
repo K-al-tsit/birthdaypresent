@@ -1,0 +1,506 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给我最爱的人 | 生日快乐</title>
+    <!-- 网页标签标签页图标（favicon）改为GIF格式 -->
+    <link rel="icon" href="mmexport1758232665833.gif" type="image/gif">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        love: {
+                            pink: '#FF85A2',
+                            purple: '#C084FC',
+                            blue: '#93C5FD',
+                            light: '#FFF1F2',
+                            dark: '#7C3AED'
+                        }
+                    },
+                    fontFamily: {
+                        romantic: ['"Dancing Script"', 'cursive', 'sans-serif'],
+                        main: ['"Nunito"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .heart-beat {
+                animation: heartbeat 1.5s ease-in-out infinite;
+            }
+            .float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .fade-in {
+                animation: fadeIn 1.5s ease-in forwards;
+            }
+            .slide-up {
+                animation: slideUp 1s ease-out forwards;
+            }
+            .gif-container {
+                overflow: hidden;
+                border-radius: 1rem;
+            }
+            .gif-container img {
+                transition: transform 0.5s ease;
+            }
+            .gif-container:hover img {
+                transform: scale(1.05);
+            }
+        }
+    </style>
+    
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        /* 基础动画定义 */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 爱心背景效果 */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FF85A2;
+            transform: rotate(45deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FF85A2;
+            border-radius: 50%;
+        }
+        
+        .heart:before {
+            top: -10px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -10px;
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 动图容器悬停效果 */
+        .gif-item {
+            transition: all 0.3s ease;
+        }
+        
+        .gif-item:hover {
+            transform: scale(1.03) rotate(1deg);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 背景图片图片样式 */
+        .bg-image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('1758231270638.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
+        }
+
+        /* 统一透明度的内容容器样式 */
+        .translucent-container {
+            background-color: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3xl;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* 中间内容容器 */
+        .main-content {
+            max-width: 3xl;
+            margin: 0 auto;
+            overflow: hidden;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 倒计时卡片样式优化 */
+        .countdown-container {
+            padding: 0 0.5rem;
+            box-sizing: border-box;
+        }
+        
+        /* 修复倒计时显示问题的样式 */
+        .countdown-item {
+            width: auto; /* 自适应内容宽度 */
+            min-width: 60px; /* 最小宽度防止过小 */
+            padding: 8px 12px; /* 增加内边距提升视觉平衡 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* 整体右对齐 */
+            background: rgba(255,255,255,0.9);
+            border-radius: 8px;
+        }
+        
+        .countdown-number {
+            font-size: clamp(1.8rem, 6vw, 2.5rem); /* 响应式字体大小 */
+            line-height: 1; /* 消除行高间隙 */
+            display: block; /* 强制块级显示 */
+            text-align: right; /* 数字右对齐 */
+            margin-bottom: -2px; /* 微调数字与单位间距 */
+            padding-right: 4px; /* 右侧留白避免贴边 */
+            font-weight: bold;
+            color: #FF85A2;
+        }
+        
+        .countdown-unit {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: right; /* 单位同步右对齐 */
+            padding-right: 4px;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-content, .hero-content {
+                margin-left: 1rem;
+                margin-right: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+            
+            .hero-content {
+                padding: 2rem 1rem;
+            }
+            
+            .countdown-item {
+                min-width: 50px;
+                padding: 6px 8px;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-unit {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-main text-gray-800 overflow-x-hidden">
+    <!-- 背景图片容器 -->
+    <div class="bg-image-container"></div>
+    
+    <!-- 内容包裹器 -->
+    <div class="content-wrapper">
+        <!-- 爱心心点击效果容器 -->
+        <div id="hearts-container"></div>
+
+        <!-- 导航栏 -->
+        <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
+            <div class="container mx-auto px-4 py-3 flex justify-center">
+                <ul class="flex space-x-6 text-love-pink">
+                    <li><a href="#home" class="hover:text-love-pink/80 transition-colors duration-300"><i class="fa fa-home mr-1"></i>首页</a></li>
+                    <li><a href="#message" class="hover:text-love-pink/80 transition-colors duration-300"><i class="fa fa-comment mr-1"></i>祝福</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section id="home" class="min-h-screen flex items-center justify-center relative pt-16 overflow-hidden">
+            <!-- 背景装饰 -->
+            <div class="absolute inset-0 z-0">
+                <div class="absolute top-1/4 left-1/5 w-32 h-32 bg-love-pink/20 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-1/3 right-1/4 w-40 h-40 bg-love-pink/20 rounded-full blur-3xl"></div>
+            </div>
+            
+            <!-- 英雄区域内容 - 使用统一透明度容器 -->
+            <div class="container mx-auto px-4 z-10 text-center">
+                <div class="hero-content translucent-container max-w-3xl mx-auto py-8 px-6 md:px-10">
+                    <div class="fade-in opacity-0" style="animation-delay: 0.3s">
+                        <h1 class="font-romantic text-[clamp(2.5rem,8vw,5rem)] text-love-pink font-bold mb-4 text-shadow">
+                            祝禾呈20岁生日快乐！
+                        </h1>
+                    </div>
+                    
+                    <!-- 主视觉动图 -->
+                    <div class="fade-in opacity-0 max-w-md mx-auto mb-8" style="animation-delay: 1.5s">
+                        <div class="gif-container shadow-2xl">
+                            <img src="mmexport1758228356805.gif" alt="浪漫生日蛋糕动图" class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div class="fade-in opacity-0" style="animation-delay: 1.8s">
+                        <a href="#message" class="inline-block bg-love-pink hover:bg-love-pink/90 text-white font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                            点击查看我的祝福 <i class="fa fa-angle-down ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 漂浮装饰 -->
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-love-blue/10 rounded-full float" style="animation-delay: 0s"></div>
+            <div class="absolute top-20 -right-10 w-32 h-32 bg-love-pink/10 rounded-full float" style="animation-delay: 2s"></div>
+            <div class="absolute bottom-40 right-20 w-24 h-24 bg-love-pink/10 rounded-full float" style="animation-delay: 4s"></div>
+        </section>
+        <style>
+        /* 确保GIF作为行内元素显示 */
+        .inline-gif {
+            display: inline-block; /* 关键：保持在行内 */
+            vertical-align: middle; /* 与文字垂直居中对齐 */
+            width: 35px; /* 控制GIF大小，适应文字行高 */
+            margin: 0 5px; /* 可选：添加左右间距，避免与文字贴紧 */
+            vertical-align: -3px   /* 微调垂直位置，使其更好地与文字对齐 */
+        }
+    </style>
+
+        <!-- 中间主要内容区域 -->
+        <div class="main-content translucent-container">
+            <!-- 祝福信息区域 -->
+            <section id="message" class="py-16 px-4 md:px-8">
+                <div class="container mx-auto">
+                    <div class="max-w-3xl mx-auto">
+                        <h2 class="font-romantic text-[clamp(1.8rem,5vw,3rem)] text-love-pink text-center mb-8 slide-up opacity-0" style="animation-delay: 0.2s">
+                            致禾呈
+                        </h2>
+                        
+                        <div class="space-y-6 text-lg slide-up opacity-0" style="animation-delay: 0.5s">
+                            <p>
+                                20岁生日快乐！<img src="mmexport1759687076591.gif" alt="小图标" class="inline-gif">时间是不是过得很快？有没有感觉自己好像一下子就长大了，变成了不敢想象的大人呢？<img src="mmexport1759691640831.gif" alt="小图标" class="inline-gif">会不会担心未来会发生什么？不知道未来的路会怎么走？虽然我目前为止还是19岁，不能猜到禾呈的想法，但是不管怎么样，我觉得禾呈都不用担心未来，因为你是我见到过的最坚强最勇敢的人。虽然遇到过很多很多不愉快的事情，但是你仍然保持着对朋友们的热情和对生活的热爱，你会想该怎么样给大家过生日，怎么样让大家开心，也会想什么时候跟朋友们出去玩，什么时候去吃一顿好吃的，是很会享受生活的一个人<img src="mmexport1759692284200.gif" alt="小图标" class="inline-gif">能够享受生活就已经战胜了99%的人哦，因为这是能让人继续走下去的秘诀，希望禾呈在变成社畜之后也还能够从生活中的小事中感受到幸福。
+                            </p>
+                            <p>
+                                昨天是我们在一起的第600天，看到这个数字有没有觉得，诶？好大的数字！<img src="mmexport1759691637439.gif" alt="小图标" class="inline-gif">原来我们已经不是刚在一起的时候了，这600天的时间，我们对彼此之间的了解已经达到了任何人都要多的地步。虽然有时候我们会因为一些小事吵架，但这确实是在所难免的事情。我在感情方面始终是一个比你迟钝的人，也不擅长表达自己的情感，很多时候我都不能意识到自己的行为会让你难过，也不知道该怎么能让你不难过。但是禾呈每次都包容我，教我应该怎么样做，我很感谢你，当然，我觉得我也越来越懂你了，越来越能够真切的感受到你的喜怒哀乐了，我觉得这是一件再好不过的事情。希望我们以后的矛盾可以变得越来越少，变成两个非常合拍的人<img src="mmexport1759691919741.gif" alt="小图标" class="inline-gif">   
+                            </p>
+                            <p>
+                                未来会变成什么样呢？未来要变成什么样的人呢？我迫切地想要找到这个答案，你说我变得成熟了，我只是想要找到一条出路，一直在思考着这个无论如何都找不到答案的问题。在这什么也不做就太漫长，想做些什么又太短暂的人生中，怎么样才是正确的生活方式呢？思来想去也没有结果，最好的选择也许是按部就班的往前走，幸好我遇见了你，或许我真的不用努力地往前看，你在我身边的一颦一笑，就是我所期盼的未来。
+                            </p>
+                            <p>
+                                希望我们可以一直这样手牵手走下去，走到我们长大成人，走到我们成家立业，走到我们两鬓花白，走到我们看不清彼此的脸庞，都能手牵着手，一直一直走下去。
+                           <!-- 分隔线和解锁区域 -->
+                            <div class="my-8 pt-6 border-t border-love-pink/20">
+                                <!-- 解锁按钮 -->
+                                <button id="unlockBtn" class="w-full py-3 px-6 bg-love-pink/10 hover:bg-love-pink/20 text-love-pink rounded-lg transition-all duration-300 flex items-center justify-center gap-2 font-medium">
+                                    <i class="fa fa-lock"></i>
+                                    <span>悄悄话</span>
+                                </button>
+                                
+                                <!-- 隐藏的内容区域 -->
+                                <div id="hiddenContent" class="mt-6 hidden">
+                                    <p>
+                                        我其实非常想要让禾呈过一个开心的20岁生日，生日礼物想了很久很久。我之前就想送你一条项链，因为我感觉禾呈的脖子上总是少了点什么！大概是一条好看的项链吧，所以我就准备了一条银色的闪闪亮亮的项链，感觉跟禾呈很搭呢，但是不知道禾呈收到礼物之后会怎么想，会不会觉得这个礼物不够用心呢？<img src="mmexport1759691744669.gif" alt="小图标" class="inline-gif">所以我打算再准备一个用心的礼物！送什么好呢，冥思苦想了很久，也取材了很久，本来想送你斯卡蒂的通行证，还想着怎么让你自己抽出来，不过没有想到很好的办法，想自己抽也没有抽到！<img src="mmexport1759687072314.gif" alt="小图标"class="inline-gif">你还记得我之前情人节想要给你准备一个手作礼物，其实是想用cad软件做一个小玩具，但是最后没有做完，技术难度对我来说太高了，不过我从那时起就决定一定要用自己的技术能力给禾呈准备惊喜，努力学习的目标之一也是这个吧。很可惜我不是一个很擅长学习的人，所以到目前为止还没办法给你准备很高技术力的礼物，但是某天我想到我在高中的时候还给自己搞过博客呢，用一个网站给禾呈过生日怎么样？感觉是很不错的事情！<img src="mmexport1759691741574.gif" alt="小图标" class="inline-gif">于是我又重新学了一遍网站的搭建之类的事情，好在曾经做过有点经验，不然一个月的时间都不够我准备了。如果禾呈看到这个礼物能感到惊喜，那我就很满足了。
+                                    </p>
+                                </div>
+                            </div>
+                                
+                        </div>
+
+                    
+                        
+                        <!-- 倒计时部分 -->
+                        <div class="mt-12 pt-8 border-t border-love-pink/30 slide-up opacity-0 countdown-container" style="animation-delay: 0.8s">
+                            <h3 class="font-romantic text-2xl text-center text-love-pink mb-6">我们已经在一起</h3>
+                            <div class="flex justify-center space-x-2 md:space-x-6">
+                                <div class="text-center">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md countdown-item">
+                                        <span id="days" class="countdown-number">822</span>
+                                        <span class="countdown-unit">天</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md countdown-item">
+                                        <span id="hours" class="countdown-number">00</span>
+                                        <span class="countdown-unit">时</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md countdown-item">
+                                        <span id="minutes" class="countdown-number">00</span>
+                                        <span class="countdown-unit">分</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-lg shadow-md countdown-item">
+                                        <span id="seconds" class="countdown-number">00</span>
+                                        <span class="countdown-unit">秒</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+             <!-- 主视觉动图 -->
+                    <div class="fade-in opacity-0 max-w-md mx-auto mb-8" style="animation-delay: 1.5s">
+                        <div class="gif-container shadow-2xl">
+                            <img src="mmexport1758232662466.gif" alt="浪漫生日蛋糕动图" class="w-full h-auto rounded-lg">
+                        </div>
+                    </div>
+        </div> <!-- 中间内容容器结束 -->
+        
+
+        <!-- 页脚 -->
+        <footer class="bg-love-pink/90 text-white py-8 backdrop-blur-sm">
+            
+        </footer>
+    </div>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'shadow');
+                navbar.classList.remove('py-3');
+            } else {
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2', 'shadow');
+            }
+        });
+        
+        // 倒计时功能
+        function updateCountdown() {
+            const anniversary = new Date(2024, 1, 14, 2, 0, 0);
+            const now = new Date();
+            const diff = now - anniversary;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // 点击页面任意位置出现爱心效果
+        document.addEventListener('click', function(e) {
+            createHeart(e.clientX, e.clientY);
+        });
+        
+        // 创建单个爱心
+        function createHeart(x, y) {
+            const heartsContainer = document.getElementById('hearts-container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            
+            heart.style.left = `${x - 10}px`;
+            heart.style.top = `${y - 10}px`;
+            
+            heartsContainer.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.style.transition = 'all 1s ease';
+                heart.style.opacity = '1';
+                heart.style.transform = 'rotate(45deg) translateY(-50px)';
+            }, 10);
+            
+            setTimeout(() => {
+                heart.style.opacity = '0';
+                setTimeout(() => {
+                    heartsContainer.removeChild(heart);
+                }, 1000);
+            }, 2000);
+        }
+        
+        // 创建多个爱心
+        function createHearts(count) {
+            for (let i = 0; i < count; i++) {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                setTimeout(() => {
+                    createHeart(x, y);
+                }, i * 100);
+            }
+        }
+        
+        // 页面加载完成后显示动画
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '';
+                }, 100);
+            });
+            
+            setTimeout(() => {
+                createHearts(10);
+            }, 3000);
+        });
+        
+    document.addEventListener('DOMContentLoaded', function() {
+    const unlockBtn = document.getElementById('unlockBtn');
+    const hiddenContent = document.getElementById('hiddenContent');
+    
+    unlockBtn.addEventListener('click', function() {
+        // 按钮动画效果
+        unlockBtn.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            unlockBtn.style.display = 'none';
+            // 显示隐藏内容并添加动画
+            hiddenContent.classList.remove('hidden');
+            hiddenContent.classList.add('fade-in', 'slide-up');
+            // 同时生成一些爱心效果增加氛围
+            createHearts(15);
+            }, 300);
+        });
+    });
+    </script>
+</body></html>
