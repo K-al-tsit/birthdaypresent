@@ -4,35 +4,9 @@
     <title>给我最爱的人 | 生日快乐</title>
     <!-- 网页标签标签页图标（favicon）改为GIF格式 -->
     <link rel="icon" href="mmexport1758232665833.gif" type="image/gif">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- 配置Tailwind自定义颜色和字体 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        love: {
-                            pink: '#FF85A2',
-                            purple: '#C084FC',
-                            blue: '#93C5FD',
-                            light: '#FFF1F2',
-                            dark: '#7C3AED'
-                        }
-                    },
-                    fontFamily: {
-                        romantic: ['"Dancing Script"', 'cursive', 'sans-serif'],
-                        main: ['"Nunito"', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- 自定义工具类 -->
-    <style type="text/tailwindcss">
-        @layer utilities {
+<!-- 自定义工具类 -->
+    <style>
+
             .text-shadow {
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             }
@@ -58,13 +32,11 @@
             .gif-container:hover img {
                 transform: scale(1.05);
             }
-        }
-    </style>
+        
+</style>
     
     <!-- 引入Google字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&amp;family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
-    
-    <style>
+<style>
         /* 基础动画定义 */
         @keyframes heartbeat {
             0% { transform: scale(1); }
@@ -161,14 +133,14 @@
             background-color: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-radius: 3xl;
+            border-radius: 1.5rem;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         /* 中间内容容器 */
         .main-content {
-            max-width: 3xl;
+            max-width: 48rem;
             margin: 0 auto;
             overflow: hidden;
             margin-top: 3rem;
@@ -239,8 +211,148 @@
             }
         }
     </style>
+
+<style id="local-utility-css">
+  :root {
+    --love-pink: #FF85A2;
+    --love-blue: #93C5FD;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { display: block; max-width: 100%; }
+  button, a { font: inherit; }
+
+  .font-main { font-family: "Nunito", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif; }
+  .font-romantic { font-family: "Snell Roundhand", "Bradley Hand", "Segoe Script", "Kaiti SC", "STKaiti", cursive; }
+  .text-gray-800 { color: #1f2937; }
+  .text-white { color: #fff; }
+  .text-love-pink { color: var(--love-pink); }
+  .font-bold { font-weight: 700; }
+  .font-semibold { font-weight: 600; }
+  .font-medium { font-weight: 500; }
+  .text-center { text-align: center; }
+  .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-\[clamp\(2\.5rem\,8vw\,5rem\)\] { font-size: clamp(2.5rem, 8vw, 5rem); }
+  .text-\[clamp\(1\.8rem\,5vw\,3rem\)\] { font-size: clamp(1.8rem, 5vw, 3rem); }
+
+  .container { width: 100%; max-width: 72rem; margin-left: auto; margin-right: auto; }
+  .max-w-3xl { max-width: 48rem; }
+  .max-w-md { max-width: 28rem; }
+  .mx-auto { margin-left: auto; margin-right: auto; }
+  .w-full { width: 100%; }
+  .w-24 { width: 6rem; }
+  .w-32 { width: 8rem; }
+  .w-40 { width: 10rem; }
+  .h-24 { height: 6rem; }
+  .h-32 { height: 8rem; }
+  .h-40 { height: 10rem; }
+  .h-auto { height: auto; }
+  .min-h-screen { min-height: 100vh; }
+
+  .fixed { position: fixed; }
+  .relative { position: relative; }
+  .absolute { position: absolute; }
+  .inset-0 { inset: 0; }
+  .top-1\/4 { top: 25%; }
+  .top-20 { top: 5rem; }
+  .bottom-1\/3 { bottom: 33.333333%; }
+  .bottom-40 { bottom: 10rem; }
+  .left-1\/5 { left: 20%; }
+  .right-1\/4 { right: 25%; }
+  .right-20 { right: 5rem; }
+  .-bottom-10 { bottom: -2.5rem; }
+  .-left-10 { left: -2.5rem; }
+  .-right-10 { right: -2.5rem; }
+  .z-0 { z-index: 0; }
+  .z-10 { z-index: 10; }
+  .z-50 { z-index: 50; }
+
+  .flex { display: flex; }
+  .inline-block { display: inline-block; }
+  .hidden { display: none !important; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .gap-2 { gap: .5rem; }
+  .space-x-2 > * + * { margin-left: .5rem; }
+  .space-x-6 > * + * { margin-left: 1.5rem; }
+  .space-y-6 > * + * { margin-top: 1.5rem; }
+
+  .overflow-hidden { overflow: hidden; }
+  .overflow-x-hidden { overflow-x: hidden; }
+
+  .px-4 { padding-left: 1rem; padding-right: 1rem; }
+  .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .px-8 { padding-left: 2rem; padding-right: 2rem; }
+  .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+  .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+  .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+  .pt-6 { padding-top: 1.5rem; }
+  .pt-8 { padding-top: 2rem; }
+  .pt-16 { padding-top: 4rem; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mb-6 { margin-bottom: 1.5rem; }
+  .mb-8 { margin-bottom: 2rem; }
+  .mt-6 { margin-top: 1.5rem; }
+  .mt-12 { margin-top: 3rem; }
+  .my-8 { margin-top: 2rem; margin-bottom: 2rem; }
+  .ml-2 { margin-left: .5rem; }
+  .mr-1 { margin-right: .25rem; }
+
+  .rounded-lg { border-radius: .5rem; }
+  .rounded-full { border-radius: 9999px; }
+  .border-t { border-top-width: 1px; border-top-style: solid; }
+  .border-love-pink\/20 { border-color: rgba(255,133,162,.2); }
+  .border-love-pink\/30 { border-color: rgba(255,133,162,.3); }
+
+  .bg-white\/80 { background-color: rgba(255,255,255,.8); }
+  .bg-love-pink { background-color: var(--love-pink); }
+  .bg-love-pink\/10 { background-color: rgba(255,133,162,.1); }
+  .bg-love-pink\/20 { background-color: rgba(255,133,162,.2); }
+  .bg-love-pink\/90 { background-color: rgba(255,133,162,.9); }
+  .bg-love-blue\/10 { background-color: rgba(147,197,253,.1); }
+
+  .blur-3xl { filter: blur(64px); }
+  .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .backdrop-blur-md { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .shadow-md { box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1); }
+  .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1); }
+  .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); }
+
+  .opacity-0 { opacity: 0; }
+  .transform { transform: translateZ(0); }
+  .transition-all { transition-property: all; }
+  .transition-colors { transition-property: color, background-color, border-color; }
+  .duration-300 { transition-duration: 300ms; }
+
+  .hover\:bg-love-pink\/20:hover { background-color: rgba(255,133,162,.2); }
+  .hover\:bg-love-pink\/90:hover { background-color: rgba(255,133,162,.9); }
+  .hover\:text-love-pink\/80:hover { color: rgba(255,133,162,.8); }
+  .hover\:shadow-xl:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1); }
+  .hover\:-translate-y-1:hover { transform: translateY(-.25rem); }
+
+  /* Local replacements for the four Font Awesome glyphs used by this page. */
+  .fa { display: inline-block; width: 1em; text-align: center; font-style: normal; }
+  .fa-home::before { content: "⌂"; }
+  .fa-comment::before { content: "♡"; }
+  .fa-angle-down::before { content: "⌄"; }
+  .fa-lock::before { content: "▣"; }
+
+  @media (min-width: 768px) {
+    .md\:px-8 { padding-left: 2rem; padding-right: 2rem; }
+    .md\:px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .md\:space-x-6 > * + * { margin-left: 1.5rem; }
+  }
+</style>
+
 </head>
-<body class="font-main text-gray-800 overflow-x-hidden">
+<body data-archive-self-contained="true" class="font-main text-gray-800 overflow-x-hidden">
     <!-- 背景图片容器 -->
     <div class="bg-image-container"></div>
     
