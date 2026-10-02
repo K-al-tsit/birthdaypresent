@@ -83,9 +83,33 @@ function parseEmbeddedCover(buffer) {
       while (mimeEnd < frame.length && frame[mimeEnd] !== 0) mimeEnd += 1;
       const mime = new TextDecoder("latin1").decode(frame.subarray(1, mimeEnd)) || "image/jpeg";
       const descriptionStart = Math.min(frame.length, mimeEnd + 2);
+      const imageTypeAt = (start) => {
+        if (start + 2 < frame.length && frame[start] === 0xff && frame[start + 1] === 0xd8 && frame[start + 2] === 0xff) return "image/jpeg";
+        if (start + 7 < frame.length && frame[start] === 0x89 && frame[start + 1] === 0x50 && frame[start + 2] === 0x4e && frame[start + 3] === 0x47 && frame[start + 4] === 0x0d && frame[start + 5] === 0x0a && frame[start + 6] === 0x1a && frame[start + 7] === 0x0a) return "image/png";
+        if (start + 5 < frame.length && ascii(frame, start, 6) === "GIF87a") return "image/gif";
+        if (start + 5 < frame.length && ascii(frame, start, 6) === "GIF89a") return "image/gif";
+        if (start + 11 < frame.length && ascii(frame, start, 4) === "RIFF" && ascii(frame, start + 8, 4) === "WEBP") return "image/webp";
+        return null;
+      };
+
+      // Some taggers omit the empty APIC description terminator and put JPEG/PNG
+      // bytes immediately after the picture-type byte. Accept that common malformed
+      // layout before applying the strict ID3 description parsing path.
+      const immediateType = imageTypeAt(descriptionStart);
+      if (immediateType) return new Blob([frame.slice(descriptionStart)], { type: immediateType });
+
       const descriptionEnd = findTerminator(frame, descriptionStart, frame.length, encoding);
-      const imageStart = Math.min(frame.length, descriptionEnd + ((encoding === 1 || encoding === 2) ? 2 : 1));
-      if (imageStart < frame.length) return new Blob([frame.slice(imageStart)], { type: mime });
+      const strictImageStart = Math.min(frame.length, descriptionEnd + ((encoding === 1 || encoding === 2) ? 2 : 1));
+      const strictType = imageTypeAt(strictImageStart);
+      if (strictType) return new Blob([frame.slice(strictImageStart)], { type: strictType });
+
+      // Last-resort compatibility for non-standard APIC descriptions: locate a
+      // known image signature near the beginning of the picture payload.
+      const scanEnd = Math.min(frame.length, descriptionStart + 2048);
+      for (let imageStart = descriptionStart; imageStart < scanEnd; imageStart += 1) {
+        const detectedType = imageTypeAt(imageStart);
+        if (detectedType) return new Blob([frame.slice(imageStart)], { type: detectedType });
+      }
       return null;
     }
     offset = frameEnd;
