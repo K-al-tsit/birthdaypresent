@@ -384,7 +384,7 @@ footer {
   transition: transform .35s cubic-bezier(.2,.8,.2,1), opacity .25s ease;
 }
 .player-shell.visible { transform: translate(-50%,0); opacity: 1; }
-.player-main { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .85rem; }
+.player-main { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .85rem; }
 .player-cover {
   position: relative;
   width: 3rem;

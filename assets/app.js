@@ -243,8 +243,8 @@ function setPlayerMode(expanded, { focus = true } = {}) {
   document.querySelector(".topbar").inert = open;
   document.querySelector("footer").inert = open;
   $("playerShell").inert = open;
+  $("playerShell").setAttribute("aria-hidden", String(open));
   if (!open) {
-    $("playerShell").setAttribute("aria-hidden", "false");
     if (focus) $("expandPlayer").focus({ preventScroll: true });
   } else if (focus) {
     $("minimizePlayer").focus({ preventScroll: true });
