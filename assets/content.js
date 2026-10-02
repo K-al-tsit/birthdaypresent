@@ -137,7 +137,7 @@ window.SITE_CONTENT = {
     },
     {
       "no": "05",
-      "title": "我好想你 (苏打绿版)",
+      "title": "我好想你",
       "subtitle": "苏打绿",
       "note": "等待把属于我们的这首歌放进来",
       "media": true
@@ -159,7 +159,7 @@ window.SITE_CONTENT = {
     {
       "no": "08",
       "title": "刚好遇见你",
-      "subtitle": "李玉刚,徐天意",
+      "subtitle": "李玉刚",
       "note": "等待把属于我们的这首歌放进来",
       "media": true
     },
@@ -214,7 +214,7 @@ window.SITE_CONTENT = {
     },
     {
       "no": "16",
-      "title": "なんでもないや (movie edit)",
+      "title": "なんでもないや (movie ver.)",
       "subtitle": "RADWIMPS",
       "note": "等待把属于我们的这首歌放进来",
       "media": true
@@ -250,10 +250,10 @@ window.SITE_CONTENT = {
     },
     {
       "no": "21",
-      "title": "Track 21",
-      "subtitle": "这首歌的位置还空着",
+      "title": "小幸运",
+      "subtitle": "田馥甄",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     }
   ]
 };
