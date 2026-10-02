@@ -137,45 +137,45 @@ window.SITE_CONTENT = {
     },
     {
       "no": "05",
-      "title": "Track 05",
-      "subtitle": "这首歌的位置还空着",
+      "title": "我好想你 (苏打绿版)",
+      "subtitle": "苏打绿",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "06",
-      "title": "Track 06",
-      "subtitle": "这首歌的位置还空着",
+      "title": "同桌的你",
+      "subtitle": "老狼",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "07",
-      "title": "Track 07",
-      "subtitle": "这首歌的位置还空着",
+      "title": "カワキヲアメク",
+      "subtitle": "美波",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "08",
-      "title": "Track 08",
-      "subtitle": "这首歌的位置还空着",
+      "title": "刚好遇见你",
+      "subtitle": "李玉刚,徐天意",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "09",
-      "title": "Track 09",
-      "subtitle": "这首歌的位置还空着",
+      "title": "可惜没如果",
+      "subtitle": "林俊杰",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "10",
-      "title": "Track 10",
-      "subtitle": "这首歌的位置还空着",
+      "title": "ギターと孤独と蒼い惑星",
+      "subtitle": "結束バンド",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "11",
