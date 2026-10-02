@@ -1073,10 +1073,12 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
     width: min(86vw, 24rem);
     margin: 1rem auto .2rem;
     display: grid;
-    grid-template-columns: repeat(3, 48px);
-    justify-content: space-between;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
   }
+  .mobile-player-modes > :first-child { justify-self: start; }
+  .mobile-player-modes > :nth-child(2) { justify-self: center; }
+  .mobile-player-modes > :last-child { justify-self: end; }
   .mobile-mode-button {
     width: 48px;
     height: 48px;
