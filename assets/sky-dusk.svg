@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">
+<title>黄昏、晚霞与海边栈桥</title>
+<defs>
+<linearGradient id="sky" x2="0" y2="1"><stop stop-color="#263779"/><stop offset=".36" stop-color="#71549b"/><stop offset=".63" stop-color="#da779a"/><stop offset=".8" stop-color="#ffa986"/><stop offset="1" stop-color="#ffd5a4"/></linearGradient>
+<linearGradient id="sea" x2="0" y2="1"><stop stop-color="#bc799d"/><stop offset=".5" stop-color="#644b8c"/><stop offset="1" stop-color="#293467"/></linearGradient>
+<linearGradient id="light"><stop stop-color="#27244f"/><stop offset=".35" stop-color="#27244f" stop-opacity=".95"/><stop offset=".67" stop-color="#27244f" stop-opacity=".03"/><stop offset="1" stop-color="#27244f" stop-opacity="0"/></linearGradient>
+</defs>
+<path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+<circle cx="1255" cy="614" r="50" fill="#ffe4ba"/>
+<path fill="#f6aeaf" opacity=".5" d="M826 391c76-14 122-6 192-12 15-21 44-23 70-11 78-4 101 7 176 11-113 12-302 23-438 12Z"/>
+<path fill="#e5a3bd" opacity=".65" d="M1044 487c82-18 146-8 207-11 13-22 43-27 64-8 111-14 208-1 285 18-174 11-394 7-556 1Z"/>
+<path fill="#fbd0ba" opacity=".65" d="M816 614c220-9 418-15 675-5-169 15-474 18-675 5Z"/>
+<path fill="url(#sea)" d="M0 683h1600v317H0z"/>
+<path stroke="#ffc6ad" stroke-width="3" d="M0 685h1600"/>
+<g stroke="#ffd1b4" stroke-linecap="round" opacity=".6"><path d="M1217 709h69m-91 21h116m-107 21h107m-134 33h148m-166 38h176m-222 48h245"/></g>
+<g fill="#fff0e4"><circle cx="1003" cy="130" r="2"/><circle cx="1391" cy="95" r="2.2"/><circle cx="1510" cy="244" r="1.7"/><circle cx="841" cy="210" r="1.6"/><circle cx="1197" cy="251" r="1.5"/><circle cx="1467" cy="381" r="1.4"/></g>
+<path stroke="#ecd6ee" stroke-width="1.5" opacity=".6" d="m1246 121 52-23"/>
+<path fill="#302953" d="m1305 823 295 87v39l-327-105z"/>
+<path fill="#1b2045" d="m1287 843 313 103v23l-313-109zM1368 866h12v134h-12zM1532 920h13v80h-13z"/>
+<g stroke="#886486" stroke-width="2"><path d="m1321 833 27 24m20-10 26 24m19-10 24 24m20-11 27 26m18-11 23 25m20-13 28 27"/></g>
+<path fill="url(#light)" d="M0 0h1600v1000H0z"/>
+</svg>
