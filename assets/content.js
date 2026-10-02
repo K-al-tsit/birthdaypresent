@@ -4,6 +4,7 @@ window.SITE_CONTENT = {
   "settings": {
     "dayStartHour": 6,
     "duskStartHour": 18,
+    "lyricsLeadSeconds": 0.5,
     "audioBase": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio"
   },
   "copy": {

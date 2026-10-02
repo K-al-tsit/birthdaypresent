@@ -22,6 +22,7 @@ document.querySelectorAll("[data-copy]").forEach((el) => { el.textContent = text
 document.querySelectorAll("[data-label]").forEach((el) => { el.setAttribute("aria-label", text(el.dataset.label)); });
 
 const audio = $("audio");
+const lyricsLeadSeconds = Number(content.settings?.lyricsLeadSeconds || 0);
 const grid = $("trackGrid");
 const progress = $("progress");
 const expandedProgress = $("expandedProgress");
@@ -222,12 +223,13 @@ function setLyricsStatus(message) {
   renderLyrics($("mobileLyrics"), [], message);
 }
 function lyricIndexAt(time) {
+  const adjustedTime = time + lyricsLeadSeconds;
   let low = 0;
   let high = currentLyrics.length - 1;
   let answer = -1;
   while (low <= high) {
     const mid = Math.floor((low + high) / 2);
-    if (currentLyrics[mid].time <= time + 0.035) {
+    if (currentLyrics[mid].time <= adjustedTime + 0.035) {
       answer = mid;
       low = mid + 1;
     } else {
