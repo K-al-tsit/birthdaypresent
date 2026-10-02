@@ -158,13 +158,24 @@
       </header>
       <div class="now-playing-layout">
         <div class="now-playing-primary">
-          <div class="now-playing-artwork" id="expandedCover">
-            <img id="expandedCoverImage" alt="" aria-hidden="true" hidden>
-            <span id="expandedCoverFallback">01</span>
-          </div>
-          <div class="now-playing-meta">
-            <h2 id="expandedTitle">Track 01</h2>
-            <p id="expandedSubtitle">这首歌的位置还空着</p>
+          <div class="now-playing-stage">
+            <div class="now-playing-artwork" id="expandedCover">
+              <img id="expandedCoverImage" alt="" aria-hidden="true" hidden>
+              <span id="expandedCoverFallback">01</span>
+            </div>
+            <div class="now-playing-meta">
+              <h2 id="expandedTitle">Track 01</h2>
+              <p id="expandedSubtitle">这首歌的位置还空着</p>
+            </div>
+
+            <div class="now-playing-message-mobile" id="mobileMessagePanel" aria-hidden="true">
+              <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
+              <div class="now-playing-message-mobile-scroll"><p id="expandedNoteMobile">等待把属于我们的这首歌放进来</p></div>
+            </div>
+
+            <div class="now-playing-lyrics-mobile" id="mobileLyricsPanel" aria-hidden="true">
+              <div class="lyrics-scroll" id="mobileLyrics"><p class="lyrics-status" data-copy="player.lyricsLoading">正在加载歌词…</p></div>
+            </div>
           </div>
 
           <div class="mobile-player-modes" role="group" data-label="player.mobileModes" aria-label="播放视图">
@@ -180,15 +191,6 @@
             <button class="mobile-mode-button" id="mobileSequenceMode" type="button" data-label="player.sequenceMode" aria-label="顺序播放" aria-pressed="true">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m16 14 3 3-3 3"/></svg>
             </button>
-          </div>
-
-          <div class="now-playing-message-mobile" id="mobileMessagePanel" aria-hidden="true">
-            <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
-            <div class="now-playing-message-mobile-scroll"><p id="expandedNoteMobile">等待把属于我们的这首歌放进来</p></div>
-          </div>
-
-          <div class="now-playing-lyrics-mobile" id="mobileLyricsPanel" aria-hidden="true">
-            <div class="lyrics-scroll" id="mobileLyrics"><p class="lyrics-status" data-copy="player.lyricsLoading">正在加载歌词…</p></div>
           </div>
 
           <div class="now-playing-progress">

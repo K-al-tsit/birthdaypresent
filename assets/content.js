@@ -3,7 +3,8 @@
 window.SITE_CONTENT = {
   "settings": {
     "dayStartHour": 6,
-    "duskStartHour": 18
+    "duskStartHour": 18,
+    "audioBase": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio"
   },
   "copy": {
     "page": {
@@ -110,28 +111,28 @@ window.SITE_CONTENT = {
       "title": "だから僕は音楽を辞めた",
       "subtitle": "ヨルシカ",
       "note": "有些歌不是因为发生过什么才变得特别，而是在某一天以后，再听见时就会自然地想到你。",
-      "src": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio/dakara-boku-wa-ongaku-wo-yameta/%E3%83%A8%E3%83%AB%E3%82%B7%E3%82%AB%20-%20%E3%81%9F%E3%82%99%E3%81%8B%E3%82%89%E5%83%95%E3%81%AF%E9%9F%B3%E6%A5%BD%E3%82%92%E8%BE%9E%E3%82%81%E3%81%9F.mp3"
+      "media": true
     },
     {
       "no": "02",
-      "title": "Track 02",
-      "subtitle": "这首歌的位置还空着",
+      "title": "我怀念的",
+      "subtitle": "孙燕姿",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "03",
-      "title": "Track 03",
-      "subtitle": "这首歌的位置还空着",
+      "title": "丸ノ内サディスティック",
+      "subtitle": "椎名林檎",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "04",
-      "title": "Track 04",
-      "subtitle": "这首歌的位置还空着",
+      "title": "时间煮雨",
+      "subtitle": "郁可唯",
       "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "media": true
     },
     {
       "no": "05",

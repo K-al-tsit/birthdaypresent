@@ -1,6 +1,16 @@
 /* Edit visible words and track details in content.js; this file only handles interactions. */
 const content = window.SITE_CONTENT;
-const tracks = content.tracks;
+const audioBase = String(content.settings?.audioBase || "").replace(/\/+$/, "");
+const tracks = content.tracks.map((track) => {
+  if (!track.media || !audioBase) return { ...track };
+  const stem = String(track.file || (track.subtitle + " - " + track.title)).normalize("NFD");
+  const encodedStem = encodeURIComponent(stem);
+  return {
+    ...track,
+    src: audioBase + "/" + encodedStem + ".mp3",
+    lyrics: audioBase + "/" + encodedStem + ".lrc"
+  };
+});
 const $ = (id) => document.getElementById(id);
 const text = (key, values = {}) => {
   const value = key.split(".").reduce((item, part) => item?.[part], content.copy);
@@ -387,8 +397,8 @@ function setShuffleEnabled(enabled) {
   shuffleEnabled = Boolean(enabled);
   syncPlaybackModes();
 }
-function setMobileDetailMode(mode) {
-  mobileDetailMode = mobileDetailMode === mode ? null : mode;
+function applyMobileDetailMode(mode) {
+  mobileDetailMode = mode === "message" || mode === "lyrics" ? mode : null;
   const messageOpen = mobileDetailMode === "message";
   const lyricsOpen = mobileDetailMode === "lyrics";
   $("nowPlaying").classList.toggle("message-mode", messageOpen);
@@ -401,15 +411,53 @@ function setMobileDetailMode(mode) {
   $("mobileLyricsPanel").setAttribute("aria-hidden", String(!lyricsOpen));
   if (lyricsOpen) requestAnimationFrame(() => updateLyrics(audio.currentTime, true));
 }
+function animateArtworkBackToDefault() {
+  if (reducedMotion.matches) {
+    applyMobileDetailMode(null);
+    return;
+  }
+  const nowPlaying = $("nowPlaying");
+  const artwork = $("expandedCover");
+  const first = artwork.getBoundingClientRect();
+  const firstRadius = getComputedStyle(artwork).borderRadius;
+  nowPlaying.classList.add("artwork-expanding");
+  applyMobileDetailMode(null);
+  const last = artwork.getBoundingClientRect();
+  const dx = first.left - last.left;
+  const dy = first.top - last.top;
+  const sx = last.width ? first.width / last.width : 1;
+  const sy = last.height ? first.height / last.height : 1;
+  const lastRadius = getComputedStyle(artwork).borderRadius;
+  const animation = artwork.animate([
+    {
+      transformOrigin: "top left",
+      transform: "translate(" + dx + "px," + dy + "px) scale(" + sx + "," + sy + ")",
+      borderRadius: firstRadius
+    },
+    {
+      transformOrigin: "top left",
+      transform: "translate(0,0) scale(1,1)",
+      borderRadius: lastRadius
+    }
+  ], {
+    duration: 460,
+    easing: "cubic-bezier(.2,.82,.2,1)",
+    fill: "both"
+  });
+  const cleanup = () => nowPlaying.classList.remove("artwork-expanding");
+  animation.addEventListener("finish", cleanup, { once: true });
+  animation.addEventListener("cancel", cleanup, { once: true });
+}
+function setMobileDetailMode(mode) {
+  const nextMode = mobileDetailMode === mode ? null : mode;
+  if (mobileDetailMode && nextMode === null) {
+    animateArtworkBackToDefault();
+    return;
+  }
+  applyMobileDetailMode(nextMode);
+}
 function resetMobileDetailMode() {
-  mobileDetailMode = null;
-  $("nowPlaying").classList.remove("message-mode", "lyrics-mode");
-  $("messageMode").classList.remove("active");
-  $("messageMode").setAttribute("aria-pressed", "false");
-  $("mobileLyricsMode").classList.remove("active");
-  $("mobileLyricsMode").setAttribute("aria-pressed", "false");
-  $("mobileMessagePanel").setAttribute("aria-hidden", "true");
-  $("mobileLyricsPanel").setAttribute("aria-hidden", "true");
+  applyMobileDetailMode(null);
 }
 function setDesktopSideMode(mode) {
   desktopSideMode = mode === "lyrics" ? "lyrics" : "message";

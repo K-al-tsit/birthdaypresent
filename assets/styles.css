@@ -590,6 +590,7 @@ body.player-expanded .now-playing {
   gap: clamp(2.5rem, 7vw, 7rem);
 }
 .now-playing-primary { min-width: 0; }
+.now-playing-stage { display: contents; }
 .now-playing-artwork {
   position: relative;
   width: min(100%, 430px);
@@ -1104,39 +1105,44 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
 }
 @media (max-width: 760px) {
   .now-playing-surface {
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow: hidden;
     display: block;
     padding-top: max(.55rem, env(safe-area-inset-top));
     padding-bottom: max(1.1rem, env(safe-area-inset-bottom));
   }
   .now-playing-header {
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 4;
     min-height: 48px;
   }
   .now-playing-layout {
     display: block;
     width: min(100%, 30rem);
-    padding: .4rem .15rem 1.5rem;
+    height: calc(100dvh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding: .35rem .15rem .45rem;
   }
   .now-playing-primary {
     width: 100%;
-    min-height: calc(100dvh - 72px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto auto auto;
+  }
+  .now-playing-stage {
+    min-height: 0;
     display: flex;
     flex-direction: column;
-  }
-  .now-playing:not(.message-mode):not(.lyrics-mode) .now-playing-primary {
     justify-content: center;
-    padding-bottom: clamp(.75rem, 3.5dvh, 2rem);
+    overflow: hidden;
   }
   .now-playing-artwork {
+    flex: 0 0 auto;
     width: min(72vw, 21rem);
     border-radius: 1.05rem;
     transition: width .34s cubic-bezier(.22,.78,.2,1), margin .34s cubic-bezier(.22,.78,.2,1), border-radius .34s ease;
   }
   .now-playing-meta {
+    flex: 0 0 auto;
     width: min(72vw, 21rem);
     margin: 1rem auto 0;
     transition: width .34s cubic-bezier(.22,.78,.2,1), margin .34s cubic-bezier(.22,.78,.2,1);
@@ -1147,14 +1153,12 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   }
   .mobile-player-modes {
     width: min(90vw, 25rem);
-    margin: 1rem auto .2rem;
+    margin: .75rem auto .1rem;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
   }
-  .mobile-player-modes > * {
-    justify-self: center;
-  }
+  .mobile-player-modes > * { justify-self: center; }
   .mobile-mode-button {
     width: 48px;
     height: 48px;
@@ -1197,20 +1201,21 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
     width: min(86vw, 24rem);
     margin-inline: auto;
   }
-  .now-playing-progress { margin-top: .3rem; }
+  .now-playing-progress { margin-top: .15rem; }
   .now-playing-controls {
-    margin-top: .45rem;
+    margin-top: .25rem;
     gap: clamp(1.5rem, 9vw, 3.2rem);
   }
   .now-playing-message-mobile,
   .now-playing-lyrics-mobile {
-    width: min(86vw, 24rem);
-    margin: 0 auto;
+    display: none;
+    min-height: 0;
+    width: 100%;
+    margin: 0;
   }
   .now-playing-message-mobile-scroll,
   .now-playing-lyrics-mobile .lyrics-scroll {
     min-height: 0;
-    max-height: 44dvh;
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: none;
@@ -1220,33 +1225,30 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   #expandedNoteMobile {
     margin: 0;
     white-space: pre-line;
-    font-size: clamp(1.55rem, 6.7vw, 2.15rem);
+    font-size: clamp(1.5rem, 6.4vw, 2.05rem);
     font-weight: 700;
-    line-height: 1.58;
+    line-height: 1.56;
     letter-spacing: -.02em;
     text-wrap: pretty;
   }
   .now-playing-lyrics-mobile .lyrics-scroll {
-    height: 42dvh;
-    padding-block: 34%;
+    height: 100%;
+    padding-block: 32%;
   }
   .now-playing-lyrics-mobile .lyric-line {
     margin-bottom: 1rem;
     font-size: clamp(1.15rem, 5.2vw, 1.65rem);
   }
 
-  /* 手机文字/歌词模式：封面缩到左上，歌曲信息在顶部，中间展示内容。 */
-  .now-playing.message-mode .now-playing-primary,
-  .now-playing.lyrics-mode .now-playing-primary {
+  /* 三种视图共享同一个上部舞台；模式切换时模式键、进度条和播放键不移动。 */
+  .now-playing.message-mode .now-playing-stage,
+  .now-playing.lyrics-mode .now-playing-stage {
     display: grid;
     grid-template-columns: 4.6rem minmax(0, 1fr);
-    grid-template-rows: auto minmax(13rem, 1fr) auto auto auto;
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "art meta"
-      "detail detail"
-      "modes modes"
-      "progress progress"
-      "controls controls";
+      "detail detail";
     align-items: center;
     column-gap: .9rem;
   }
@@ -1254,7 +1256,7 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   .now-playing.lyrics-mode .now-playing-artwork {
     grid-area: art;
     width: 4.6rem;
-    margin: .55rem 0 .65rem;
+    margin: .4rem 0 .5rem;
     border-radius: .55rem;
     box-shadow: 0 10px 30px rgba(0,0,0,.24);
   }
@@ -1262,7 +1264,7 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   .now-playing.lyrics-mode .now-playing-meta {
     grid-area: meta;
     width: auto;
-    margin: .55rem 0 .65rem;
+    margin: .4rem 0 .5rem;
     align-self: center;
   }
   .now-playing.message-mode .now-playing-meta h2,
@@ -1282,34 +1284,30 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   .now-playing.message-mode .now-playing-message-mobile {
     grid-area: detail;
     display: flex;
-    width: 100%;
-    min-height: 0;
-    margin: 0;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
     opacity: 1;
-    animation: player-detail-in .3s ease both;
+    animation: player-detail-in .28s ease both;
+  }
+  .now-playing.message-mode .now-playing-message-label { margin-bottom: .8rem; }
+  .now-playing.message-mode .now-playing-message-mobile-scroll {
+    max-height: 100%;
   }
   .now-playing.lyrics-mode .now-playing-lyrics-mobile {
     grid-area: detail;
     display: block;
-    width: 100%;
-    min-height: 0;
-    margin: 0;
+    height: 100%;
     opacity: 1;
-    animation: player-detail-in .3s ease both;
+    animation: player-detail-in .28s ease both;
   }
-  .now-playing.message-mode .now-playing-message-label { margin-bottom: .9rem; }
-  .now-playing.message-mode .now-playing-message-mobile-scroll { max-height: 42dvh; }
-  .now-playing.message-mode .mobile-player-modes,
-  .now-playing.lyrics-mode .mobile-player-modes { grid-area: modes; margin-top: .35rem; }
-  .now-playing.message-mode .now-playing-progress,
-  .now-playing.lyrics-mode .now-playing-progress { grid-area: progress; }
-  .now-playing.message-mode .now-playing-controls,
-  .now-playing.lyrics-mode .now-playing-controls { grid-area: controls; }
+  .now-playing.artwork-expanding .now-playing-artwork {
+    transition: none !important;
+    will-change: transform, border-radius;
+  }
 
   @keyframes player-detail-in {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 }
