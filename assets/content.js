@@ -223,6 +223,7 @@ window.SITE_CONTENT = {
       "no": "17",
       "title": "さくら ～あなたに出会えてよかった～",
       "subtitle": "RSP",
+      "file": "RSP - さくら 〜あなたに出会えてよかった〜",
       "note": "等待把属于我们的这首歌放进来",
       "media": true
     },
