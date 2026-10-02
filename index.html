@@ -166,6 +166,24 @@
             <h2 id="expandedTitle">Track 01</h2>
             <p id="expandedSubtitle">这首歌的位置还空着</p>
           </div>
+
+          <div class="mobile-player-modes" role="group" data-label="player.mobileModes" aria-label="播放视图">
+            <button class="mobile-mode-button" id="mobileShuffleMode" type="button" data-label="player.shuffleMode" aria-label="乱序播放" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h3c2.2 0 3.4-1.9 4.6-4"/><path d="M14 7c1-1 1.9-2 3-2h3"/><path d="m17 2 3 3-3 3"/></svg>
+            </button>
+            <button class="mobile-mode-button" id="messageMode" type="button" data-label="player.messageToggle" aria-label="想对你说" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H9l-4 4V5Z"/><path d="M9 9h6M9 12h4"/></svg>
+            </button>
+            <button class="mobile-mode-button" id="mobileRepeatMode" type="button" data-label="player.repeatMode" aria-label="循环播放" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 3-3 3"/><path d="M17 17H7l-3-3 3-3"/></svg>
+            </button>
+          </div>
+
+          <div class="now-playing-message-mobile" id="mobileMessagePanel" aria-hidden="true">
+            <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
+            <div class="now-playing-message-mobile-scroll"><p id="expandedNoteMobile">等待把属于我们的这首歌放进来</p></div>
+          </div>
+
           <div class="now-playing-progress">
             <input id="expandedProgress" type="range" min="0" max="100" value="0" step="0.1" data-label="player.progress" aria-label="播放进度" disabled>
             <div class="now-playing-times">
@@ -174,9 +192,15 @@
             </div>
           </div>
           <div class="now-playing-controls">
+            <button class="now-playing-mode desktop-mode-button" id="desktopShuffleMode" type="button" data-label="player.shuffleMode" aria-label="乱序播放" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h3c2.2 0 3.4-1.9 4.6-4"/><path d="M14 7c1-1 1.9-2 3-2h3"/><path d="m17 2 3 3-3 3"/></svg>
+            </button>
             <button class="now-playing-transport" id="expandedPreviousTrack" type="button" data-label="player.previous" aria-label="上一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button>
             <button class="now-playing-play" id="expandedPlayPause" type="button" data-label="player.play" aria-label="播放"><span id="expandedPlayIcon" aria-hidden="true">▶</span></button>
             <button class="now-playing-transport" id="expandedNextTrack" type="button" data-label="player.next" aria-label="下一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button>
+            <button class="now-playing-mode desktop-mode-button" id="desktopRepeatMode" type="button" data-label="player.repeatMode" aria-label="循环播放" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 3-3 3"/><path d="M17 17H7l-3-3 3-3"/></svg>
+            </button>
           </div>
         </div>
         <div class="now-playing-message">

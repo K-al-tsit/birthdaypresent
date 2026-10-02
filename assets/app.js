@@ -23,6 +23,9 @@ let scrubbing = false;
 let expandedScrubbing = false;
 let motionEnabled = false;
 let playerTransitionToken = 0;
+let shuffleEnabled = false;
+let repeatEnabled = false;
+let mobileMessageVisible = false;
 const coverCache = new Map();
 const coverObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries, observer) => {
   entries.forEach((entry) => {
@@ -251,6 +254,41 @@ function setPlayerMode(expanded, { focus = true } = {}) {
     $("minimizePlayer").focus({ preventScroll: true });
   }
 }
+function syncPlaybackModes() {
+  audio.loop = repeatEnabled;
+  ["desktopShuffleMode", "mobileShuffleMode"].forEach((id) => {
+    const button = $(id);
+    button.classList.toggle("active", shuffleEnabled);
+    button.setAttribute("aria-pressed", String(shuffleEnabled));
+  });
+  ["desktopRepeatMode", "mobileRepeatMode"].forEach((id) => {
+    const button = $(id);
+    button.classList.toggle("active", repeatEnabled);
+    button.setAttribute("aria-pressed", String(repeatEnabled));
+  });
+}
+function setShuffleEnabled(enabled) {
+  shuffleEnabled = Boolean(enabled);
+  syncPlaybackModes();
+}
+function setRepeatEnabled(enabled) {
+  repeatEnabled = Boolean(enabled);
+  syncPlaybackModes();
+}
+function setMobileMessageVisible(visible) {
+  mobileMessageVisible = Boolean(visible);
+  $("nowPlaying").classList.toggle("message-mode", mobileMessageVisible);
+  $("messageMode").classList.toggle("active", mobileMessageVisible);
+  $("messageMode").setAttribute("aria-pressed", String(mobileMessageVisible));
+  $("mobileMessagePanel").setAttribute("aria-hidden", String(!mobileMessageVisible));
+}
+function randomPlayableIndex(exclude = -1) {
+  const candidates = tracks
+    .map((track, index) => track.src ? index : -1)
+    .filter((index) => index >= 0 && index !== exclude);
+  if (!candidates.length) return exclude >= 0 && tracks[exclude]?.src ? exclude : -1;
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
 function expandPlayerFromCard(card) {
   if (!card || reducedMotion.matches || document.body.classList.contains("player-transitioning")) {
     setPlayerMode(true);
@@ -350,6 +388,8 @@ function selectTrack(index, { autoplay = false, notify = true, expanded = true }
   $("expandedTitle").textContent = track.title;
   $("expandedSubtitle").textContent = track.subtitle;
   $("expandedNote").textContent = track.note;
+  $("expandedNoteMobile").textContent = track.note;
+  setMobileMessageVisible(false);
   $("playerShell").classList.add("visible");
   $("playerShell").setAttribute("aria-hidden", "false");
   document.body.classList.add("has-player");
@@ -407,7 +447,12 @@ tracks.forEach((track, index) => {
 });
 function moveTrack(offset) {
   if (activeIndex < 0) return;
-  selectTrack(activeIndex + offset, {
+  let nextIndex = activeIndex + offset;
+  if (shuffleEnabled && offset > 0) {
+    const randomIndex = randomPlayableIndex(activeIndex);
+    if (randomIndex >= 0) nextIndex = randomIndex;
+  }
+  selectTrack(nextIndex, {
     autoplay: !audio.paused,
     expanded: document.body.classList.contains("player-expanded")
   });
@@ -420,6 +465,12 @@ $("expandedPreviousTrack").addEventListener("click", () => moveTrack(-1));
 $("expandedNextTrack").addEventListener("click", () => moveTrack(1));
 $("expandPlayer").addEventListener("click", () => setPlayerMode(true));
 $("minimizePlayer").addEventListener("click", () => setPlayerMode(false));
+$("desktopShuffleMode").addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
+$("mobileShuffleMode").addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
+$("desktopRepeatMode").addEventListener("click", () => setRepeatEnabled(!repeatEnabled));
+$("mobileRepeatMode").addEventListener("click", () => setRepeatEnabled(!repeatEnabled));
+$("messageMode").addEventListener("click", () => setMobileMessageVisible(!mobileMessageVisible));
+syncPlaybackModes();
 $("shuffleBtn").addEventListener("click", () => {
   if (!tracks.length) return;
   const next = activeIndex < 0 ? Math.floor(Math.random() * tracks.length) : (activeIndex + 1 + Math.floor(Math.random() * Math.max(1, tracks.length - 1))) % tracks.length;
@@ -434,8 +485,15 @@ audio.addEventListener("timeupdate", updateProgress);
 audio.addEventListener("waiting", () => { $("playerNote").textContent = text("player.loading"); });
 audio.addEventListener("playing", () => { $("playerNote").textContent = tracks[activeIndex].note; });
 audio.addEventListener("ended", () => {
-  const next = tracks.findIndex((track, i) => i > activeIndex && track.src);
-  if (next >= 0) selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
+  if (repeatEnabled && tracks[activeIndex]?.src) {
+    audio.currentTime = 0;
+    playCurrent();
+    return;
+  }
+  const next = shuffleEnabled
+    ? randomPlayableIndex(activeIndex)
+    : tracks.findIndex((track, i) => i > activeIndex && track.src);
+  if (next >= 0 && next !== activeIndex) selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
   else setPlaying(false);
 });
 audio.addEventListener("error", () => {

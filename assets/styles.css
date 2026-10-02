@@ -625,10 +625,35 @@ body.player-expanded .now-playing {
 #expandedProgress::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: #fff; }
 #expandedProgress:disabled { opacity: .4; cursor: default; }
 .now-playing-times { margin-top: -.15rem; display: flex; justify-content: space-between; color: rgba(255,255,255,.62); font-size: .7rem; font-variant-numeric: tabular-nums; }
-.now-playing-controls { margin-top: .7rem; display: flex; align-items: center; justify-content: center; gap: clamp(1.5rem, 6vw, 3.4rem); }
-.now-playing-transport, .now-playing-play { display: grid; place-items: center; border: 0; color: #fff; cursor: pointer; }
+.now-playing-controls { margin-top: .7rem; display: flex; align-items: center; justify-content: center; gap: clamp(.8rem, 3.5vw, 2.5rem); }
+.now-playing-transport, .now-playing-play, .now-playing-mode { display: grid; place-items: center; border: 0; color: #fff; cursor: pointer; }
 .now-playing-transport { width: 52px; height: 52px; background: transparent; }
 .now-playing-play { width: 66px; height: 66px; border-radius: 50%; background: rgba(255,255,255,.94); color: #101722; font-size: 1.35rem; box-shadow: 0 10px 28px rgba(0,0,0,.2); }
+.now-playing-mode {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255,255,255,.64);
+  transition: color .18s ease, background .18s ease, transform .18s ease;
+}
+.now-playing-mode svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.now-playing-mode.active {
+  color: #fff;
+  background: rgba(255,255,255,.14);
+}
+.mobile-player-modes,
+.now-playing-message-mobile {
+  display: none;
+}
 .now-playing-message {
   min-width: 0;
   max-height: min(70dvh, 650px);
@@ -903,7 +928,7 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
 @media (hover: none) {
   .track-card:hover { transform: none; }
   .primary-btn:hover, .ghost-btn:hover { transform: none; }
-  .track-card:active, .player-button:active, .transport-button:active { opacity: .75; }
+  .track-card:active, .player-button:active, .transport-button:active, .now-playing-mode:active, .mobile-mode-button:active { opacity: .75; }
 }
 @media (max-width: 850px) {
   .hero::before { background-position: 75% center; }
@@ -1014,15 +1039,182 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
     padding-top: max(.55rem, env(safe-area-inset-top));
     padding-bottom: max(1.1rem, env(safe-area-inset-bottom));
   }
-  .now-playing-header { position: sticky; top: 0; z-index: 2; min-height: 48px; }
-  .now-playing-layout { display: block; width: min(100%, 30rem); padding: .4rem .15rem 1.5rem; }
-  .now-playing-artwork { width: min(72vw, 21rem); border-radius: 1.05rem; }
-  .now-playing-meta { width: min(72vw, 21rem); margin: 1rem auto 0; }
-  .now-playing-progress, .now-playing-controls { width: min(86vw, 24rem); margin-inline: auto; }
-  .now-playing-message { width: min(86vw, 24rem); max-height: none; margin: 2.1rem auto 0; display: block; }
-  .now-playing-message-scroll { overflow: visible; padding-right: 0; }
-  #expandedNote { font-size: clamp(1.45rem, 6.4vw, 2.05rem); line-height: 1.58; }
+  .now-playing-header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    min-height: 48px;
+  }
+  .now-playing-layout {
+    display: block;
+    width: min(100%, 30rem);
+    padding: .4rem .15rem 1.5rem;
+  }
+  .now-playing-primary {
+    width: 100%;
+    min-height: calc(100dvh - 72px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+  }
+  .now-playing-artwork {
+    width: min(72vw, 21rem);
+    border-radius: 1.05rem;
+    transition: width .34s cubic-bezier(.22,.78,.2,1), margin .34s cubic-bezier(.22,.78,.2,1), border-radius .34s ease;
+  }
+  .now-playing-meta {
+    width: min(72vw, 21rem);
+    margin: 1rem auto 0;
+    transition: width .34s cubic-bezier(.22,.78,.2,1), margin .34s cubic-bezier(.22,.78,.2,1);
+  }
+  .desktop-mode-button {
+    display: none;
+  }
+  .mobile-player-modes {
+    width: min(86vw, 24rem);
+    margin: 1rem auto .2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 48px);
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mobile-mode-button {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: rgba(255,255,255,.62);
+    cursor: pointer;
+    transition: color .18s ease, background .18s ease, transform .18s ease;
+  }
+  .mobile-mode-button svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .mobile-mode-button.active {
+    color: #fff;
+    background: rgba(255,255,255,.14);
+  }
+  .now-playing-progress,
+  .now-playing-controls {
+    width: min(86vw, 24rem);
+    margin-inline: auto;
+  }
+  .now-playing-progress {
+    margin-top: .3rem;
+  }
+  .now-playing-controls {
+    margin-top: .45rem;
+    gap: clamp(1.5rem, 9vw, 3.2rem);
+  }
+  .now-playing-message {
+    display: none;
+  }
+  .now-playing-message-mobile {
+    width: min(86vw, 24rem);
+    margin: 0 auto;
+  }
+  .now-playing-message-mobile-scroll {
+    min-height: 0;
+    max-height: 44dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .now-playing-message-mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  #expandedNoteMobile {
+    margin: 0;
+    white-space: pre-line;
+    font-size: clamp(1.55rem, 6.7vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.58;
+    letter-spacing: -.02em;
+    text-wrap: pretty;
+  }
+
+  /* “想对你说”模式：封面缩到左上，歌曲信息在顶部，正文占据中部。 */
+  .now-playing.message-mode .now-playing-primary {
+    display: grid;
+    grid-template-columns: 4.6rem minmax(0, 1fr);
+    grid-template-rows: auto minmax(13rem, 1fr) auto auto auto;
+    grid-template-areas:
+      "art meta"
+      "message message"
+      "modes modes"
+      "progress progress"
+      "controls controls";
+    align-items: center;
+    column-gap: .9rem;
+  }
+  .now-playing.message-mode .now-playing-artwork {
+    grid-area: art;
+    width: 4.6rem;
+    margin: .55rem 0 .65rem;
+    border-radius: .55rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,.24);
+  }
+  .now-playing.message-mode .now-playing-meta {
+    grid-area: meta;
+    width: auto;
+    margin: .55rem 0 .65rem;
+    align-self: center;
+  }
+  .now-playing.message-mode .now-playing-meta h2 {
+    font-size: 1rem;
+    line-height: 1.22;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  .now-playing.message-mode .now-playing-meta p {
+    margin-top: .25rem;
+    font-size: .8rem;
+  }
+  .now-playing.message-mode .now-playing-message-mobile {
+    grid-area: message;
+    display: flex;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 1;
+    animation: player-message-in .3s ease both;
+  }
+  .now-playing.message-mode .now-playing-message-label {
+    margin-bottom: .9rem;
+  }
+  .now-playing.message-mode .now-playing-message-mobile-scroll {
+    max-height: 42dvh;
+  }
+  .now-playing.message-mode .mobile-player-modes {
+    grid-area: modes;
+    margin-top: .35rem;
+  }
+  .now-playing.message-mode .now-playing-progress {
+    grid-area: progress;
+  }
+  .now-playing.message-mode .now-playing-controls {
+    grid-area: controls;
+  }
+
+  @keyframes player-message-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
+
 @media (min-width: 360px) and (max-width: 460px) {
   .hero { padding-top: 2.15rem; gap: 2rem; }
   .hero h1 { font-size: clamp(3.4rem, 17vw, 4.65rem); }
