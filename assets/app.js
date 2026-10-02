@@ -22,6 +22,7 @@ let selectionVersion = 0;
 let scrubbing = false;
 let expandedScrubbing = false;
 let motionEnabled = false;
+let playerTransitionToken = 0;
 const coverCache = new Map();
 const coverObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries, observer) => {
   entries.forEach((entry) => {
@@ -250,6 +251,73 @@ function setPlayerMode(expanded, { focus = true } = {}) {
     $("minimizePlayer").focus({ preventScroll: true });
   }
 }
+function expandPlayerFromCard(card) {
+  if (!card || reducedMotion.matches || document.body.classList.contains("player-transitioning")) {
+    setPlayerMode(true);
+    return;
+  }
+  const rect = card.getBoundingClientRect();
+  if (rect.width < 2 || rect.height < 2) {
+    setPlayerMode(true);
+    return;
+  }
+
+  playerTransitionToken += 1;
+  const token = playerTransitionToken;
+  const ghost = card.cloneNode(true);
+  ghost.classList.remove("active");
+  ghost.classList.add("player-card-transition");
+  ghost.removeAttribute("aria-pressed");
+  ghost.removeAttribute("aria-label");
+  ghost.removeAttribute("data-track-index");
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.tabIndex = -1;
+  if ("disabled" in ghost) ghost.disabled = true;
+  ghost.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+
+  Object.assign(ghost.style, {
+    left: rect.left + "px",
+    top: rect.top + "px",
+    width: rect.width + "px",
+    height: rect.height + "px",
+    borderRadius: getComputedStyle(card).borderRadius
+  });
+
+  document.body.append(ghost);
+  card.classList.add("transition-source");
+  document.body.classList.add("player-transitioning");
+
+  const cleanup = () => {
+    if (token !== playerTransitionToken) return;
+    ghost.remove();
+    card.classList.remove("transition-source");
+    document.body.classList.remove("player-transitioning");
+  };
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (token !== playerTransitionToken) return;
+      ghost.classList.add("is-opening");
+      ghost.style.left = "0px";
+      ghost.style.top = "0px";
+      ghost.style.width = window.innerWidth + "px";
+      ghost.style.height = window.innerHeight + "px";
+      ghost.style.borderRadius = "0px";
+    });
+  });
+
+  window.setTimeout(() => {
+    if (token !== playerTransitionToken) return;
+    setPlayerMode(true, { focus: false });
+  }, 250);
+
+  window.setTimeout(() => {
+    if (token !== playerTransitionToken) return;
+    setPlayerMode(true, { focus: false });
+    ghost.classList.add("is-handoff");
+    window.setTimeout(cleanup, 170);
+  }, 520);
+}
 function playCurrent() {
   if (!tracks[activeIndex]?.src) { showToast(text("messages.emptyAudio")); return; }
   const version = selectionVersion;
@@ -323,10 +391,13 @@ tracks.forEach((track, index) => {
   });
   card.addEventListener("click", () => {
     if (activeIndex === index) {
-      if (!document.body.classList.contains("player-expanded")) setPlayerMode(true);
+      if (!document.body.classList.contains("player-expanded")) expandPlayerFromCard(card);
       else if (audio.paused) playCurrent();
       else audio.pause();
-    } else selectTrack(index, { autoplay: true, expanded: true });
+    } else {
+      selectTrack(index, { autoplay: true, expanded: false });
+      expandPlayerFromCard(card);
+    }
   });
   grid.append(card);
   if (track.src) {

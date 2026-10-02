@@ -435,6 +435,57 @@ footer {
 .progress-wrap { display: grid; grid-template-columns: 2.8rem 1fr 2.8rem; align-items: center; gap: .55rem; margin-top: .65rem; color: var(--muted); font-size: .67rem; }
 #progress { width: 100%; accent-color: var(--accent); }
 
+.player-card-transition {
+  position: fixed !important;
+  z-index: 95 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  cursor: default !important;
+  transform: none !important;
+  box-shadow: 0 18px 60px rgba(7, 28, 58, .2);
+  will-change: left, top, width, height, border-radius, opacity, background;
+  transition:
+    left .52s cubic-bezier(.22,.78,.2,1),
+    top .52s cubic-bezier(.22,.78,.2,1),
+    width .52s cubic-bezier(.22,.78,.2,1),
+    height .52s cubic-bezier(.22,.78,.2,1),
+    border-radius .52s cubic-bezier(.22,.78,.2,1),
+    border-color .4s ease,
+    background .4s ease,
+    opacity .16s ease;
+}
+.player-card-transition > * {
+  transition: opacity .2s ease, transform .32s cubic-bezier(.22,.78,.2,1);
+}
+.player-card-transition.is-opening {
+  border-color: transparent !important;
+  background: #10233e !important;
+  box-shadow: none;
+}
+.player-card-transition.is-opening > * {
+  opacity: 0;
+  transform: translateY(-8px) scale(.96);
+}
+.player-card-transition.is-handoff {
+  opacity: 0;
+}
+.track-card.transition-source {
+  opacity: .12;
+}
+body.player-transitioning {
+  overflow: hidden;
+}
+body.player-transitioning .player-shell {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+body.player-transitioning .now-playing {
+  transition-duration: .18s;
+}
+
 .mini-player-open {
   min-width: 0;
   display: grid;
@@ -982,6 +1033,7 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   footer { padding-bottom: max(10.5rem, calc(9.5rem + env(safe-area-inset-bottom))); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .player-card-transition { display: none !important; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
