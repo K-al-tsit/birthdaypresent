@@ -96,10 +96,10 @@ window.SITE_CONTENT = {
   "tracks": [
     {
       "no": "01",
-      "title": "Track 01",
-      "subtitle": "这首歌的位置还空着",
-      "note": "等待把属于我们的这首歌放进来",
-      "src": ""
+      "title": "だから僕は音楽を辞めた",
+      "subtitle": "ヨルシカ",
+      "note": "有些歌不是因为发生过什么才变得特别，而是在某一天以后，再听见时就会自然地想到你。",
+      "src": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio/%E3%83%A8%E3%83%AB%E3%82%B7%E3%82%AB%20-%20%E3%81%9F%E3%82%99%E3%81%8B%E3%82%89%E5%83%95%E3%81%AF%E9%9F%B3%E6%A5%BD%E3%82%92%E8%BE%9E%E3%82%81%E3%81%9F.mp3"
     },
     {
       "no": "02",
