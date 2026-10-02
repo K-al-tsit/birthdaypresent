@@ -1127,6 +1127,10 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
     display: flex;
     flex-direction: column;
   }
+  .now-playing:not(.message-mode):not(.lyrics-mode) .now-playing-primary {
+    justify-content: center;
+    padding-bottom: clamp(.75rem, 3.5dvh, 2rem);
+  }
   .now-playing-artwork {
     width: min(72vw, 21rem);
     border-radius: 1.05rem;
