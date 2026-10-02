@@ -173,6 +173,38 @@ $("soundToggle").addEventListener("click", () => {
 reducedMotion.addEventListener("change", () => setMotion(motionEnabled));
 $("themeSelect").value = window.SiteTheme.getMode();
 $("themeSelect").addEventListener("change", (event) => window.SiteTheme.setMode(event.target.value));
+
+const mobileSettingsToggle = $("mobileSettingsToggle");
+const headerControls = $("headerControls");
+const themeGlyph = $("themeGlyph");
+const mobileLayout = window.matchMedia("(max-width: 560px)");
+function syncThemeGlyph() {
+  themeGlyph.textContent = document.documentElement.dataset.theme === "dusk" ? "◐" : "☼";
+}
+function setMobileSettingsOpen(open) {
+  const next = Boolean(open && mobileLayout.matches);
+  headerControls.classList.toggle("is-open", next);
+  mobileSettingsToggle.setAttribute("aria-expanded", String(next));
+}
+mobileSettingsToggle.addEventListener("click", () => {
+  setMobileSettingsOpen(!headerControls.classList.contains("is-open"));
+});
+document.addEventListener("pointerdown", (event) => {
+  if (!headerControls.classList.contains("is-open")) return;
+  if (headerControls.contains(event.target) || mobileSettingsToggle.contains(event.target)) return;
+  setMobileSettingsOpen(false);
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !headerControls.classList.contains("is-open")) return;
+  setMobileSettingsOpen(false);
+  mobileSettingsToggle.focus();
+});
+mobileLayout.addEventListener("change", (event) => {
+  if (!event.matches) setMobileSettingsOpen(false);
+});
+new MutationObserver(syncThemeGlyph).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+syncThemeGlyph();
+
 $("memoryTrigger").addEventListener("click", () => $("memoryModal").showModal());
 document.querySelector("[data-close-memory]").addEventListener("click", () => $("memoryModal").close());
 $("memoryModal").addEventListener("click", (event) => {

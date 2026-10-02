@@ -20,7 +20,11 @@
       <span class="brand-mark" data-copy="brand.mark">21</span>
       <span class="brand-text" data-copy="brand.name">FOR H.C.</span>
     </a>
-    <div class="header-controls">
+    <button class="mobile-settings-toggle" id="mobileSettingsToggle" type="button" aria-controls="headerControls" aria-expanded="false" data-label="theme.settings" aria-label="显示设置">
+      <span class="mobile-settings-icon" id="themeGlyph" aria-hidden="true">☼</span>
+      <span class="sr-only" data-copy="theme.settings">显示设置</span>
+    </button>
+    <div class="header-controls" id="headerControls">
       <select class="theme-select" id="themeSelect" aria-label="画面时段" data-label="theme.label">
         <option value="auto" data-copy="theme.auto">自动</option>
         <option value="day" data-copy="theme.day">晴空</option>

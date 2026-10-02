@@ -75,6 +75,7 @@ window.SITE_CONTENT = {
       "link": "回到去年"
     },
     "theme": {
+      "settings": "显示设置",
       "label": "画面时段",
       "auto": "自动",
       "day": "晴空",
