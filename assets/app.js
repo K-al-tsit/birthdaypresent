@@ -14,11 +14,13 @@ document.querySelectorAll("[data-label]").forEach((el) => { el.setAttribute("ari
 const audio = $("audio");
 const grid = $("trackGrid");
 const progress = $("progress");
+const expandedProgress = $("expandedProgress");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let activeIndex = -1;
 let toastTimer;
 let selectionVersion = 0;
 let scrubbing = false;
+let expandedScrubbing = false;
 let motionEnabled = false;
 const coverCache = new Map();
 const coverObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries, observer) => {
@@ -154,14 +156,27 @@ function updateMediaMetadata(track, coverUrl = null) {
 async function loadPlayerCover(track, version) {
   const image = $("playerCoverImage");
   const cover = $("playerCover");
+  const expandedImage = $("expandedCoverImage");
+  const expandedCover = $("expandedCover");
+  const backdropImage = $("expandedBackdropImage");
   image.hidden = true;
+  expandedImage.hidden = true;
+  backdropImage.hidden = true;
   image.removeAttribute("src");
+  expandedImage.removeAttribute("src");
+  backdropImage.removeAttribute("src");
   cover.classList.remove("has-art");
+  expandedCover.classList.remove("has-art");
   const coverUrl = await getCoverUrl(track);
   if (!coverUrl || version !== selectionVersion || tracks[activeIndex] !== track) return;
   image.src = coverUrl;
+  expandedImage.src = coverUrl;
+  backdropImage.src = coverUrl;
   image.hidden = false;
+  expandedImage.hidden = false;
+  backdropImage.hidden = false;
   cover.classList.add("has-art");
+  expandedCover.classList.add("has-art");
   updateMediaMetadata(track, coverUrl);
 }
 async function loadCardCover(index) {
@@ -189,20 +204,51 @@ function showToast(message) {
 }
 function setPlaying(playing) {
   $("playIcon").textContent = playing ? "❚❚" : "▶";
+  $("expandedPlayIcon").textContent = playing ? "❚❚" : "▶";
   $("playPause").setAttribute("aria-label", text(playing ? "player.pause" : "player.play"));
+  $("expandedPlayPause").setAttribute("aria-label", text(playing ? "player.pause" : "player.play"));
   document.body.classList.toggle("is-playing", playing);
   if ("mediaSession" in navigator && tracks[activeIndex]?.src) {
     navigator.mediaSession.playbackState = playing ? "playing" : "paused";
   }
 }
 function updateProgress() {
-  if (scrubbing) return;
   const hasDuration = Number.isFinite(audio.duration) && audio.duration > 0;
+  const value = hasDuration ? audio.currentTime / audio.duration * 100 : 0;
+  const current = formatTime(audio.currentTime);
+  const duration = formatTime(audio.duration);
   progress.disabled = !hasDuration;
-  progress.value = hasDuration ? audio.currentTime / audio.duration * 100 : 0;
-  $("currentTime").textContent = formatTime(audio.currentTime);
-  $("duration").textContent = formatTime(audio.duration);
-  progress.setAttribute("aria-valuetext", text("player.time", { current: formatTime(audio.currentTime), duration: formatTime(audio.duration) }));
+  expandedProgress.disabled = !hasDuration;
+  if (!scrubbing) {
+    progress.value = value;
+    $("currentTime").textContent = current;
+    progress.setAttribute("aria-valuetext", text("player.time", { current, duration }));
+  }
+  if (!expandedScrubbing) {
+    expandedProgress.value = value;
+    $("expandedCurrentTime").textContent = current;
+    expandedProgress.setAttribute("aria-valuetext", text("player.time", { current, duration }));
+  }
+  $("duration").textContent = duration;
+  $("expandedDuration").textContent = duration;
+}
+function setPlayerMode(expanded, { focus = true } = {}) {
+  if (activeIndex < 0) return;
+  const nowPlaying = $("nowPlaying");
+  const open = Boolean(expanded);
+  document.body.classList.toggle("player-expanded", open);
+  nowPlaying.setAttribute("aria-hidden", String(!open));
+  nowPlaying.inert = !open;
+  document.querySelector("main").inert = open;
+  document.querySelector(".topbar").inert = open;
+  document.querySelector("footer").inert = open;
+  $("playerShell").inert = open;
+  if (!open) {
+    $("playerShell").setAttribute("aria-hidden", "false");
+    if (focus) $("expandPlayer").focus({ preventScroll: true });
+  } else if (focus) {
+    $("minimizePlayer").focus({ preventScroll: true });
+  }
 }
 function playCurrent() {
   if (!tracks[activeIndex]?.src) { showToast(text("messages.emptyAudio")); return; }
@@ -213,7 +259,7 @@ function playCurrent() {
     showToast(text(error.name === "NotAllowedError" ? "messages.blocked" : "messages.failed"));
   });
 }
-function selectTrack(index, { autoplay = false, notify = true } = {}) {
+function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
   if (!tracks.length) return;
   selectionVersion += 1;
   audio.pause();
@@ -221,16 +267,25 @@ function selectTrack(index, { autoplay = false, notify = true } = {}) {
   const track = tracks[activeIndex];
   audio.removeAttribute("src");
   scrubbing = false;
+  expandedScrubbing = false;
   progress.value = 0;
+  expandedProgress.value = 0;
   progress.disabled = true;
+  expandedProgress.disabled = true;
   $("currentTime").textContent = $("duration").textContent = "0:00";
+  $("expandedCurrentTime").textContent = $("expandedDuration").textContent = "0:00";
   $("playerIndex").textContent = track.no;
   $("playerTitle").textContent = track.title;
   $("playerNote").textContent = track.note;
+  $("expandedIndex").textContent = track.no;
+  $("expandedCoverFallback").textContent = track.no;
+  $("expandedTitle").textContent = track.title;
+  $("expandedSubtitle").textContent = track.subtitle;
+  $("expandedNote").textContent = track.note;
   $("playerShell").classList.add("visible");
   $("playerShell").setAttribute("aria-hidden", "false");
-  $("playerShell").inert = false;
   document.body.classList.add("has-player");
+  setPlayerMode(expanded, { focus: false });
   Array.from(grid.children).forEach((card, i) => {
     card.classList.toggle("active", i === activeIndex);
     card.setAttribute("aria-pressed", String(i === activeIndex));
@@ -267,8 +322,11 @@ tracks.forEach((track, index) => {
     card.append(span);
   });
   card.addEventListener("click", () => {
-    if (activeIndex === index) { if (audio.paused) playCurrent(); else audio.pause(); }
-    else selectTrack(index, { autoplay: true });
+    if (activeIndex === index) {
+      if (!document.body.classList.contains("player-expanded")) setPlayerMode(true);
+      else if (audio.paused) playCurrent();
+      else audio.pause();
+    } else selectTrack(index, { autoplay: true, expanded: true });
   });
   grid.append(card);
   if (track.src) {
@@ -278,15 +336,23 @@ tracks.forEach((track, index) => {
 });
 function moveTrack(offset) {
   if (activeIndex < 0) return;
-  selectTrack(activeIndex + offset, { autoplay: !audio.paused });
+  selectTrack(activeIndex + offset, {
+    autoplay: !audio.paused,
+    expanded: document.body.classList.contains("player-expanded")
+  });
 }
 $("playPause").addEventListener("click", () => audio.paused ? playCurrent() : audio.pause());
 $("previousTrack").addEventListener("click", () => moveTrack(-1));
 $("nextTrack").addEventListener("click", () => moveTrack(1));
+$("expandedPlayPause").addEventListener("click", () => audio.paused ? playCurrent() : audio.pause());
+$("expandedPreviousTrack").addEventListener("click", () => moveTrack(-1));
+$("expandedNextTrack").addEventListener("click", () => moveTrack(1));
+$("expandPlayer").addEventListener("click", () => setPlayerMode(true));
+$("minimizePlayer").addEventListener("click", () => setPlayerMode(false));
 $("shuffleBtn").addEventListener("click", () => {
   if (!tracks.length) return;
   const next = activeIndex < 0 ? Math.floor(Math.random() * tracks.length) : (activeIndex + 1 + Math.floor(Math.random() * Math.max(1, tracks.length - 1))) % tracks.length;
-  selectTrack(next, { autoplay: true });
+  selectTrack(next, { autoplay: true, expanded: true });
   $("playlist").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
 });
 audio.addEventListener("play", () => setPlaying(true));
@@ -298,7 +364,7 @@ audio.addEventListener("waiting", () => { $("playerNote").textContent = text("pl
 audio.addEventListener("playing", () => { $("playerNote").textContent = tracks[activeIndex].note; });
 audio.addEventListener("ended", () => {
   const next = tracks.findIndex((track, i) => i > activeIndex && track.src);
-  if (next >= 0) selectTrack(next, { autoplay: true });
+  if (next >= 0) selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
   else setPlaying(false);
 });
 audio.addEventListener("error", () => {
@@ -324,6 +390,22 @@ progress.addEventListener("change", () => {
 progress.addEventListener("pointerup", () => { scrubbing = false; });
 progress.addEventListener("pointercancel", () => { scrubbing = false; updateProgress(); });
 progress.addEventListener("blur", () => { scrubbing = false; updateProgress(); });
+expandedProgress.addEventListener("pointerdown", () => { if (!expandedProgress.disabled) expandedScrubbing = true; });
+expandedProgress.addEventListener("input", () => {
+  if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+  expandedScrubbing = true;
+  const target = Number(expandedProgress.value) / 100 * audio.duration;
+  $("expandedCurrentTime").textContent = formatTime(target);
+  expandedProgress.setAttribute("aria-valuetext", text("player.time", { current: formatTime(target), duration: formatTime(audio.duration) }));
+});
+expandedProgress.addEventListener("change", () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = Number(expandedProgress.value) / 100 * audio.duration;
+  expandedScrubbing = false;
+  updateProgress();
+});
+expandedProgress.addEventListener("pointerup", () => { expandedScrubbing = false; });
+expandedProgress.addEventListener("pointercancel", () => { expandedScrubbing = false; updateProgress(); });
+expandedProgress.addEventListener("blur", () => { expandedScrubbing = false; updateProgress(); });
 if ("mediaSession" in navigator) {
   const handlers = { play: playCurrent, pause: () => audio.pause(), previoustrack: () => moveTrack(-1), nexttrack: () => moveTrack(1), seekto: (event) => { if (Number.isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(event.seekTime, audio.duration)); } };
   Object.entries(handlers).forEach(([action, handler]) => { try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) {} });
@@ -364,6 +446,10 @@ document.addEventListener("pointerdown", (event) => {
   setMobileSettingsOpen(false);
 });
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && document.body.classList.contains("player-expanded")) {
+    setPlayerMode(false);
+    return;
+  }
   if (event.key !== "Escape" || !headerControls.classList.contains("is-open")) return;
   setMobileSettingsOpen(false);
   mobileSettingsToggle.focus();

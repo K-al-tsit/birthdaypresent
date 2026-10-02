@@ -35,7 +35,7 @@ window.SITE_CONTENT = {
     "playlist": {
       "kicker": "TRACKLIST",
       "title": "21 tracks",
-      "note": "点开任意一首，播放器会在页面底部出现。",
+      "note": "点开任意一首，默认进入全屏播放器，也可以随时收起到底部。",
       "prefix": "TRACK",
       "select": "打开第 {no} 首歌"
     },
@@ -60,6 +60,10 @@ window.SITE_CONTENT = {
       "label": "音乐播放器",
       "initialTitle": "Track 01",
       "initialNote": "等待把这首歌放进来",
+      "nowPlaying": "正在播放",
+      "messageLabel": "想对你说",
+      "minimize": "收起到底部播放器",
+      "expand": "展开全屏播放器",
       "play": "播放",
       "pause": "暂停",
       "previous": "上一首",

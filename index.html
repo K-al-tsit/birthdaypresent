@@ -120,14 +120,17 @@
 
   <div class="player-shell" id="playerShell" role="region" data-label="player.label" aria-label="音乐播放器" aria-hidden="true" inert>
     <div class="player-main">
-      <div class="player-cover" id="playerCover">
-        <img id="playerCoverImage" alt="" aria-hidden="true" hidden>
-        <span class="player-index" id="playerIndex">01</span>
-      </div>
-      <div class="player-meta">
-        <strong id="playerTitle" data-copy="player.initialTitle">Track 01</strong>
-        <span id="playerNote" data-copy="player.initialNote">等待把这首歌放进来</span>
-      </div>
+      <button class="mini-player-open" id="expandPlayer" type="button" data-label="player.expand" aria-label="展开全屏播放器">
+        <span class="player-cover" id="playerCover">
+          <img id="playerCoverImage" alt="" aria-hidden="true" hidden>
+          <span class="player-index" id="playerIndex">01</span>
+        </span>
+        <span class="player-meta">
+          <strong id="playerTitle" data-copy="player.initialTitle">Track 01</strong>
+          <span id="playerNote" data-copy="player.initialNote">等待把这首歌放进来</span>
+        </span>
+        <span class="mini-expand-icon" aria-hidden="true">⌃</span>
+      </button>
       <div class="playback-controls">
         <button class="transport-button" id="previousTrack" type="button" data-label="player.previous" aria-label="上一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button>
         <button class="player-button" id="playPause" type="button" data-label="player.play" aria-label="播放"><span id="playIcon" aria-hidden="true">▶</span></button>
@@ -141,6 +144,48 @@
     </div>
     <audio id="audio" preload="metadata"></audio>
   </div>
+
+  <section class="now-playing" id="nowPlaying" role="dialog" aria-modal="true" data-label="player.label" aria-label="音乐播放器" aria-hidden="true" inert>
+    <div class="now-playing-backdrop" aria-hidden="true"><img id="expandedBackdropImage" alt="" hidden></div>
+    <div class="now-playing-shade" aria-hidden="true"></div>
+    <div class="now-playing-surface">
+      <header class="now-playing-header">
+        <button class="now-playing-minimize" id="minimizePlayer" type="button" data-label="player.minimize" aria-label="收起到底部播放器">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+        </button>
+        <span class="now-playing-heading" data-copy="player.nowPlaying">正在播放</span>
+        <span class="now-playing-index" id="expandedIndex">01</span>
+      </header>
+      <div class="now-playing-layout">
+        <div class="now-playing-primary">
+          <div class="now-playing-artwork" id="expandedCover">
+            <img id="expandedCoverImage" alt="" aria-hidden="true" hidden>
+            <span id="expandedCoverFallback">01</span>
+          </div>
+          <div class="now-playing-meta">
+            <h2 id="expandedTitle">Track 01</h2>
+            <p id="expandedSubtitle">这首歌的位置还空着</p>
+          </div>
+          <div class="now-playing-progress">
+            <input id="expandedProgress" type="range" min="0" max="100" value="0" step="0.1" data-label="player.progress" aria-label="播放进度" disabled>
+            <div class="now-playing-times">
+              <span id="expandedCurrentTime">0:00</span>
+              <span id="expandedDuration">0:00</span>
+            </div>
+          </div>
+          <div class="now-playing-controls">
+            <button class="now-playing-transport" id="expandedPreviousTrack" type="button" data-label="player.previous" aria-label="上一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button>
+            <button class="now-playing-play" id="expandedPlayPause" type="button" data-label="player.play" aria-label="播放"><span id="expandedPlayIcon" aria-hidden="true">▶</span></button>
+            <button class="now-playing-transport" id="expandedNextTrack" type="button" data-label="player.next" aria-label="下一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button>
+          </div>
+        </div>
+        <div class="now-playing-message">
+          <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
+          <div class="now-playing-message-scroll"><p id="expandedNote">等待把属于我们的这首歌放进来</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
