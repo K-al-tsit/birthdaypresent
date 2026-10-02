@@ -67,7 +67,10 @@ window.SITE_CONTENT = {
       "mobileModes": "播放视图",
       "shuffleMode": "乱序播放",
       "messageToggle": "想对你说",
-      "repeatMode": "循环播放",
+      "lyrics": "歌词",
+      "sequenceMode": "顺序播放",
+      "lyricsLoading": "正在加载歌词…",
+      "lyricsUnavailable": "这首歌暂时没有可用歌词。",
       "play": "播放",
       "pause": "暂停",
       "previous": "上一首",
@@ -107,7 +110,7 @@ window.SITE_CONTENT = {
       "title": "だから僕は音楽を辞めた",
       "subtitle": "ヨルシカ",
       "note": "有些歌不是因为发生过什么才变得特别，而是在某一天以后，再听见时就会自然地想到你。",
-      "src": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio/%E3%83%A8%E3%83%AB%E3%82%B7%E3%82%AB%20-%20%E3%81%9F%E3%82%99%E3%81%8B%E3%82%89%E5%83%95%E3%81%AF%E9%9F%B3%E6%A5%BD%E3%82%92%E8%BE%9E%E3%82%81%E3%81%9F.mp3"
+      "src": "https://birthdaypresent-audio-1317115476.cos.ap-shanghai.myqcloud.com/audio/dakara-boku-wa-ongaku-wo-yameta/%E3%83%A8%E3%83%AB%E3%82%B7%E3%82%AB%20-%20%E3%81%9F%E3%82%99%E3%81%8B%E3%82%89%E5%83%95%E3%81%AF%E9%9F%B3%E6%A5%BD%E3%82%92%E8%BE%9E%E3%82%81%E3%81%9F.mp3"
     },
     {
       "no": "02",

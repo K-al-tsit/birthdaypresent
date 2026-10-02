@@ -174,14 +174,21 @@
             <button class="mobile-mode-button mobile-message-button" id="messageMode" type="button" data-label="player.messageToggle" aria-label="想对你说" aria-pressed="false">
               <span data-copy="player.messageToggle">想对你说</span>
             </button>
-            <button class="mobile-mode-button" id="mobileRepeatMode" type="button" data-label="player.repeatMode" aria-label="循环播放" aria-pressed="false">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 3-3 3"/><path d="M17 17H7l-3-3 3-3"/></svg>
+            <button class="mobile-mode-button" id="mobileLyricsMode" type="button" data-label="player.lyrics" aria-label="歌词" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></svg>
+            </button>
+            <button class="mobile-mode-button" id="mobileSequenceMode" type="button" data-label="player.sequenceMode" aria-label="顺序播放" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m16 14 3 3-3 3"/></svg>
             </button>
           </div>
 
           <div class="now-playing-message-mobile" id="mobileMessagePanel" aria-hidden="true">
             <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
             <div class="now-playing-message-mobile-scroll"><p id="expandedNoteMobile">等待把属于我们的这首歌放进来</p></div>
+          </div>
+
+          <div class="now-playing-lyrics-mobile" id="mobileLyricsPanel" aria-hidden="true">
+            <div class="lyrics-scroll" id="mobileLyrics"><p class="lyrics-status" data-copy="player.lyricsLoading">正在加载歌词…</p></div>
           </div>
 
           <div class="now-playing-progress">
@@ -198,14 +205,22 @@
             <button class="now-playing-transport" id="expandedPreviousTrack" type="button" data-label="player.previous" aria-label="上一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button>
             <button class="now-playing-play" id="expandedPlayPause" type="button" data-label="player.play" aria-label="播放"><span id="expandedPlayIcon" aria-hidden="true">▶</span></button>
             <button class="now-playing-transport" id="expandedNextTrack" type="button" data-label="player.next" aria-label="下一首"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button>
-            <button class="now-playing-mode desktop-mode-button" id="desktopRepeatMode" type="button" data-label="player.repeatMode" aria-label="循环播放" aria-pressed="false">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l3 3-3 3"/><path d="M17 17H7l-3-3 3-3"/></svg>
+            <button class="now-playing-mode desktop-mode-button" id="desktopSequenceMode" type="button" data-label="player.sequenceMode" aria-label="顺序播放" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m16 14 3 3-3 3"/></svg>
             </button>
           </div>
         </div>
-        <div class="now-playing-message">
-          <p class="now-playing-message-label" data-copy="player.messageLabel">想对你说</p>
-          <div class="now-playing-message-scroll"><p id="expandedNote">等待把属于我们的这首歌放进来</p></div>
+        <div class="now-playing-side">
+          <div class="now-playing-side-tabs" role="tablist" aria-label="文字内容">
+            <button class="now-playing-side-tab active" id="desktopMessageTab" type="button" role="tab" aria-selected="true" aria-controls="desktopMessagePane" data-copy="player.messageLabel">想对你说</button>
+            <button class="now-playing-side-tab" id="desktopLyricsTab" type="button" role="tab" aria-selected="false" aria-controls="desktopLyricsPane" data-copy="player.lyrics">歌词</button>
+          </div>
+          <div class="now-playing-side-pane active" id="desktopMessagePane" role="tabpanel" aria-labelledby="desktopMessageTab">
+            <div class="now-playing-message-scroll"><p id="expandedNote">等待把属于我们的这首歌放进来</p></div>
+          </div>
+          <div class="now-playing-side-pane" id="desktopLyricsPane" role="tabpanel" aria-labelledby="desktopLyricsTab" hidden>
+            <div class="lyrics-scroll desktop-lyrics-scroll" id="desktopLyrics"><p class="lyrics-status" data-copy="player.lyricsLoading">正在加载歌词…</p></div>
+          </div>
         </div>
       </div>
     </div>
