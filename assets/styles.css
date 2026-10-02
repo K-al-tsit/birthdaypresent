@@ -1269,10 +1269,13 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
     margin: .4rem 0 .5rem;
     align-self: center;
   }
+  .now-playing.message-mode .now-playing-stage {
+    overflow: visible;
+  }
   .now-playing.message-mode .now-playing-artwork,
   .now-playing.message-mode .now-playing-meta {
     position: relative;
-    top: -.55rem;
+    top: calc(-1 * clamp(2.75rem, 7dvh, 4.5rem));
   }
   .now-playing.message-mode .now-playing-meta h2,
   .now-playing.lyrics-mode .now-playing-meta h2 {
