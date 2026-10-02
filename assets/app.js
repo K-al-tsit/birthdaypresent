@@ -34,6 +34,7 @@ let scrubbing = false;
 let expandedScrubbing = false;
 let motionEnabled = false;
 let playerTransitionToken = 0;
+let audioFadeToken = 0;
 let shuffleEnabled = false;
 let mobileDetailMode = null;
 let desktopSideMode = "message";
@@ -548,18 +549,53 @@ function expandPlayerFromCard(card) {
     window.setTimeout(cleanup, 170);
   }, 520);
 }
-function playCurrent() {
+function fadeAudioVolume(target, duration, version = selectionVersion) {
+  const token = ++audioFadeToken;
+  const start = audio.volume;
+  const change = target - start;
+  if (duration <= 0 || Math.abs(change) < 0.001) {
+    audio.volume = target;
+    return Promise.resolve(true);
+  }
+  return new Promise((resolve) => {
+    const started = performance.now();
+    const step = (now) => {
+      if (token !== audioFadeToken || version !== selectionVersion) {
+        resolve(false);
+        return;
+      }
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = progress * progress * (3 - 2 * progress);
+      audio.volume = Math.max(0, Math.min(1, start + change * eased));
+      if (progress < 1) requestAnimationFrame(step);
+      else resolve(true);
+    };
+    requestAnimationFrame(step);
+  });
+}
+function playCurrent({ fadeIn = false } = {}) {
   if (!tracks[activeIndex]?.src) { showToast(text("messages.emptyAudio")); return; }
   const version = selectionVersion;
-  audio.play().catch((error) => {
+  if (fadeIn) audio.volume = 0;
+  else if (audio.volume < 0.999) audio.volume = 1;
+  audio.play().then(() => {
+    if (fadeIn && version === selectionVersion) fadeAudioVolume(1, 120, version);
+  }).catch((error) => {
     if (version !== selectionVersion || error.name === "AbortError") return;
+    audio.volume = 1;
     setPlaying(false);
     showToast(text(error.name === "NotAllowedError" ? "messages.blocked" : "messages.failed"));
   });
 }
-function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
+async function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
   if (!tracks.length) return;
+  const wasPlaying = !audio.paused && !audio.ended && Boolean(audio.getAttribute("src"));
   selectionVersion += 1;
+  const version = selectionVersion;
+  if (wasPlaying) {
+    await fadeAudioVolume(0, 90, version);
+    if (version !== selectionVersion) return;
+  }
   audio.pause();
   activeIndex = (index + tracks.length) % tracks.length;
   const track = tracks[activeIndex];
@@ -598,8 +634,11 @@ function selectTrack(index, { autoplay = false, notify = true, expanded = true }
   loadPlayerCover(track, selectionVersion);
   loadCardCover(activeIndex);
   loadLyrics(track, selectionVersion);
-  if (track.src && autoplay) playCurrent();
-  else if (!track.src && notify) showToast(text("messages.emptySelection", { no: track.no }));
+  if (track.src && autoplay) playCurrent({ fadeIn: true });
+  else {
+    audio.volume = 1;
+    if (!track.src && notify) showToast(text("messages.emptySelection", { no: track.no }));
+  }
 }
 tracks.forEach((track, index) => {
   const card = document.createElement("button");
