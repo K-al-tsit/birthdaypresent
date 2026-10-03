@@ -1931,3 +1931,125 @@ body.sound-on .album-cover {
 .mini-expand-icon {
   display: none !important;
 }
+
+
+/* 2026-10-03 · match the approved Figma album artwork */
+.album-cover {
+  container-type: inline-size;
+  border-radius: 1rem;
+}
+.album-cover > img {
+  object-position: center center;
+  filter: none;
+}
+.album-cover::after {
+  display: block !important;
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / .34) 0%, rgb(0 0 0 / 0) 26.5625%),
+    linear-gradient(to top, rgb(0 0 0 / .62) 0%, rgb(0 0 0 / 0) 42.1875%),
+    rgb(9 17 31 / .12) !important;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .08);
+}
+:root[data-theme="dusk"] .album-cover::after {
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / .34) 0%, rgb(0 0 0 / 0) 26.5625%),
+    linear-gradient(to top, rgb(0 0 0 / .62) 0%, rgb(0 0 0 / 0) 42.1875%),
+    rgb(9 17 31 / .12) !important;
+}
+.album-print {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  color: #fff;
+  font-family: Inter, "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  text-shadow: none;
+}
+.album-cover-brand,
+.album-cover-date,
+.album-number,
+.album-title,
+.album-cover-meta {
+  position: absolute;
+  display: block;
+  margin: 0;
+  white-space: nowrap;
+}
+.album-cover-brand {
+  left: 6.5625cqw;
+  top: 5.9375cqw;
+  color: rgb(255 255 255 / .94);
+  font-size: 2.03125cqw;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: .34375cqw;
+}
+.album-cover-date {
+  right: 10.15625cqw;
+  top: 6.25cqw;
+  color: rgb(255 255 255 / .78);
+  font-size: 1.71875cqw;
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: .25cqw;
+  text-align: right;
+}
+.album-number {
+  left: 5.9375cqw;
+  top: 66.25cqw;
+  align-self: auto;
+  color: rgb(255 255 255 / .98);
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  font-size: 19.375cqw;
+  font-weight: 300;
+  line-height: .98;
+  letter-spacing: -.703125cqw;
+  text-shadow: none;
+}
+.album-title {
+  left: 7.34375cqw;
+  top: 88.4375cqw;
+  align-self: auto;
+  color: rgb(255 255 255 / .95);
+  font-size: 2.1875cqw;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .40625cqw;
+  text-transform: uppercase;
+}
+.album-cover-meta {
+  right: 11.09375cqw;
+  top: 89.6875cqw;
+  color: rgb(255 255 255 / .68);
+  font-size: 1.5625cqw;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .234375cqw;
+  text-align: right;
+}
+.album-info { display: none !important; }
+.album-caption-line {
+  width: min(31rem, 100%);
+  margin: 1rem 0 0 auto;
+  color: rgb(189 204 227 / .74);
+  font-family: Inter, "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  font-size: .6875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+}
+@media (max-width: 850px) {
+  .album-caption-line {
+    width: min(32rem, 86vw);
+    margin-inline: auto;
+  }
+}
+@media (max-width: 560px) {
+  .album-caption-line {
+    width: min(21.5rem, 86vw);
+    margin-top: .85rem;
+    font-size: .625rem;
+    letter-spacing: .085rem;
+  }
+}
