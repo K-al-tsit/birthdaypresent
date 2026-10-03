@@ -1416,14 +1416,14 @@ body.sound-on .album-cover { animation: album-float-theme var(--album-float-dura
 }
 .hero-scroll-cue:hover { color: var(--text); transform: translateY(1px); }
 .hero-scroll-cue:hover::after { transform: translateY(3px); }
-.track-card {
+.track-card:not(.player-card-transition) {
   transition:
     transform var(--track-hover-duration) ease,
     border-color var(--track-hover-duration) ease,
     background var(--track-hover-duration) ease,
     box-shadow var(--track-hover-duration) ease;
 }
-.track-card:hover { transform: translateY(var(--track-hover-lift)); }
+.track-card:not(.player-card-transition):hover { transform: translateY(var(--track-hover-lift)); }
 
 .story {
   position: relative;
@@ -1642,4 +1642,18 @@ button.timeline-point { cursor: pointer; appearance: none; }
 }
 @media (min-width: 360px) and (max-width: 460px) {
   .track-card { min-height: 8.9rem; }
+}
+
+
+/* Keep the card-to-player FLIP morph independent from ordinary track-card hover transitions. */
+.player-card-transition {
+  transition:
+    left .52s cubic-bezier(.22,.78,.2,1),
+    top .52s cubic-bezier(.22,.78,.2,1),
+    width .52s cubic-bezier(.22,.78,.2,1),
+    height .52s cubic-bezier(.22,.78,.2,1),
+    border-radius .52s cubic-bezier(.22,.78,.2,1),
+    border-color .4s ease,
+    background .4s ease,
+    opacity .16s ease !important;
 }
