@@ -517,6 +517,7 @@ function expandPlayerFromCard(card) {
   document.body.append(ghost);
   card.classList.add("transition-source");
   document.body.classList.add("player-transitioning");
+  setPlayerMode(true, { focus: false });
 
   const cleanup = () => {
     if (token !== playerTransitionToken) return;
@@ -539,14 +540,8 @@ function expandPlayerFromCard(card) {
 
   window.setTimeout(() => {
     if (token !== playerTransitionToken) return;
-    setPlayerMode(true, { focus: false });
-  }, 250);
-
-  window.setTimeout(() => {
-    if (token !== playerTransitionToken) return;
-    setPlayerMode(true, { focus: false });
     ghost.classList.add("is-handoff");
-    window.setTimeout(cleanup, 170);
+    window.setTimeout(cleanup, 150);
   }, 520);
 }
 function fadeAudioVolume(target, duration, version = selectionVersion) {
@@ -783,12 +778,11 @@ $("themeSelect").addEventListener("change", (event) => window.SiteTheme.setMode(
 const mobileSettingsToggle = $("mobileSettingsToggle");
 const headerControls = $("headerControls");
 const themeGlyph = $("themeGlyph");
-const mobileLayout = window.matchMedia("(max-width: 560px)");
 function syncThemeGlyph() {
   themeGlyph.textContent = document.documentElement.dataset.theme === "dusk" ? "◐" : "☼";
 }
 function setMobileSettingsOpen(open) {
-  const next = Boolean(open && mobileLayout.matches);
+  const next = Boolean(open);
   headerControls.classList.toggle("is-open", next);
   mobileSettingsToggle.setAttribute("aria-expanded", String(next));
 }
@@ -808,9 +802,6 @@ document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape" || !headerControls.classList.contains("is-open")) return;
   setMobileSettingsOpen(false);
   mobileSettingsToggle.focus();
-});
-mobileLayout.addEventListener("change", (event) => {
-  if (!event.matches) setMobileSettingsOpen(false);
 });
 new MutationObserver(syncThemeGlyph).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 syncThemeGlyph();
