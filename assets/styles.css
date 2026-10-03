@@ -2298,3 +2298,10 @@ body.sound-on .album-vinyl {
     font-size: .86rem;
   }
 }
+
+
+/* Prevent the browser from preserving the previous song's lyric scroll anchor. */
+.lyrics-scroll,
+.now-playing-lyrics-mobile .lyrics-scroll {
+  overflow-anchor: none;
+}
