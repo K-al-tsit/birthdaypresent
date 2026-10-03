@@ -283,14 +283,26 @@ async function getLyrics(track) {
   }
   return lyricsCache.get(url);
 }
+function resetLyricsScroll(container) {
+  if (!container) return;
+  const previousBehavior = container.style.scrollBehavior;
+  container.style.scrollBehavior = "auto";
+  container.scrollTop = 0;
+  requestAnimationFrame(() => {
+    container.scrollTop = 0;
+    requestAnimationFrame(() => {
+      container.style.scrollBehavior = previousBehavior;
+    });
+  });
+}
 function renderLyrics(container, entries, status = "") {
   container.replaceChildren();
-  container.scrollTop = 0;
   if (status) {
     const p = document.createElement("p");
     p.className = "lyrics-status";
     p.textContent = status;
     container.append(p);
+    resetLyricsScroll(container);
     return;
   }
   const fragment = document.createDocumentFragment();
@@ -302,6 +314,7 @@ function renderLyrics(container, entries, status = "") {
     fragment.append(p);
   });
   container.append(fragment);
+  resetLyricsScroll(container);
 }
 function setLyricsStatus(message) {
   renderLyrics($("desktopLyrics"), [], message);
@@ -626,11 +639,15 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   const wasPlaying = !audio.paused && !audio.ended && Boolean(audio.getAttribute("src"));
   selectionVersion += 1;
   const version = selectionVersion;
+  currentLyrics = [];
+  activeLyricIndex = -1;
+  setLyricsStatus(text("player.lyricsLoading"));
   if (wasPlaying) {
     await fadeAudioVolume(0, 90, version);
     if (version !== selectionVersion) return;
   }
   audio.pause();
+  try { audio.currentTime = 0; } catch (_) {}
   activeIndex = (index + tracks.length) % tracks.length;
   const track = tracks[activeIndex];
   audio.removeAttribute("src");
@@ -663,7 +680,6 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   });
   if (track.src) audio.src = track.src;
   audio.load();
-  try { audio.currentTime = 0; } catch (_) {}
   setPlaying(false);
   updateMediaMetadata(track);
   loadPlayerCover(track, selectionVersion);
