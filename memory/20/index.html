@@ -354,6 +354,51 @@
   }
 </style>
 
+<style>
+  .return-21-link {
+    position: absolute;
+    left: max(1rem, env(safe-area-inset-left));
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    color: #ff85a2;
+    font-size: .82rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: .02em;
+  }
+  .return-21-link:hover { opacity: .72; }
+  .archive-yearline {
+    width: min(760px, calc(100% - 2rem));
+    margin: 1rem auto 4rem;
+    padding: 2rem 1rem;
+    display: grid;
+    grid-template-columns: auto minmax(4rem, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    color: #ff85a2;
+  }
+  .archive-yearline .archive-line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,133,162,.28), rgba(255,133,162,.78));
+  }
+  .archive-yearline .archive-year { font-weight: 700; text-decoration: none; }
+  .archive-yearline .archive-year small {
+    display: block;
+    margin-top: .25rem;
+    color: rgba(255,133,162,.68);
+    font-size: .68rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+  }
+  @media (max-width: 520px) {
+    .return-21-link span { display: none; }
+    .archive-yearline { grid-template-columns: auto minmax(2rem, 1fr) auto; padding-inline: 0; }
+  }
+</style>
 </head>
 <body data-archive-self-contained="true" class="font-main text-gray-800 overflow-x-hidden">
     <!-- 背景图片容器 -->
@@ -366,6 +411,7 @@
 
         <!-- 导航栏 -->
         <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
+            <a href="../../" class="return-21-link" aria-label="回到21岁页面">← <span>回到21岁</span></a>
             <div class="container mx-auto px-4 py-3 flex justify-center">
                 <ul class="flex space-x-6 text-love-pink">
                     <li><a href="#home" class="hover:text-love-pink/80 transition-colors duration-300"><i class="fa fa-home mr-1"></i>首页</a></li>
@@ -504,6 +550,15 @@
                         </div>
                     </div>
         </div> <!-- 中间内容容器结束 -->
+        
+
+        <section class="archive-yearline" aria-label="年份时间线">
+            <span class="archive-year">20岁<small>去年</small></span>
+            <span class="archive-line" aria-hidden="true"></span>
+            <a class="archive-year" href="../../">21岁<small>回到今年</small></a>
+        </section>
+        
+
         
 
         <!-- 页脚 -->

@@ -45,10 +45,7 @@
           <span class="accent" data-copy="hero.titleSecond">21 首歌。</span>
         </h1>
         <p class="hero-lead" data-copy="hero.lead">有些话很难一次说完，所以我把它们藏进我们一起听过、唱过、记住过的歌里。</p>
-        <div class="hero-actions">
-          <a class="primary-btn" href="#playlist" data-copy="hero.start">开始听</a>
-          <button class="ghost-btn" id="shuffleBtn" type="button" data-copy="hero.shuffle">随机打开一首</button>
-        </div>
+        <a class="hero-scroll-cue" href="#story" data-copy="hero.continue">继续往下</a>
       </div>
 
       <div class="hero-album" aria-hidden="true">
@@ -77,6 +74,20 @@
       </div>
     </section>
 
+    <section class="story" id="story">
+      <div class="story-rule" aria-hidden="true"></div>
+      <p class="section-kicker" data-copy="story.kicker">BEFORE THE MUSIC</p>
+      <div class="story-grid">
+        <h2 data-copy="story.title">想把这一年，
+留在你二十一岁这一页里。</h2>
+        <div class="story-copy">
+          <p data-copy="story.bodyFirst">去年我把想说的话写成了一整个网页。今年我更想把它们留在歌里。</p>
+          <p data-copy="story.bodySecond">这里有我们一起听过的、有一听见就会想到你的，也有些只是在某个时刻忽然觉得很适合放在这里。它们不一定都在讲爱情，却刚好拼成了我眼里的这一年。</p>
+          <p class="story-signature" data-copy="story.signature">给 21 岁的禾呈</p>
+        </div>
+      </div>
+    </section>
+
     <section class="playlist-section" id="playlist">
       <div class="section-head">
         <div>
@@ -89,27 +100,18 @@
       <div class="track-grid" id="trackGrid" aria-live="polite"></div>
     </section>
 
-    <section class="letter">
-      <div class="letter-card">
-        <p class="section-kicker" data-copy="letter.kicker">ONE MORE THING</p>
-        <h2 data-copy="letter.title">今年先不把所有话都写在这里。</h2>
-        <p data-copy="letter.body">你听到最后一首的时候，大概就会知道我想说什么了。</p>
-        <div class="signature">
-          <span data-copy="letter.signature">— 21</span>
-        </div>
-      </div>
-    </section>
-
     <section class="timeline" aria-label="年份" data-label="timeline.label">
-      <div class="timeline-line"></div>
-      <button class="year year-past" id="memoryTrigger" type="button" aria-label="20岁" data-label="timeline.pastLabel">
-        <span data-copy="timeline.past">20</span>
-        <small data-copy="timeline.pastCaption">last year</small>
+      <button class="timeline-point timeline-point-past" id="memoryTrigger" type="button" aria-label="20岁" data-label="timeline.pastLabel">
+        <span class="timeline-age" data-copy="timeline.past">20岁</span>
+        <small data-copy="timeline.pastCaption">去年的页面</small>
       </button>
-      <div class="timeline-arrow">→</div>
-      <div class="year year-now">
-        <span data-copy="timeline.now">21</span>
-        <small data-copy="timeline.nowCaption">now</small>
+      <div class="timeline-connector" aria-hidden="true">
+        <span class="timeline-line"></span>
+        <span class="timeline-arrow">→</span>
+      </div>
+      <div class="timeline-point timeline-point-now" aria-current="page">
+        <span class="timeline-age" data-copy="timeline.now">21岁</span>
+        <small data-copy="timeline.nowCaption">今年的 21 首歌</small>
       </div>
     </section>
   </main>

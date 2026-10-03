@@ -1,21 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">
-<title>晴空、白云与海边栈桥</title>
+<title>晴空、层云、海面与远处栈桥</title>
+<desc>一幅原创的夏日海边场景：高空蓝、薄云、远方海雾与右侧延伸入海的栈桥。</desc>
 <defs>
-<linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0854d5"/><stop offset=".58" stop-color="#27a9f5"/><stop offset="1" stop-color="#bdeeff"/></linearGradient>
-<linearGradient id="sea" x2="0" y2="1"><stop stop-color="#137fdf"/><stop offset="1" stop-color="#0846ab"/></linearGradient>
-<linearGradient id="light"><stop stop-color="#f4fbff"/><stop offset=".35" stop-color="#f4fbff" stop-opacity=".94"/><stop offset=".65" stop-color="#f4fbff" stop-opacity=".05"/><stop offset="1" stop-color="#f4fbff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="sky" x1="800" y1="0" x2="800" y2="700" gradientUnits="userSpaceOnUse"><stop stop-color="#2F79DE"/><stop offset=".43" stop-color="#69BAEE"/><stop offset=".76" stop-color="#B7E7FA"/><stop offset="1" stop-color="#EEF9FF"/></linearGradient>
+  <linearGradient id="sea" x1="800" y1="668" x2="800" y2="1000" gradientUnits="userSpaceOnUse"><stop stop-color="#68C2EA"/><stop offset=".36" stop-color="#3195D2"/><stop offset="1" stop-color="#155B9E"/></linearGradient>
+  <linearGradient id="horizonGlow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#F5FCFF" stop-opacity=".08"/><stop offset=".52" stop-color="#FFFFFF" stop-opacity=".72"/><stop offset="1" stop-color="#E8F8FF" stop-opacity=".18"/></linearGradient>
+  <linearGradient id="veil" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#F7FCFF" stop-opacity=".74"/><stop offset=".38" stop-color="#F7FCFF" stop-opacity=".22"/><stop offset=".72" stop-color="#F7FCFF" stop-opacity="0"/></linearGradient>
+  <filter id="far" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
 </defs>
-<path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
-<path fill="#fff" d="M724 263c39-24 68-21 101-20-1-31 18-53 51-55 6-37 40-60 75-48 27-34 78-30 103 8 44-7 67 15 74 44 41-3 67 10 84 31 53 0 84 14 111 28-184 6-356 24-599 12Z"/>
-<path fill="#e6f6ff" d="M790 265c162-9 290-17 451-16-41 17-115 15-168 21-107 5-196 9-283-5Z"/>
-<path fill="#fff" d="M1162 436c35-22 62-23 91-22 6-28 25-40 48-39 9-40 47-57 81-36 30-13 55-3 69 27 27-7 50 3 65 24 36-2 73 11 101 33-131 11-297 19-455 13Z"/>
-<path fill="#eafaff" opacity=".75" d="M453 497c176-18 323-10 453-5-121 14-298 23-453 5Z"/>
-<path fill="url(#sea)" d="M0 683h1600v317H0z"/>
-<path stroke="#b8f0ff" stroke-width="4" d="M0 685h1600"/>
-<g stroke="#78d4ff" opacity=".65"><path d="M739 718h136m107 7h221m-95 51h171m-391 45h163m246-78h159m-481 147h203m-52-45h189"/></g>
-<g stroke="#0e5fb2" stroke-width="3" stroke-linecap="round"><path d="m1244 154 13-6 14 6m52 38 9-4 9 4"/></g>
-<path fill="#173978" d="m1305 823 295 87v39l-327-105z"/>
-<path fill="#092656" d="m1287 843 313 103v23l-313-109zM1368 866h12v134h-12zM1532 920h13v80h-13z"/>
-<g stroke="#6589bc" stroke-width="2"><path d="m1321 833 27 24m20-10 26 24m19-10 24 24m20-11 27 26m18-11 23 25m20-13 28 27"/></g>
-<path fill="url(#light)" d="M0 0h1600v1000H0z"/>
+<rect width="1600" height="1000" fill="url(#sky)"/>
+<g opacity=".42" filter="url(#far)">
+  <path fill="#E8F7FF" d="M745 154c72-43 170-47 247-8 38-28 100-28 137 4 87-14 182 7 254 59-202 11-445 17-638-2-46-5-55-31 0-53Z"/>
+  <path fill="#EAF8FF" d="M1030 348c62-35 125-29 174-5 33-20 79-18 106 7 65-4 135 14 190 52-143 9-320 11-444-1-54-5-71-27-26-53Z"/>
+</g>
+<g opacity=".95">
+  <path fill="#FFFFFF" d="M835 208c42-31 90-38 134-20 27-49 94-63 143-29 38-27 94-22 124 12 41-12 93 0 119 35 57-4 116 15 159 55-194 17-449 18-635 3-59-5-72-31-24-56Z"/>
+  <path fill="#DDF3FE" opacity=".82" d="M853 258c182 12 403 5 586-6-63 34-173 46-290 45-126-1-226-15-296-39Z"/>
+</g>
+<g opacity=".72">
+  <path fill="#FFFFFF" d="M1160 454c34-27 78-32 113-12 22-38 75-45 110-16 27-18 68-14 90 11 45-7 91 8 127 42-131 15-293 16-417 5-45-4-57-17-23-30Z"/>
+  <path fill="#E2F5FE" d="M541 515c91-25 210-29 303-3 48-12 104-9 145 8-149 19-319 17-448-5Z"/>
+</g>
+<rect y="641" width="1600" height="55" fill="url(#horizonGlow)" opacity=".62"/>
+<path fill="url(#sea)" d="M0 676h1600v324H0z"/>
+<path stroke="#DDF8FF" stroke-width="3" opacity=".85" d="M0 677h1600"/>
+<g stroke-linecap="round">
+  <g stroke="#BFEAFF" opacity=".72"><path d="M647 716h173" stroke-width="3"/><path d="M920 735h242" stroke-width="3"/><path d="M1052 780h188" stroke-width="2.5"/><path d="M762 836h214" stroke-width="2.5"/><path d="M1216 858h174" stroke-width="2.5"/><path d="M952 913h266" stroke-width="2"/></g>
+  <g stroke="#1B74B4" opacity=".42"><path d="M119 741h305"/><path d="M402 800h231"/><path d="M122 886h324"/><path d="M488 945h356"/></g>
+</g>
+<g opacity=".62" stroke="#225F9C" stroke-width="3" stroke-linecap="round"><path d="m1220 150 13-7 13 7"/><path d="m1297 182 10-5 10 5"/></g>
+<g>
+  <path fill="#214E7E" d="m1281 818 319 90v39l-351-104z"/>
+  <path fill="#12385F" d="m1250 843 350 103v24l-350-110z"/>
+  <path fill="#0D3158" d="M1336 864h13v136h-13zM1518 917h14v83h-14z"/>
+  <g stroke="#7196B5" stroke-width="2" opacity=".8"><path d="m1293 829 30 25m20-13 30 27m20-12 30 27m19-11 31 29m19-12 29 29m20-13 31 29"/></g>
+</g>
+<rect width="1600" height="1000" fill="url(#veil)"/>
 </svg>

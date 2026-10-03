@@ -22,8 +22,7 @@ window.SITE_CONTENT = {
       "titleFirst": "21 岁，",
       "titleSecond": "21 首歌。",
       "lead": "有些话很难一次说完，所以我把它们藏进我们一起听过、唱过、记住过的歌里。",
-      "start": "开始听",
-      "shuffle": "随机打开一首",
+      "continue": "继续往下",
       "albumNumber": "21",
       "albumLabel": "songs for you",
       "albumMeta": "OCTOBER · 2026",
@@ -41,19 +40,20 @@ window.SITE_CONTENT = {
       "prefix": "TRACK",
       "select": "打开第 {no} 首歌"
     },
-    "letter": {
-      "kicker": "ONE MORE THING",
-      "title": "今年先不把所有话都写在这里。",
-      "body": "你听到最后一首的时候，大概就会知道我想说什么了。",
-      "signature": "— 21"
+    "story": {
+      "kicker": "BEFORE THE MUSIC",
+      "title": "想把这一年，\n留在你二十一岁这一页里。",
+      "bodyFirst": "去年我把想说的话写成了一整个网页。今年我更想把它们留在歌里。",
+      "bodySecond": "这里有我们一起听过的、有一听见就会想到你的，也有些只是在某个时刻忽然觉得很适合放在这里。它们不一定都在讲爱情，却刚好拼成了我眼里的这一年。你可以从第一首听到最后一首，也可以随便停在某一首。只希望以后再听见其中任何一段旋律时，你会记得：二十一岁的生日，有人很认真地为你挑过这二十一首歌。",
+      "signature": "给 21 岁的禾呈"
     },
     "timeline": {
       "label": "年份",
-      "past": "20",
-      "pastLabel": "20岁",
-      "pastCaption": "last year",
-      "now": "21",
-      "nowCaption": "now"
+      "past": "20岁",
+      "pastLabel": "20岁 · 去年的页面",
+      "pastCaption": "去年的页面",
+      "now": "21岁",
+      "nowCaption": "今年的 21 首歌"
     },
     "footer": {
       "text": "made for 禾呈 · 2026"

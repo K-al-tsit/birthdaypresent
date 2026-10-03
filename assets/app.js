@@ -708,12 +708,6 @@ $("desktopMessageTab").addEventListener("click", () => setDesktopSideMode("messa
 $("desktopLyricsTab").addEventListener("click", () => setDesktopSideMode("lyrics"));
 syncPlaybackModes();
 setDesktopSideMode("message");
-$("shuffleBtn").addEventListener("click", () => {
-  if (!tracks.length) return;
-  const next = activeIndex < 0 ? Math.floor(Math.random() * tracks.length) : (activeIndex + 1 + Math.floor(Math.random() * Math.max(1, tracks.length - 1))) % tracks.length;
-  selectTrack(next, { autoplay: true, expanded: true });
-  $("playlist").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
-});
 audio.addEventListener("play", () => setPlaying(true));
 audio.addEventListener("pause", () => setPlaying(false));
 audio.addEventListener("loadedmetadata", updateProgress);
