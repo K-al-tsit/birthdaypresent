@@ -28,7 +28,6 @@
   <g stroke="#BFEAFF" opacity=".72"><path d="M647 716h173" stroke-width="3"/><path d="M920 735h242" stroke-width="3"/><path d="M1052 780h188" stroke-width="2.5"/><path d="M762 836h214" stroke-width="2.5"/><path d="M1216 858h174" stroke-width="2.5"/><path d="M952 913h266" stroke-width="2"/></g>
   <g stroke="#1B74B4" opacity=".42"><path d="M119 741h305"/><path d="M402 800h231"/><path d="M122 886h324"/><path d="M488 945h356"/></g>
 </g>
-<g opacity=".62" stroke="#225F9C" stroke-width="3" stroke-linecap="round"><path d="m1220 150 13-7 13 7"/><path d="m1297 182 10-5 10 5"/></g>
 <g>
   <path fill="#214E7E" d="m1281 818 319 90v39l-351-104z"/>
   <path fill="#12385F" d="m1250 843 350 103v24l-350-110z"/>
