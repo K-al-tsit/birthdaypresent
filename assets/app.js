@@ -285,6 +285,7 @@ async function getLyrics(track) {
 }
 function renderLyrics(container, entries, status = "") {
   container.replaceChildren();
+  container.scrollTop = 0;
   if (status) {
     const p = document.createElement("p");
     p.className = "lyrics-status";
@@ -357,7 +358,7 @@ async function loadLyrics(track, version) {
   }
   renderLyrics($("desktopLyrics"), entries);
   renderLyrics($("mobileLyrics"), entries);
-  updateLyrics(audio.currentTime, true);
+  updateLyrics(0, true);
 }
 function updateMediaMetadata(track, coverUrl = null) {
   if (!("mediaSession" in navigator) || !("MediaMetadata" in window)) return;
@@ -662,6 +663,7 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   });
   if (track.src) audio.src = track.src;
   audio.load();
+  try { audio.currentTime = 0; } catch (_) {}
   setPlaying(false);
   updateMediaMetadata(track);
   loadPlayerCover(track, selectionVersion);
