@@ -41,6 +41,89 @@ let currentLyrics = [];
 let activeLyricIndex = -1;
 const coverCache = new Map();
 const lyricsCache = new Map();
+
+const fallbackArtworkPalette = {
+  dark: [18, 27, 53],
+  mid: [88, 67, 118],
+  warm: [207, 105, 126],
+  light: [236, 196, 188]
+};
+function averageArtworkColors(items, fallback) {
+  if (!items.length) return fallback;
+  const total = items.reduce((sum, pixel) => [
+    sum[0] + pixel.r,
+    sum[1] + pixel.g,
+    sum[2] + pixel.b
+  ], [0, 0, 0]);
+  return total.map((value) => Math.round(value / items.length));
+}
+function applyArtworkPalette(palette) {
+  const root = document.documentElement;
+  root.style.setProperty("--art-dark-rgb", palette.dark.join(" "));
+  root.style.setProperty("--art-mid-rgb", palette.mid.join(" "));
+  root.style.setProperty("--art-warm-rgb", palette.warm.join(" "));
+  root.style.setProperty("--art-light-rgb", palette.light.join(" "));
+}
+async function extractArtworkPalette(image, isCurrent = () => true) {
+  if (!image) return;
+  try {
+    if (!image.complete || !image.naturalWidth) await image.decode();
+    if (!isCurrent() || !image.naturalWidth) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 32;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) return;
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    const pixels = [];
+    for (let offset = 0; offset < data.length; offset += 4) {
+      if (data[offset + 3] < 220) continue;
+      const r = data[offset];
+      const g = data[offset + 1];
+      const b = data[offset + 2];
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const saturation = max - min;
+      const luminance = .2126 * r + .7152 * g + .0722 * b;
+      if (luminance < 18 || luminance > 242) continue;
+      pixels.push({
+        r, g, b,
+        saturation,
+        luminance,
+        warm: (r - b) + .6 * (r - g) + saturation
+      });
+    }
+    if (!pixels.length || !isCurrent()) return;
+    pixels.sort((a, b) => a.luminance - b.luminance);
+    const darkStart = Math.floor(pixels.length * .08);
+    const darkEnd = Math.max(darkStart + 8, Math.floor(pixels.length * .3));
+    const dark = averageArtworkColors(pixels.slice(darkStart, darkEnd), fallbackArtworkPalette.dark);
+    const colorful = pixels
+      .filter((pixel) => pixel.luminance > 52 && pixel.luminance < 205)
+      .sort((a, b) => b.saturation - a.saturation);
+    const mid = averageArtworkColors(colorful.slice(0, Math.max(10, Math.floor(pixels.length * .1))), fallbackArtworkPalette.mid);
+    const warmPixels = pixels
+      .filter((pixel) => pixel.luminance > 58 && pixel.luminance < 225 && pixel.r > pixel.b * 1.04)
+      .sort((a, b) => b.warm - a.warm);
+    const warm = averageArtworkColors(warmPixels.slice(0, Math.max(8, Math.floor(pixels.length * .07))), fallbackArtworkPalette.warm);
+    const lightPixels = pixels
+      .filter((pixel) => pixel.luminance > 145)
+      .sort((a, b) => b.saturation - a.saturation);
+    const light = averageArtworkColors(lightPixels.slice(0, Math.max(8, Math.floor(pixels.length * .06))), fallbackArtworkPalette.light);
+    if (isCurrent()) applyArtworkPalette({ dark, mid, warm, light });
+  } catch (error) {
+    console.debug("Artwork palette extraction unavailable", error);
+  }
+}
+function applyHeroArtworkPalette(isCurrent = () => true) {
+  return extractArtworkPalette($("heroAlbumImage"), isCurrent);
+}
+const heroAlbumImage = $("heroAlbumImage");
+if (heroAlbumImage) {
+  if (heroAlbumImage.complete && heroAlbumImage.naturalWidth) applyHeroArtworkPalette();
+  else heroAlbumImage.addEventListener("load", () => applyHeroArtworkPalette(), { once: true });
+}
 const coverObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries, observer) => {
   entries.forEach((entry) => {
     if (!entry.isIntersecting) return;
@@ -291,6 +374,7 @@ async function loadPlayerCover(track, version) {
   const expandedImage = $("expandedCoverImage");
   const expandedCover = $("expandedCover");
   const backdropImage = $("expandedBackdropImage");
+  const stillCurrent = () => version === selectionVersion && tracks[activeIndex] === track;
   image.hidden = true;
   expandedImage.hidden = true;
   backdropImage.hidden = true;
@@ -300,7 +384,11 @@ async function loadPlayerCover(track, version) {
   cover.classList.remove("has-art");
   expandedCover.classList.remove("has-art");
   const coverUrl = await getCoverUrl(track);
-  if (!coverUrl || version !== selectionVersion || tracks[activeIndex] !== track) return;
+  if (!stillCurrent()) return;
+  if (!coverUrl) {
+    await applyHeroArtworkPalette(stillCurrent);
+    return;
+  }
   image.src = coverUrl;
   expandedImage.src = coverUrl;
   backdropImage.src = coverUrl;
@@ -310,6 +398,7 @@ async function loadPlayerCover(track, version) {
   cover.classList.add("has-art");
   expandedCover.classList.add("has-art");
   updateMediaMetadata(track, coverUrl);
+  await extractArtworkPalette(expandedImage, stillCurrent);
 }
 async function loadCardCover(index) {
   const track = tracks[index];
