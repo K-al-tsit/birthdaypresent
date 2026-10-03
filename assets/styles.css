@@ -2509,7 +2509,7 @@ body.sound-on .album-vinyl {
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: .04em;
-  text-align: right;
+  text-align: left;
 }
 .story-copy {
   max-width: 49rem;
