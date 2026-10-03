@@ -2480,3 +2480,11 @@ body.sound-on .album-vinyl {
     line-height: 1.98;
   }
 }
+
+
+/* 2026-10-04 · align closing signature to the right edge */
+.closing-signature {
+  display: block;
+  width: 100%;
+  text-align: right;
+}
