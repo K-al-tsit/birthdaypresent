@@ -2488,3 +2488,39 @@ body.sound-on .album-vinyl {
   width: 100%;
   text-align: right;
 }
+
+
+/* 2026-10-04 · treat the addressee like the closing signature */
+.story-grid {
+  width: min(880px, 100%);
+  margin: 0 auto;
+  display: block;
+}
+.story-address,
+.story h2.story-address {
+  position: static;
+  width: 100%;
+  max-width: none;
+  margin: 0 0 2.35rem;
+  color: var(--accent-2);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.02rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: .04em;
+  text-align: right;
+}
+.story-copy {
+  max-width: 49rem;
+  margin: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+@media (max-width: 560px) {
+  .story-address,
+  .story h2.story-address {
+    margin-bottom: 1.8rem;
+    font-size: 1rem;
+  }
+}
