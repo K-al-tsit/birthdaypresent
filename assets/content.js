@@ -24,8 +24,9 @@ window.SITE_CONTENT = {
       "lead": "有些话很难一次说完，所以我把它们藏进我们一起听过、唱过、记住过的歌里。",
       "continue": "继续往下",
       "albumNumber": "21",
-      "albumLabel": "songs for you",
-      "albumMeta": "OCTOBER · 2026",
+      "albumCoverLabel": "for H.C.",
+      "albumLabel": "For H.C. · 2026",
+      "albumMeta": "21 首歌",
       "caption": "A playlist made from our memories."
     },
     "playlist": {
