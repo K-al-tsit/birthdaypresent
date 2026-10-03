@@ -1910,3 +1910,24 @@ body.sound-on .album-cover {
   .album-stack,
   .album-info { width: min(21.5rem, 86vw); }
 }
+
+
+/* 2026-10-03 · final album cover correction */
+.album-number {
+  align-self: flex-start;
+  margin: 0;
+  transform: none;
+}
+.album-title {
+  align-self: flex-start;
+}
+.album-print {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.mini-player-open {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.mini-expand-icon {
+  display: none !important;
+}
