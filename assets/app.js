@@ -37,6 +37,7 @@ let audioFadeToken = 0;
 let shuffleEnabled = false;
 let mobileDetailMode = null;
 let desktopSideMode = "message";
+let desiredPlayerExpanded = false;
 let currentLyrics = [];
 let activeLyricIndex = -1;
 const coverCache = new Map();
@@ -455,9 +456,10 @@ function updateProgress() {
   updateLyrics(audio.currentTime);
 }
 function setPlayerMode(expanded, { focus = true } = {}) {
+  const open = Boolean(expanded);
+  desiredPlayerExpanded = open;
   if (activeIndex < 0) return;
   const nowPlaying = $("nowPlaying");
-  const open = Boolean(expanded);
   const wasOpen = document.body.classList.contains("player-expanded");
   if (open && !wasOpen) {
     resetMobileDetailMode();
@@ -619,6 +621,7 @@ function playCurrent({ fadeIn = false } = {}) {
 }
 async function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
   if (!tracks.length) return;
+  desiredPlayerExpanded = Boolean(expanded);
   const wasPlaying = !audio.paused && !audio.ended && Boolean(audio.getAttribute("src"));
   selectionVersion += 1;
   const version = selectionVersion;
@@ -652,7 +655,7 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   $("playerShell").classList.add("visible");
   $("playerShell").setAttribute("aria-hidden", "false");
   document.body.classList.add("has-player");
-  setPlayerMode(expanded, { focus: false });
+  setPlayerMode(desiredPlayerExpanded, { focus: false });
   Array.from(grid.children).forEach((card, i) => {
     card.classList.toggle("active", i === activeIndex);
     card.setAttribute("aria-pressed", String(i === activeIndex));
@@ -698,7 +701,7 @@ tracks.forEach((track, index) => {
       else if (audio.paused) playCurrent();
       else audio.pause();
     } else {
-      selectTrack(index, { autoplay: true, expanded: false });
+      selectTrack(index, { autoplay: true, expanded: true });
       expandPlayerFromCard(card);
     }
   });
