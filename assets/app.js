@@ -33,7 +33,6 @@ let selectionVersion = 0;
 let scrubbing = false;
 let expandedScrubbing = false;
 let motionEnabled = false;
-let playerTransitionToken = 0;
 let audioFadeToken = 0;
 let shuffleEnabled = false;
 let mobileDetailMode = null;
@@ -370,6 +369,12 @@ function setPlayerMode(expanded, { focus = true } = {}) {
   if (activeIndex < 0) return;
   const nowPlaying = $("nowPlaying");
   const open = Boolean(expanded);
+  const wasOpen = document.body.classList.contains("player-expanded");
+  if (open && !wasOpen) {
+    resetMobileDetailMode();
+    setDesktopSideMode("message");
+    nowPlaying.classList.remove("artwork-expanding");
+  }
   document.body.classList.toggle("player-expanded", open);
   nowPlaying.setAttribute("aria-hidden", String(!open));
   nowPlaying.inert = !open;
@@ -482,67 +487,8 @@ function randomPlayableIndex(exclude = -1) {
   if (!candidates.length) return exclude >= 0 && tracks[exclude]?.src ? exclude : -1;
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
-function expandPlayerFromCard(card) {
-  if (!card || reducedMotion.matches || document.body.classList.contains("player-transitioning")) {
-    setPlayerMode(true);
-    return;
-  }
-  const rect = card.getBoundingClientRect();
-  if (rect.width < 2 || rect.height < 2) {
-    setPlayerMode(true);
-    return;
-  }
-
-  playerTransitionToken += 1;
-  const token = playerTransitionToken;
-  const ghost = card.cloneNode(true);
-  ghost.classList.remove("active");
-  ghost.classList.add("player-card-transition");
-  ghost.removeAttribute("aria-pressed");
-  ghost.removeAttribute("aria-label");
-  ghost.removeAttribute("data-track-index");
-  ghost.setAttribute("aria-hidden", "true");
-  ghost.tabIndex = -1;
-  if ("disabled" in ghost) ghost.disabled = true;
-  ghost.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
-
-  Object.assign(ghost.style, {
-    left: rect.left + "px",
-    top: rect.top + "px",
-    width: rect.width + "px",
-    height: rect.height + "px",
-    borderRadius: getComputedStyle(card).borderRadius
-  });
-
-  document.body.append(ghost);
-  card.classList.add("transition-source");
-  document.body.classList.add("player-transitioning");
-  setPlayerMode(true, { focus: false });
-
-  const cleanup = () => {
-    if (token !== playerTransitionToken) return;
-    ghost.remove();
-    card.classList.remove("transition-source");
-    document.body.classList.remove("player-transitioning");
-  };
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      if (token !== playerTransitionToken) return;
-      ghost.classList.add("is-opening");
-      ghost.style.left = "0px";
-      ghost.style.top = "0px";
-      ghost.style.width = window.innerWidth + "px";
-      ghost.style.height = window.innerHeight + "px";
-      ghost.style.borderRadius = "0px";
-    });
-  });
-
-  window.setTimeout(() => {
-    if (token !== playerTransitionToken) return;
-    ghost.classList.add("is-handoff");
-    window.setTimeout(cleanup, 150);
-  }, 520);
+function expandPlayerFromCard() {
+  setPlayerMode(true);
 }
 function fadeAudioVolume(target, duration, version = selectionVersion) {
   const token = ++audioFadeToken;

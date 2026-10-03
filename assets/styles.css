@@ -435,56 +435,6 @@ footer {
 .progress-wrap { display: grid; grid-template-columns: 2.8rem 1fr 2.8rem; align-items: center; gap: .55rem; margin-top: .65rem; color: var(--muted); font-size: .67rem; }
 #progress { width: 100%; accent-color: var(--accent); }
 
-.player-card-transition {
-  position: fixed !important;
-  z-index: 95 !important;
-  margin: 0 !important;
-  min-height: 0 !important;
-  max-width: none !important;
-  overflow: hidden !important;
-  pointer-events: none !important;
-  cursor: default !important;
-  transform: none !important;
-  box-shadow: 0 18px 60px rgba(7, 28, 58, .2);
-  will-change: left, top, width, height, border-radius, opacity, background;
-  transition:
-    left .52s cubic-bezier(.22,.78,.2,1),
-    top .52s cubic-bezier(.22,.78,.2,1),
-    width .52s cubic-bezier(.22,.78,.2,1),
-    height .52s cubic-bezier(.22,.78,.2,1),
-    border-radius .52s cubic-bezier(.22,.78,.2,1),
-    border-color .4s ease,
-    background .4s ease,
-    opacity .16s ease;
-}
-.player-card-transition > * {
-  transition: opacity .2s ease, transform .32s cubic-bezier(.22,.78,.2,1);
-}
-.player-card-transition.is-opening {
-  border-color: transparent !important;
-  box-shadow: none;
-  opacity: .14;
-}
-.player-card-transition.is-opening > * {
-  opacity: 0;
-  transform: translateY(-8px) scale(.96);
-}
-.player-card-transition.is-handoff {
-  opacity: 0;
-}
-.track-card.transition-source {
-  opacity: .12;
-}
-body.player-transitioning {
-  overflow: hidden;
-}
-body.player-transitioning .player-shell {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-body.player-transitioning .now-playing {
-  transition-duration: .18s;
-}
 
 .mini-player-open {
   min-width: 0;
@@ -1349,7 +1299,6 @@ footer { color: var(--muted); padding-bottom: max(10rem, calc(9rem + env(safe-ar
   footer { padding-bottom: max(10.5rem, calc(9.5rem + env(safe-area-inset-bottom))); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .player-card-transition { display: none !important; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
@@ -1416,14 +1365,14 @@ body.sound-on .album-cover { animation: album-float-theme var(--album-float-dura
 }
 .hero-scroll-cue:hover { color: var(--text); transform: translateY(1px); }
 .hero-scroll-cue:hover::after { transform: translateY(3px); }
-.track-card:not(.player-card-transition) {
+.track-card {
   transition:
     transform var(--track-hover-duration) ease,
     border-color var(--track-hover-duration) ease,
     background var(--track-hover-duration) ease,
     box-shadow var(--track-hover-duration) ease;
 }
-.track-card:not(.player-card-transition):hover { transform: translateY(var(--track-hover-lift)); }
+.track-card:hover { transform: translateY(var(--track-hover-lift)); }
 
 .story {
   position: relative;
@@ -1645,20 +1594,6 @@ button.timeline-point { cursor: pointer; appearance: none; }
 }
 
 
-/* Keep the card-to-player FLIP morph independent from ordinary track-card hover transitions. */
-.player-card-transition {
-  transition:
-    left .52s cubic-bezier(.22,.78,.2,1),
-    top .52s cubic-bezier(.22,.78,.2,1),
-    width .52s cubic-bezier(.22,.78,.2,1),
-    height .52s cubic-bezier(.22,.78,.2,1),
-    border-radius .52s cubic-bezier(.22,.78,.2,1),
-    border-color .4s ease,
-    background .4s ease,
-    opacity .48s cubic-bezier(.22,.78,.2,1) !important;
-}
-
-
 /* Unified display settings control on desktop and mobile. */
 .mobile-settings-toggle {
   display: grid;
@@ -1716,4 +1651,42 @@ button.timeline-point { cursor: pointer; appearance: none; }
 }
 @media (max-width: 560px) {
   .header-controls { right: max(1rem, env(safe-area-inset-right)); }
+}
+
+
+/* Full-screen player: bottom-sheet transition from MiniPlayer to Now Playing. */
+.now-playing {
+  opacity: 1;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(0, 100%, 0);
+  border-radius: 1.65rem 1.65rem 0 0;
+  overflow: hidden;
+  will-change: transform, border-radius;
+  transition:
+    transform .48s cubic-bezier(.32,.72,0,1),
+    border-radius .34s ease,
+    visibility .48s step-end;
+}
+body.player-expanded .now-playing {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  border-radius: 0;
+  transition:
+    transform .5s cubic-bezier(.32,.72,0,1),
+    border-radius .38s ease,
+    visibility 0s step-start;
+}
+body.player-expanded .player-shell {
+  transform: translate(-50%, 135%);
+  opacity: 0;
+  transition:
+    transform .38s cubic-bezier(.32,.72,0,1),
+    opacity .2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .now-playing,
+  body.player-expanded .now-playing { transition: none !important; }
 }
