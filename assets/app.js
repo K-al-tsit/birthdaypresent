@@ -655,7 +655,7 @@ tracks.forEach((track, index) => {
   coverImage.hidden = true;
   cover.append(coverImage);
   card.append(cover);
-  [["track-no", content.copy.playlist.prefix + " " + track.no], ["track-title", track.title], ["track-subtitle", track.subtitle], ["track-arrow", "↗"]].forEach(([className, value]) => {
+  [["track-no", content.copy.playlist.prefix + " " + track.no], ["track-title", track.title], ["track-subtitle", track.subtitle], ["track-arrow", "▶"]].forEach(([className, value]) => {
     const span = document.createElement("span");
     span.className = className;
     span.textContent = value;

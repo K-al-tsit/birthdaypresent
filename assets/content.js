@@ -28,15 +28,9 @@ window.SITE_CONTENT = {
       "albumMeta": "OCTOBER · 2026",
       "caption": "A playlist made from our memories."
     },
-    "intro": {
-      "kicker": "A LITTLE ARCHIVE",
-      "title": "不是推荐歌单，\n是我们的时间线。",
-      "body": "这里的每一首歌都应该有一个原因：一起听过、一起唱过、某天突然想到你，或者只因为那一段旋律刚好属于那时的我们。"
-    },
     "playlist": {
       "kicker": "TRACKLIST",
       "title": "21 tracks",
-      "note": "点开任意一首，默认进入全屏播放器，也可以随时收起到底部。",
       "prefix": "TRACK",
       "select": "打开第 {no} 首歌"
     },
@@ -47,13 +41,17 @@ window.SITE_CONTENT = {
       "bodySecond": "这里有我们一起听过的、有一听见就会想到你的，也有些只是在某个时刻忽然觉得很适合放在这里。它们不一定都在讲爱情，却刚好拼成了我眼里的这一年。你可以从第一首听到最后一首，也可以随便停在某一首。只希望以后再听见其中任何一段旋律时，你会记得：二十一岁的生日，有人很认真地为你挑过这二十一首歌。",
       "signature": "给 21 岁的禾呈"
     },
+    "closing": {
+      "kicker": "AT THE END",
+      "title": "我最后想说的话",
+      "body": "二十一岁生日快乐。希望以后再听见这些歌的时候，你想到的不只是今天，也会想到我们一起走过的这一年。至于以后还有多少首歌、多少个生日，我想和你慢慢听下去。",
+      "signature": "— 给禾呈"
+    },
     "timeline": {
-      "label": "年份",
-      "past": "20岁",
-      "pastLabel": "20岁 · 去年的页面",
-      "pastCaption": "去年的页面",
-      "now": "21岁",
-      "nowCaption": "今年的 21 首歌"
+      "label": "生日时间线",
+      "past": "2025.10.7",
+      "pastLabel": "打开2025年生日页面",
+      "now": "2026.10.7"
     },
     "footer": {
       "text": "made for 禾呈 · 2026"

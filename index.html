@@ -66,14 +66,6 @@
       </div>
     </section>
 
-    <section class="intro">
-      <p class="section-kicker" data-copy="intro.kicker">A LITTLE ARCHIVE</p>
-      <div class="intro-grid">
-        <h2 data-copy="intro.title">不是推荐歌单，<br>是我们的时间线。</h2>
-        <p data-copy="intro.body">这里的每一首歌都应该有一个原因：一起听过、一起唱过、某天突然想到你，或者只因为那一段旋律刚好属于那时的我们。</p>
-      </div>
-    </section>
-
     <section class="story" id="story">
       <div class="story-rule" aria-hidden="true"></div>
       <p class="section-kicker" data-copy="story.kicker">BEFORE THE MUSIC</p>
@@ -94,24 +86,30 @@
           <p class="section-kicker" data-copy="playlist.kicker">TRACKLIST</p>
           <h2 data-copy="playlist.title">21 tracks</h2>
         </div>
-        <p class="section-note" data-copy="playlist.note">点开任意一首，播放器会在页面底部出现。</p>
       </div>
 
       <div class="track-grid" id="trackGrid" aria-live="polite"></div>
     </section>
 
+    <section class="closing-note">
+      <p class="section-kicker" data-copy="closing.kicker">AT THE END</p>
+      <div class="closing-note-inner">
+        <h2 data-copy="closing.title">我最后想说的话</h2>
+        <p data-copy="closing.body">二十一岁生日快乐。希望以后再听见这些歌的时候，你想到的不只是今天，也会想到我们一起走过的这一年。至于以后还有多少首歌、多少个生日，我想和你慢慢听下去。</p>
+        <span class="closing-signature" data-copy="closing.signature">— 给禾呈</span>
+      </div>
+    </section>
+
     <section class="timeline" aria-label="年份" data-label="timeline.label">
-      <button class="timeline-point timeline-point-past" id="memoryTrigger" type="button" aria-label="20岁" data-label="timeline.pastLabel">
-        <span class="timeline-age" data-copy="timeline.past">20岁</span>
-        <small data-copy="timeline.pastCaption">去年的页面</small>
+      <button class="timeline-point timeline-point-past" id="memoryTrigger" type="button" data-label="timeline.pastLabel" aria-label="打开2025年生日页面">
+        <span class="timeline-age" data-copy="timeline.past">2025.10.7</span>
       </button>
       <div class="timeline-connector" aria-hidden="true">
         <span class="timeline-line"></span>
         <span class="timeline-arrow">→</span>
       </div>
       <div class="timeline-point timeline-point-now" aria-current="page">
-        <span class="timeline-age" data-copy="timeline.now">21岁</span>
-        <small data-copy="timeline.nowCaption">今年的 21 首歌</small>
+        <span class="timeline-age" data-copy="timeline.now">2026.10.7</span>
       </div>
     </section>
   </main>
