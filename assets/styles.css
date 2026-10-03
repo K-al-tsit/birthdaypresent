@@ -2524,3 +2524,18 @@ body.sound-on .album-vinyl {
     font-size: 1rem;
   }
 }
+
+
+/* 2026-10-04 · slightly larger letter addressee/signature */
+.story-address,
+.story h2.story-address,
+.closing-signature {
+  font-size: 1.15rem;
+}
+@media (max-width: 560px) {
+  .story-address,
+  .story h2.story-address,
+  .closing-signature {
+    font-size: 1.05rem;
+  }
+}
