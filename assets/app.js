@@ -31,29 +31,56 @@ function noteLineStats(value) {
 function renderTrackNote(container, value) {
   const rawLines = String(value || "").replace(/\r\n?/g, "\n").split("\n");
   const stats = rawLines.map(noteLineStats);
-  const primaryQuote = stats.map(({ line, cjk, kana, latin }, index) => {
+
+  /* Keep quote detection deliberately conservative:
+     - Japanese/English lyric originals are detected by script balance.
+     - Chinese translations are only attached when they are short and directly
+       adjacent to a detected foreign-language lyric line.
+     - A short Chinese line can be treated as a quote only when isolated by
+       blank lines and written without sentence punctuation.
+     This prevents ordinary prose that happens to contain quotes/foreign words
+     from being styled as lyrics. */
+  const primaryLyric = stats.map(({ line, cjk, kana, latin }, index) => {
     if (!line) return false;
-    const quoted = /^[“"「『‘']/.test(line) && /[”"」』’'](?:[。.!?！？])?$/.test(line);
-    if (quoted && line.length <= 92) return true;
-    if (kana >= 2 && line.length <= 62) return true;
-    if (latin >= 4 && latin > cjk && line.length <= 88) return true;
+
+    const japaneseLyric =
+      kana >= 3 &&
+      kana >= Math.max(3, cjk * .35) &&
+      line.length <= 72;
+
+    const englishLyric =
+      latin >= 4 &&
+      latin > Math.max(4, cjk * 1.5) &&
+      line.length <= 92;
+
+    if (japaneseLyric || englishLyric) return true;
 
     const blankBefore = index === 0 || !stats[index - 1].line;
     const blankAfter = index === stats.length - 1 || !stats[index + 1].line;
-    const shortUnpunctuatedChinese =
+    const isolatedChineseLyric =
       cjk >= 4 &&
       cjk <= 14 &&
-      line.length <= 20 &&
+      line.length <= 22 &&
       blankBefore &&
       blankAfter &&
-      !/[。！？!?，,；;：:]$/.test(line);
-    return shortUnpunctuatedChinese;
+      !/[。！？!?，,；;：:“”"「」『』]$/.test(line);
+
+    return isolatedChineseLyric;
   });
-  const quoteLine = stats.map(({ line, cjk }, index) => {
+
+  const quoteLine = stats.map(({ line, cjk, kana, latin }, index) => {
     if (!line) return false;
-    if (primaryQuote[index]) return true;
-    if (cjk < 2 || line.length > 48) return false;
-    return Boolean(primaryQuote[index - 1] || primaryQuote[index + 1]);
+    if (primaryLyric[index]) return true;
+
+    const chineseTranslation =
+      cjk >= 2 &&
+      kana === 0 &&
+      latin <= 2 &&
+      cjk <= 26 &&
+      line.length <= 34;
+
+    if (!chineseTranslation) return false;
+    return Boolean(primaryLyric[index - 1] || primaryLyric[index + 1]);
   });
 
   const fragment = document.createDocumentFragment();
