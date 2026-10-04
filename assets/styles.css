@@ -2721,3 +2721,15 @@ body.sound-on .album-vinyl {
     letter-spacing: -.045em;
   }
 }
+
+
+/* 2026-10-05 · keep the mobile birthday headline on one line */
+.hero h1 .accent {
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .hero h1 .accent {
+    font-size: clamp(2.72rem, 11.55vw, 3.62rem);
+    letter-spacing: -.052em;
+  }
+}
