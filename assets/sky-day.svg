@@ -7,17 +7,18 @@
   <linearGradient id="horizonGlow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#F5FCFF" stop-opacity=".08"/><stop offset=".52" stop-color="#FFFFFF" stop-opacity=".72"/><stop offset="1" stop-color="#E8F8FF" stop-opacity=".18"/></linearGradient>
   <linearGradient id="veil" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#F7FCFF" stop-opacity=".74"/><stop offset=".38" stop-color="#F7FCFF" stop-opacity=".22"/><stop offset=".72" stop-color="#F7FCFF" stop-opacity="0"/></linearGradient>
   <filter id="far" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+  <filter id="cloudSoft" x="-20%" y="-35%" width="140%" height="170%"><feGaussianBlur stdDeviation="6.5"/></filter>
 </defs>
 <rect width="1600" height="1000" fill="url(#sky)"/>
 <g opacity=".42" filter="url(#far)">
   <path fill="#E8F7FF" d="M745 154c72-43 170-47 247-8 38-28 100-28 137 4 87-14 182 7 254 59-202 11-445 17-638-2-46-5-55-31 0-53Z"/>
   <path fill="#EAF8FF" d="M1030 348c62-35 125-29 174-5 33-20 79-18 106 7 65-4 135 14 190 52-143 9-320 11-444-1-54-5-71-27-26-53Z"/>
 </g>
-<g opacity=".95">
+<g opacity=".84" filter="url(#cloudSoft)">
   <path fill="#FFFFFF" d="M835 208c42-31 90-38 134-20 27-49 94-63 143-29 38-27 94-22 124 12 41-12 93 0 119 35 57-4 116 15 159 55-194 17-449 18-635 3-59-5-72-31-24-56Z"/>
   <path fill="#DDF3FE" opacity=".82" d="M853 258c182 12 403 5 586-6-63 34-173 46-290 45-126-1-226-15-296-39Z"/>
 </g>
-<g opacity=".72">
+<g opacity=".66" filter="url(#cloudSoft)">
   <path fill="#FFFFFF" d="M1160 454c34-27 78-32 113-12 22-38 75-45 110-16 27-18 68-14 90 11 45-7 91 8 127 42-131 15-293 16-417 5-45-4-57-17-23-30Z"/>
   <path fill="#E2F5FE" d="M541 515c91-25 210-29 303-3 48-12 104-9 145 8-149 19-319 17-448-5Z"/>
 </g>
