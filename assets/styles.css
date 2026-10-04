@@ -2539,3 +2539,31 @@ body.sound-on .album-vinyl {
     font-size: 1.33rem;
   }
 }
+
+
+/* 2026-10-05 · player reading comfort and vertical-only text scrolling */
+.now-playing-message-scroll,
+.lyrics-scroll,
+.now-playing-message-mobile-scroll,
+.now-playing-lyrics-mobile .lyrics-scroll {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  max-width: 100%;
+}
+
+#expandedNote {
+  font-size: clamp(1.22rem, 2.65vw, 1.9rem);
+  font-weight: 650;
+  line-height: 1.68;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  #expandedNoteMobile {
+    font-size: clamp(1.22rem, 5.4vw, 1.78rem);
+    font-weight: 650;
+    line-height: 1.62;
+    overflow-wrap: anywhere;
+  }
+}
