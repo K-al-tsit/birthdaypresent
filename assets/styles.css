@@ -2636,3 +2636,88 @@ body.sound-on .album-vinyl {
     margin-top: 1.15em;
   }
 }
+
+
+/* 2026-10-05 · clearer note paragraphs, translated lyrics, and a calmer hero greeting */
+.note-block + .note-block {
+  margin-top: .48em;
+}
+.note-block-gap {
+  margin-top: 1.28em;
+}
+.note-quote {
+  margin-block: .88em .98em;
+}
+.note-quote.note-block-gap {
+  margin-top: 1.55em;
+}
+
+.lyric-original,
+.lyric-translation {
+  display: block;
+  max-width: 100%;
+}
+.lyric-translation {
+  margin-top: .28em;
+  color: rgba(255,255,255,.56);
+  font-size: .72em;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .01em;
+}
+.lyric-line.active .lyric-translation {
+  color: rgba(255,255,255,.78);
+}
+
+.hero h1 {
+  display: flex;
+  flex-direction: column;
+  gap: .62rem;
+  max-width: 42rem;
+}
+.hero h1 > span:first-child {
+  color: var(--accent-2);
+  font-size: clamp(1.28rem, 2vw, 1.72rem);
+  font-weight: 680;
+  line-height: 1.2;
+  letter-spacing: .08em;
+}
+.hero h1 .accent {
+  margin-top: 0;
+  font-size: clamp(3.7rem, 7.1vw, 6.35rem);
+  line-height: .98;
+  letter-spacing: -.052em;
+  text-wrap: balance;
+}
+
+@media (max-width: 760px) {
+  .note-block + .note-block {
+    margin-top: .42em;
+  }
+  .note-block-gap {
+    margin-top: 1.08em;
+  }
+  .note-quote.note-block-gap {
+    margin-top: 1.32em;
+  }
+  .lyric-translation {
+    margin-top: .24em;
+    font-size: .75em;
+    line-height: 1.46;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero h1 {
+    gap: .5rem;
+  }
+  .hero h1 > span:first-child {
+    font-size: 1.14rem;
+    letter-spacing: .065em;
+  }
+  .hero h1 .accent {
+    font-size: clamp(3.25rem, 14.4vw, 4.35rem);
+    line-height: 1.01;
+    letter-spacing: -.045em;
+  }
+}
