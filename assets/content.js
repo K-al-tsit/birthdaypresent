@@ -19,8 +19,8 @@ window.SITE_CONTENT = {
     },
     "hero": {
       "eyebrow": "2026.10.7",
-      "titleFirst": "祝禾呈 21 岁",
-      "titleSecond": "\n 生日快乐！",
+      "titleFirst": "祝禾呈",
+      "titleSecond": "21 岁生日快乐！",
       "lead": "在你的21岁，我有21首歌想给你听。",
       "continue": "继续往下",
       "albumTitleMain": "属于我们的21首歌",
