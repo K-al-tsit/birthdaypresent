@@ -21,6 +21,86 @@ document.querySelector('meta[name="description"]').content = content.copy.page.d
 document.querySelectorAll("[data-copy]").forEach((el) => { el.textContent = text(el.dataset.copy); });
 document.querySelectorAll("[data-label]").forEach((el) => { el.setAttribute("aria-label", text(el.dataset.label)); });
 
+function noteLineStats(value) {
+  const line = String(value || "").trim();
+  const cjk = (line.match(/[\u3400-\u9fff]/g) || []).length;
+  const kana = (line.match(/[\u3040-\u30ff]/g) || []).length;
+  const latin = (line.match(/[A-Za-z]/g) || []).length;
+  return { line, cjk, kana, latin };
+}
+function renderTrackNote(container, value) {
+  const rawLines = String(value || "").replace(/\r\n?/g, "\n").split("\n");
+  const stats = rawLines.map(noteLineStats);
+  const primaryQuote = stats.map(({ line, cjk, kana, latin }, index) => {
+    if (!line) return false;
+    const quoted = /^[“"「『‘']/.test(line) && /[”"」』’'](?:[。.!?！？])?$/.test(line);
+    if (quoted && line.length <= 92) return true;
+    if (kana >= 2 && line.length <= 62) return true;
+    if (latin >= 4 && latin > cjk && line.length <= 88) return true;
+
+    const blankBefore = index === 0 || !stats[index - 1].line;
+    const blankAfter = index === stats.length - 1 || !stats[index + 1].line;
+    const shortUnpunctuatedChinese =
+      cjk >= 4 &&
+      cjk <= 14 &&
+      line.length <= 20 &&
+      blankBefore &&
+      blankAfter &&
+      !/[。！？!?，,；;：:]$/.test(line);
+    return shortUnpunctuatedChinese;
+  });
+  const quoteLine = stats.map(({ line, cjk }, index) => {
+    if (!line) return false;
+    if (primaryQuote[index]) return true;
+    if (cjk < 2 || line.length > 48) return false;
+    return Boolean(primaryQuote[index - 1] || primaryQuote[index + 1]);
+  });
+
+  const fragment = document.createDocumentFragment();
+  let quoteGroup = null;
+  let pendingGap = false;
+
+  const flushQuote = () => {
+    if (!quoteGroup) return;
+    if (pendingGap) quoteGroup.classList.add("note-block-gap");
+    fragment.append(quoteGroup);
+    quoteGroup = null;
+    pendingGap = false;
+  };
+
+  stats.forEach(({ line, cjk }, index) => {
+    if (!line) {
+      flushQuote();
+      pendingGap = true;
+      return;
+    }
+
+    if (quoteLine[index]) {
+      if (!quoteGroup) {
+        quoteGroup = document.createElement("span");
+        quoteGroup.className = "note-quote";
+      }
+      const quote = document.createElement("span");
+      quote.className = "note-quote-line";
+      quote.textContent = line;
+      quoteGroup.append(quote);
+      return;
+    }
+
+    flushQuote();
+    const block = document.createElement("span");
+    const isLongChinese = cjk >= 24 && cjk / Math.max(1, line.length) >= .55;
+    block.className = "note-block " + (isLongChinese ? "note-prose-long" : "note-prose-short");
+    if (pendingGap) block.classList.add("note-block-gap");
+    block.textContent = line;
+    fragment.append(block);
+    pendingGap = false;
+  });
+
+  flushQuote();
+  container.replaceChildren(fragment);
+}
+
 const audio = $("audio");
 const lyricsLeadSeconds = Number(content.settings?.lyricsLeadSeconds || 0);
 const grid = $("trackGrid");
@@ -666,8 +746,8 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   $("expandedCoverFallback").textContent = track.no;
   $("expandedTitle").textContent = track.title;
   $("expandedSubtitle").textContent = track.subtitle;
-  $("expandedNote").textContent = track.note;
-  $("expandedNoteMobile").textContent = track.note;
+  renderTrackNote($("expandedNote"), track.note);
+  renderTrackNote($("expandedNoteMobile"), track.note);
   resetMobileDetailMode();
   setDesktopSideMode("message");
   $("playerShell").classList.add("visible");
