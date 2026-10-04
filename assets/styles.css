@@ -2567,3 +2567,72 @@ body.sound-on .album-vinyl {
     overflow-wrap: anywhere;
   }
 }
+
+
+/* 2026-10-05 · editorial note layout: justified prose, distinct lyric quotations */
+#expandedNote,
+#expandedNoteMobile {
+  white-space: normal;
+}
+
+.note-block,
+.note-quote,
+.note-quote-line {
+  max-width: 100%;
+}
+
+.note-block {
+  display: block;
+  text-align: left;
+}
+
+.note-prose-long {
+  text-align: justify;
+  text-justify: inter-character;
+  text-align-last: left;
+}
+
+.note-prose-short {
+  text-align: left;
+}
+
+.note-block-gap {
+  margin-top: 1.05em;
+}
+
+.note-quote {
+  display: block;
+  margin-block: .72em .82em;
+  padding-left: .9em;
+  border-left: 2px solid rgb(var(--art-light-rgb) / .58);
+  color: rgba(255,255,255,.76);
+  font-size: .9em;
+  font-weight: 550;
+  line-height: 1.58;
+  letter-spacing: .005em;
+  text-align: left;
+}
+
+.note-quote.note-block-gap {
+  margin-top: 1.35em;
+}
+
+.note-quote-line {
+  display: block;
+  text-align: left;
+}
+
+@media (max-width: 760px) {
+  .note-block-gap {
+    margin-top: .92em;
+  }
+  .note-quote {
+    margin-block: .62em .72em;
+    padding-left: .78em;
+    font-size: .92em;
+    line-height: 1.56;
+  }
+  .note-quote.note-block-gap {
+    margin-top: 1.15em;
+  }
+}
