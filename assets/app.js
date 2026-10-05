@@ -228,11 +228,12 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
         const bright = averageLuminance >= 165;
         const veryBright = averageLuminance >= 195;
         const root = document.documentElement;
-        root.style.setProperty("--player-shade-top", veryBright ? ".58" : bright ? ".42" : ".20");
-        root.style.setProperty("--player-shade-mid", veryBright ? ".74" : bright ? ".66" : ".55");
-        root.style.setProperty("--player-shade-bottom", veryBright ? ".94" : bright ? ".92" : ".90");
-        root.style.setProperty("--player-shade-base", veryBright ? ".42" : bright ? ".3" : ".12");
-        root.style.setProperty("--player-backdrop-opacity", veryBright ? ".48" : bright ? ".58" : ".72");
+        root.style.setProperty("--player-shade-top", veryBright ? ".56" : bright ? ".42" : ".24");
+        root.style.setProperty("--player-shade-mid", veryBright ? ".74" : bright ? ".64" : ".52");
+        root.style.setProperty("--player-shade-bottom", veryBright ? ".90" : bright ? ".86" : ".82");
+        root.style.setProperty("--player-shade-base", veryBright ? ".36" : bright ? ".26" : ".14");
+        root.style.setProperty("--player-backdrop-opacity", veryBright ? ".40" : bright ? ".54" : ".68");
+        root.style.setProperty("--player-ink-rgb", veryBright ? "12 14 20" : bright ? "15 18 25" : "18 22 31");
       }
     }
   } catch (error) {
