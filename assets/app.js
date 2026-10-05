@@ -417,7 +417,7 @@ async function getLyrics(track) {
   ]);
   return mergeLyricTranslations(entries, translations);
 }
-function resetLyricsScroll(container) {
+function resetScrollPosition(container) {
   if (!container) return;
   const previousBehavior = container.style.scrollBehavior;
   container.style.scrollBehavior = "auto";
@@ -425,9 +425,17 @@ function resetLyricsScroll(container) {
   requestAnimationFrame(() => {
     container.scrollTop = 0;
     requestAnimationFrame(() => {
+      container.scrollTop = 0;
       container.style.scrollBehavior = previousBehavior;
     });
   });
+}
+function resetLyricsScroll(container) {
+  resetScrollPosition(container);
+}
+function resetMessageScroll() {
+  document.querySelectorAll(".now-playing-message-scroll, .now-playing-message-mobile-scroll")
+    .forEach(resetScrollPosition);
 }
 function renderLyrics(container, entries, status = "") {
   container.replaceChildren();
@@ -814,6 +822,7 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   $("expandedSubtitle").textContent = track.subtitle;
   renderTrackNote($("expandedNote"), track.note);
   renderTrackNote($("expandedNoteMobile"), track.note);
+  resetMessageScroll();
   resetMobileDetailMode();
   setDesktopSideMode("message");
   $("playerShell").classList.add("visible");
