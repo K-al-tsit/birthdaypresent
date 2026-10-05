@@ -1288,6 +1288,22 @@ function closeMemoryArchive({ fromHistory = false } = {}) {
   memoryArchiveDialog.close();
 }
 $("memoryArchiveLink").addEventListener("click", openMemoryArchive);
+$("closeMemoryArchive").addEventListener("click", () => closeMemoryArchive());
+document.querySelectorAll("[data-archive-target]").forEach((button) => {
+  button.addEventListener("click", () => {
+    let frameDocument;
+    try {
+      frameDocument = memoryArchiveFrame.contentDocument;
+    } catch (_) {
+      return;
+    }
+    const target = frameDocument?.getElementById(button.dataset.archiveTarget);
+    target?.scrollIntoView({
+      behavior: reducedMotion.matches ? "auto" : "smooth",
+      block: "start"
+    });
+  });
+});
 memoryArchiveDialog.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeMemoryArchive();
