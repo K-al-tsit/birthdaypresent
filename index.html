@@ -177,19 +177,18 @@
             </div>
           </div>
 
-          <div class="mobile-player-modes">
-            <div class="mobile-detail-switch" role="group" aria-label="内容视图">
-              <button class="mobile-detail-button" id="messageMode" type="button" data-label="player.messageToggle" aria-label="想对你说" aria-pressed="false">
-                <span data-copy="player.messageToggle">想对你说</span>
-              </button>
-              <button class="mobile-detail-button" id="mobileLyricsMode" type="button" data-label="player.lyrics" aria-label="歌词" aria-pressed="false">
-                <span data-copy="player.lyrics">歌词</span>
-              </button>
-            </div>
-            <button class="mobile-playback-mode" id="mobilePlaybackMode" type="button" data-label="player.sequenceMode" aria-label="顺序播放" aria-pressed="false" data-mode="sequence">
-              <svg class="playback-mode-icon playback-mode-icon-sequence" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m16 14 3 3-3 3"/></svg>
-              <svg class="playback-mode-icon playback-mode-icon-shuffle" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h3c2.2 0 3.4-1.9 4.6-4"/><path d="M14 7c1-1 1.9-2 3-2h3"/><path d="m17 2 3 3-3 3"/></svg>
-              <span id="mobilePlaybackModeText" data-copy="player.sequenceMode">顺序播放</span>
+          <div class="mobile-player-modes" role="group" data-label="player.mobileModes" aria-label="播放视图">
+            <button class="mobile-mode-button" id="mobileShuffleMode" type="button" data-label="player.shuffleMode" aria-label="乱序播放" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3c5 0 5 10 10 10h3"/><path d="m17 14 3 3-3 3"/><path d="M4 17h3c2.2 0 3.4-1.9 4.6-4"/><path d="M14 7c1-1 1.9-2 3-2h3"/><path d="m17 2 3 3-3 3"/></svg>
+            </button>
+            <button class="mobile-mode-button mobile-message-button" id="messageMode" type="button" data-label="player.messageToggle" aria-label="想对你说" aria-pressed="false">
+              <span data-copy="player.messageToggle">想对你说</span>
+            </button>
+            <button class="mobile-mode-button mobile-lyrics-button" id="mobileLyricsMode" type="button" data-label="player.lyrics" aria-label="歌词" aria-pressed="false">
+              <span data-copy="player.lyrics">歌词</span>
+            </button>
+            <button class="mobile-mode-button" id="mobileSequenceMode" type="button" data-label="player.sequenceMode" aria-label="顺序播放" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/><path d="m16 14 3 3-3 3"/></svg>
             </button>
           </div>
 
@@ -249,7 +248,7 @@
     ></iframe>
   </dialog>
 
-  <script src="./assets/app.js?v=20261006-3" defer></script>
+  <script src="./assets/app.js?v=20261006-4" defer></script>
 </body>
 </html>
 <!-- edgeone-preview-trigger: 2026-10-06T00:39+08:00 -->
