@@ -786,25 +786,10 @@ function syncPlaybackModes() {
 
   const mobileShuffle = $("mobileShuffleMode");
   const mobileSequence = $("mobileSequenceMode");
-  if (mobileShuffle) {
-    mobileShuffle.classList.toggle("active", shuffleEnabled);
-    mobileShuffle.setAttribute("aria-pressed", String(shuffleEnabled));
-  }
-  if (mobileSequence) {
-    mobileSequence.classList.toggle("active", !shuffleEnabled);
-    mobileSequence.setAttribute("aria-pressed", String(!shuffleEnabled));
-  }
-
-  const mobileMode = $("mobilePlaybackMode");
-  const mobileModeText = $("mobilePlaybackModeText");
-  if (mobileMode) {
-    const modeKey = shuffleEnabled ? "player.shuffleMode" : "player.sequenceMode";
-    mobileMode.classList.toggle("active", shuffleEnabled);
-    mobileMode.setAttribute("aria-pressed", String(shuffleEnabled));
-    mobileMode.setAttribute("aria-label", text(modeKey));
-    mobileMode.dataset.mode = shuffleEnabled ? "shuffle" : "sequence";
-    if (mobileModeText) mobileModeText.textContent = text(modeKey);
-  }
+  mobileShuffle.classList.toggle("active", shuffleEnabled);
+  mobileShuffle.setAttribute("aria-pressed", String(shuffleEnabled));
+  mobileSequence.classList.toggle("active", !shuffleEnabled);
+  mobileSequence.setAttribute("aria-pressed", String(!shuffleEnabled));
 }
 function playableTrackIndices() {
   return tracks
@@ -1147,9 +1132,8 @@ $("expandPlayer").addEventListener("click", () => {
 $("minimizePlayer").addEventListener("click", () => setPlayerMode(false));
 $("desktopShuffleMode").addEventListener("click", () => setShuffleEnabled(true));
 $("desktopSequenceMode").addEventListener("click", () => setShuffleEnabled(false));
-$("mobileShuffleMode")?.addEventListener("click", () => setShuffleEnabled(true));
-$("mobileSequenceMode")?.addEventListener("click", () => setShuffleEnabled(false));
-$("mobilePlaybackMode")?.addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
+$("mobileShuffleMode").addEventListener("click", () => setShuffleEnabled(true));
+$("mobileSequenceMode").addEventListener("click", () => setShuffleEnabled(false));
 $("messageMode").addEventListener("click", () => setMobileDetailMode("message"));
 $("mobileLyricsMode").addEventListener("click", () => setMobileDetailMode("lyrics"));
 $("desktopMessageTab").addEventListener("click", () => setDesktopSideMode("message"));
