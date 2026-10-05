@@ -1200,20 +1200,31 @@ const memoryArchiveDialog = $("memoryArchiveDialog");
 const memoryArchiveFrame = $("memoryArchiveFrame");
 function openMemoryArchive(event) {
   event?.preventDefault();
-  if ($("memoryModal").open) $("memoryModal").close();
-  if (!memoryArchiveFrame.src) memoryArchiveFrame.src = memoryArchiveFrame.dataset.src;
-  if (!memoryArchiveDialog.open) memoryArchiveDialog.showModal();
+  if (!memoryArchiveFrame.hasAttribute("src")) {
+    memoryArchiveFrame.setAttribute("src", memoryArchiveFrame.dataset.src);
+  }
+
+  const showArchive = () => {
+    if (!memoryArchiveDialog.open) memoryArchiveDialog.showModal();
+  };
+
+  if ($("memoryModal").open) {
+    $("memoryModal").close();
+    requestAnimationFrame(showArchive);
+  } else {
+    showArchive();
+  }
 }
 function closeMemoryArchive() {
   if (memoryArchiveDialog.open) memoryArchiveDialog.close();
 }
 $("memoryArchiveLink").addEventListener("click", openMemoryArchive);
-$("closeMemoryArchive").addEventListener("click", closeMemoryArchive);
 memoryArchiveDialog.addEventListener("close", () => {
   requestAnimationFrame(() => $("memoryTrigger").focus({ preventScroll: true }));
 });
 window.addEventListener("message", (event) => {
   if (event.origin !== location.origin) return;
+  if (event.source !== memoryArchiveFrame.contentWindow) return;
   if (event.data?.type === "close-birthday-archive") closeMemoryArchive();
 });
 
