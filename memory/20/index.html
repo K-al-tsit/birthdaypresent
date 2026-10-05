@@ -398,6 +398,16 @@
     .return-21-link span { display: none; }
     .archive-yearline { grid-template-columns: auto minmax(2rem, 1fr) auto; padding-inline: 0; }
   }
+  /* Reduced-motion support for archive page */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .heart { display: none !important; }
+    .heart-beat,
+    .float,
+    .fade-in,
+    .slide-up { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+    .gif-container img { transition: none !important; }
+  }
 </style>
 </head>
 <body data-archive-self-contained="true" class="font-main text-gray-800 overflow-x-hidden">
