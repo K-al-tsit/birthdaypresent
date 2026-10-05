@@ -32,6 +32,27 @@ document.querySelector('meta[name="description"]').content = content.copy.page.d
 document.querySelectorAll("[data-copy]").forEach((el) => { el.textContent = text(el.dataset.copy); });
 document.querySelectorAll("[data-label]").forEach((el) => { el.setAttribute("aria-label", text(el.dataset.label)); });
 
+function renderEditorialCopy(container, value) {
+  if (!container) return;
+  const paragraphs = String(value || "")
+    .replace(/\r\n?/g, "\n")
+    .trim()
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+  const fragment = document.createDocumentFragment();
+  paragraphs.forEach((paragraph, index) => {
+    const p = document.createElement("p");
+    p.textContent = paragraph;
+    if (index === paragraphs.length - 1 && paragraph.includes("\n")) p.classList.add("editorial-coda");
+    fragment.append(p);
+  });
+  container.replaceChildren(fragment);
+}
+document.querySelectorAll("[data-editorial-copy]").forEach((el) => {
+  renderEditorialCopy(el, text(el.dataset.editorialCopy));
+});
+
 function noteLineStats(value) {
   const line = String(value || "").trim();
   const cjk = (line.match(/[\u3400-\u9fff]/g) || []).length;
@@ -952,7 +973,7 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
     if (!track.src && notify) showToast(text("messages.emptySelection", { no: track.no }));
   }
 }
-async function warmTrackCovers() {
+async function warmTrackCovers(concurrency = 2) {
   const queue = tracks
     .map((track, index) => track.src ? index : -1)
     .filter((index) => index >= 0);
@@ -963,12 +984,15 @@ async function warmTrackCovers() {
       await loadCardCover(index);
     }
   };
-  await Promise.all(Array.from({ length: 3 }, worker));
+  await Promise.all(Array.from({ length: Math.max(1, concurrency) }, worker));
 }
 function scheduleTrackCoverWarmup() {
-  const start = () => warmTrackCovers().catch(() => {});
-  if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 900 });
-  else setTimeout(start, 350);
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (connection?.saveData || /2g/.test(connection?.effectiveType || "")) return;
+  const concurrency = connection?.effectiveType === "3g" ? 1 : 2;
+  const start = () => warmTrackCovers(concurrency).catch(() => {});
+  if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 1200 });
+  else setTimeout(start, 500);
 }
 
 tracks.forEach((track, index) => {
@@ -1170,6 +1194,27 @@ $("memoryModal").addEventListener("click", (event) => {
   if (event.target !== $("memoryModal")) return;
   const box = event.target.getBoundingClientRect();
   if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close();
+});
+
+const memoryArchiveDialog = $("memoryArchiveDialog");
+const memoryArchiveFrame = $("memoryArchiveFrame");
+function openMemoryArchive(event) {
+  event?.preventDefault();
+  if ($("memoryModal").open) $("memoryModal").close();
+  if (!memoryArchiveFrame.src) memoryArchiveFrame.src = memoryArchiveFrame.dataset.src;
+  if (!memoryArchiveDialog.open) memoryArchiveDialog.showModal();
+}
+function closeMemoryArchive() {
+  if (memoryArchiveDialog.open) memoryArchiveDialog.close();
+}
+$("memoryArchiveLink").addEventListener("click", openMemoryArchive);
+$("closeMemoryArchive").addEventListener("click", closeMemoryArchive);
+memoryArchiveDialog.addEventListener("close", () => {
+  requestAnimationFrame(() => $("memoryTrigger").focus({ preventScroll: true }));
+});
+window.addEventListener("message", (event) => {
+  if (event.origin !== location.origin) return;
+  if (event.data?.type === "close-birthday-archive") closeMemoryArchive();
 });
 
 
