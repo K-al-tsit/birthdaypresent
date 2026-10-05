@@ -137,6 +137,8 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let activeIndex = -1;
 let toastTimer;
 let selectionVersion = 0;
+let desktopMessageResetPending = false;
+let mobileMessageResetPending = false;
 let scrubbing = false;
 let expandedScrubbing = false;
 let motionEnabled = false;
@@ -219,7 +221,20 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
       .filter((pixel) => pixel.luminance > 145)
       .sort((a, b) => b.saturation - a.saturation);
     const light = averageArtworkColors(lightPixels.slice(0, Math.max(8, Math.floor(pixels.length * .06))), fallbackArtworkPalette.light);
-    if (isCurrent()) applyArtworkPalette({ dark, mid, warm, light });
+    if (isCurrent()) {
+      applyArtworkPalette({ dark, mid, warm, light });
+      if (image.id === "expandedCoverImage") {
+        const averageLuminance = pixels.reduce((sum, pixel) => sum + pixel.luminance, 0) / pixels.length;
+        const bright = averageLuminance >= 165;
+        const veryBright = averageLuminance >= 195;
+        const root = document.documentElement;
+        root.style.setProperty("--player-shade-top", veryBright ? ".58" : bright ? ".42" : ".20");
+        root.style.setProperty("--player-shade-mid", veryBright ? ".74" : bright ? ".66" : ".55");
+        root.style.setProperty("--player-shade-bottom", veryBright ? ".94" : bright ? ".92" : ".90");
+        root.style.setProperty("--player-shade-base", veryBright ? ".42" : bright ? ".3" : ".12");
+        root.style.setProperty("--player-backdrop-opacity", veryBright ? ".48" : bright ? ".58" : ".72");
+      }
+    }
   } catch (error) {
     console.debug("Artwork palette extraction unavailable", error);
   }
@@ -436,6 +451,12 @@ function resetLyricsScroll(container) {
 function resetMessageScroll() {
   document.querySelectorAll(".now-playing-message-scroll, .now-playing-message-mobile-scroll")
     .forEach(resetScrollPosition);
+}
+function resetDesktopMessageScroll() {
+  resetScrollPosition(document.querySelector(".now-playing-message-scroll"));
+}
+function resetMobileMessageScroll() {
+  resetScrollPosition(document.querySelector(".now-playing-message-mobile-scroll"));
 }
 function renderLyrics(container, entries, status = "") {
   container.replaceChildren();
@@ -676,6 +697,12 @@ function applyMobileDetailMode(mode) {
   $("mobileLyricsMode").setAttribute("aria-pressed", String(lyricsOpen));
   $("mobileMessagePanel").setAttribute("aria-hidden", String(!messageOpen));
   $("mobileLyricsPanel").setAttribute("aria-hidden", String(!lyricsOpen));
+  if (messageOpen && mobileMessageResetPending) {
+    requestAnimationFrame(() => {
+      resetMobileMessageScroll();
+      mobileMessageResetPending = false;
+    });
+  }
   if (lyricsOpen) requestAnimationFrame(() => updateLyrics(audio.currentTime, true));
 }
 function animateArtworkBackToDefault() {
@@ -737,6 +764,12 @@ function setDesktopSideMode(mode) {
   $("desktopMessagePane").hidden = lyricsOpen;
   $("desktopLyricsPane").classList.toggle("active", lyricsOpen);
   $("desktopLyricsPane").hidden = !lyricsOpen;
+  if (!lyricsOpen && desktopMessageResetPending) {
+    requestAnimationFrame(() => {
+      resetDesktopMessageScroll();
+      desktopMessageResetPending = false;
+    });
+  }
   if (lyricsOpen) requestAnimationFrame(() => updateLyrics(audio.currentTime, true));
 }
 function randomPlayableIndex(exclude = -1) {
@@ -793,6 +826,8 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   const wasPlaying = !audio.paused && !audio.ended && Boolean(audio.getAttribute("src"));
   selectionVersion += 1;
   const version = selectionVersion;
+  desktopMessageResetPending = true;
+  mobileMessageResetPending = true;
   currentLyrics = [];
   activeLyricIndex = -1;
   setLyricsStatus(text("player.lyricsLoading"));
