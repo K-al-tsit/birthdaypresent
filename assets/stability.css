@@ -166,29 +166,6 @@ footer {
 
 /* Keep the final mobile page width safe after the older <=560px rule. */
 @media (max-width: 560px) {
-  .memory-archive-toolbar {
-    grid-template-columns: 44px 1fr auto;
-    gap: .45rem;
-  }
-  .memory-archive-back {
-    width: 44px;
-    justify-content: center;
-    padding-inline: 0;
-  }
-  .memory-archive-back > span:last-child {
-    display: none;
-  }
-  .memory-archive-title {
-    justify-self: start;
-    font-size: .72rem;
-  }
-  .memory-archive-sections {
-    gap: 0;
-  }
-  .memory-archive-sections button {
-    padding-inline: .45rem;
-    font-size: .74rem;
-  }
   main {
     width: calc(100% - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right));
   }
@@ -336,5 +313,29 @@ footer {
     margin-top: 1.65rem;
     font-size: .98rem;
     line-height: 1.94;
+  }
+
+  .memory-archive-toolbar {
+    grid-template-columns: 44px 1fr auto;
+    gap: .45rem;
+  }
+  .memory-archive-back {
+    width: 44px;
+    justify-content: center;
+    padding-inline: 0;
+  }
+  .memory-archive-back > span:last-child {
+    display: none;
+  }
+  .memory-archive-title {
+    justify-self: start;
+    font-size: .72rem;
+  }
+  .memory-archive-sections {
+    gap: 0;
+  }
+  .memory-archive-sections button {
+    padding-inline: .45rem;
+    font-size: .74rem;
   }
 }
