@@ -1236,6 +1236,27 @@ function bindArchiveReturnLinks() {
   }
   if (!frameDocument || frameDocument.documentElement.dataset.parentReturnBound === "true") return;
   frameDocument.documentElement.dataset.parentReturnBound = "true";
+
+  // Keep the archive source file untouched. The parent injects the embedded-only
+  // cleanup after the same-origin iframe loads.
+  if (!frameDocument.getElementById("birthdayArchiveEmbeddedStyle")) {
+    const style = frameDocument.createElement("style");
+    style.id = "birthdayArchiveEmbeddedStyle";
+    style.textContent = `
+      #navbar,
+      .archive-yearline {
+        display: none !important;
+      }
+      #home {
+        padding-top: 0 !important;
+      }
+      body {
+        padding-top: 0 !important;
+      }
+    `;
+    frameDocument.head?.append(style);
+  }
+
   frameDocument.addEventListener("click", (event) => {
     const link = event.target.closest?.("a[href]");
     if (!link) return;
