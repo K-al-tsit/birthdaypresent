@@ -1,14 +1,25 @@
 /* Edit visible words and track details in content.js; this file only handles interactions. */
 const content = window.SITE_CONTENT;
 const audioBase = String(content.settings?.audioBase || "").replace(/\/+$/, "");
+function uniqueNormalizedStems(value) {
+  const raw = String(value || "");
+  return [...new Set([raw.normalize("NFD"), raw.normalize("NFC")])];
+}
+function mediaUrl(stem, extension) {
+  return audioBase + "/" + encodeURIComponent(stem) + extension;
+}
 const tracks = content.tracks.map((track) => {
-  if (!track.media || !audioBase) return { ...track };
-  const stem = String(track.file || (track.subtitle + " - " + track.title)).normalize("NFD");
-  const encodedStem = encodeURIComponent(stem);
+  if (!track.media || !audioBase) return { ...track, srcCandidates: [], lyricsCandidates: [] };
+  const stem = String(track.file || (track.subtitle + " - " + track.title));
+  const stems = uniqueNormalizedStems(stem);
+  const srcCandidates = stems.map((item) => mediaUrl(item, ".mp3"));
+  const lyricsCandidates = stems.map((item) => mediaUrl(item, ".lrc"));
   return {
     ...track,
-    src: audioBase + "/" + encodedStem + ".mp3",
-    lyrics: audioBase + "/" + encodedStem + ".lrc"
+    srcCandidates,
+    lyricsCandidates,
+    src: srcCandidates[0] || "",
+    lyrics: lyricsCandidates[0] || ""
   };
 });
 const $ = (id) => document.getElementById(id);
@@ -147,9 +158,12 @@ let shuffleEnabled = false;
 let mobileDetailMode = null;
 let desktopSideMode = "message";
 let desiredPlayerExpanded = false;
+let activeSourceCandidateIndex = 0;
+let playbackWanted = false;
 let currentLyrics = [];
 let activeLyricIndex = -1;
 const coverCache = new Map();
+const coverObjectUrls = new Set();
 const lyricsCache = new Map();
 
 const fallbackArtworkPalette = {
@@ -158,6 +172,34 @@ const fallbackArtworkPalette = {
   warm: [207, 105, 126],
   light: [236, 196, 188]
 };
+const defaultPlayerContrast = {
+  top: ".24",
+  mid: ".52",
+  bottom: ".82",
+  base: ".14",
+  backdrop: ".68",
+  ink: "18 22 31"
+};
+function applyPlayerContrastForLuminance(luminance) {
+  const bright = Number.isFinite(luminance) && luminance >= 165;
+  const veryBright = Number.isFinite(luminance) && luminance >= 215;
+  const root = document.documentElement;
+  root.style.setProperty("--player-shade-top", veryBright ? ".58" : bright ? ".44" : defaultPlayerContrast.top);
+  root.style.setProperty("--player-shade-mid", veryBright ? ".78" : bright ? ".66" : defaultPlayerContrast.mid);
+  root.style.setProperty("--player-shade-bottom", veryBright ? ".92" : bright ? ".87" : defaultPlayerContrast.bottom);
+  root.style.setProperty("--player-shade-base", veryBright ? ".40" : bright ? ".28" : defaultPlayerContrast.base);
+  root.style.setProperty("--player-backdrop-opacity", veryBright ? ".36" : bright ? ".52" : defaultPlayerContrast.backdrop);
+  root.style.setProperty("--player-ink-rgb", veryBright ? "10 12 18" : bright ? "14 17 24" : defaultPlayerContrast.ink);
+}
+function resetPlayerContrast() {
+  const root = document.documentElement;
+  root.style.setProperty("--player-shade-top", defaultPlayerContrast.top);
+  root.style.setProperty("--player-shade-mid", defaultPlayerContrast.mid);
+  root.style.setProperty("--player-shade-bottom", defaultPlayerContrast.bottom);
+  root.style.setProperty("--player-shade-base", defaultPlayerContrast.base);
+  root.style.setProperty("--player-backdrop-opacity", defaultPlayerContrast.backdrop);
+  root.style.setProperty("--player-ink-rgb", defaultPlayerContrast.ink);
+}
 function averageArtworkColors(items, fallback) {
   if (!items.length) return fallback;
   const total = items.reduce((sum, pixel) => [
@@ -187,6 +229,8 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
     const pixels = [];
+    let opaqueLuminanceTotal = 0;
+    let opaquePixelCount = 0;
     for (let offset = 0; offset < data.length; offset += 4) {
       if (data[offset + 3] < 220) continue;
       const r = data[offset];
@@ -196,6 +240,8 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
       const min = Math.min(r, g, b);
       const saturation = max - min;
       const luminance = .2126 * r + .7152 * g + .0722 * b;
+      opaqueLuminanceTotal += luminance;
+      opaquePixelCount += 1;
       if (luminance < 18 || luminance > 242) continue;
       pixels.push({
         r, g, b,
@@ -204,7 +250,11 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
         warm: (r - b) + .6 * (r - g) + saturation
       });
     }
-    if (!pixels.length || !isCurrent()) return;
+    if (!isCurrent()) return;
+    if (image.id === "expandedCoverImage" && opaquePixelCount) {
+      applyPlayerContrastForLuminance(opaqueLuminanceTotal / opaquePixelCount);
+    }
+    if (!pixels.length) return;
     pixels.sort((a, b) => a.luminance - b.luminance);
     const darkStart = Math.floor(pixels.length * .08);
     const darkEnd = Math.max(darkStart + 8, Math.floor(pixels.length * .3));
@@ -223,18 +273,7 @@ async function extractArtworkPalette(image, isCurrent = () => true) {
     const light = averageArtworkColors(lightPixels.slice(0, Math.max(8, Math.floor(pixels.length * .06))), fallbackArtworkPalette.light);
     if (isCurrent()) {
       applyArtworkPalette({ dark, mid, warm, light });
-      if (image.id === "expandedCoverImage") {
-        const averageLuminance = pixels.reduce((sum, pixel) => sum + pixel.luminance, 0) / pixels.length;
-        const bright = averageLuminance >= 165;
-        const veryBright = averageLuminance >= 195;
-        const root = document.documentElement;
-        root.style.setProperty("--player-shade-top", veryBright ? ".56" : bright ? ".42" : ".24");
-        root.style.setProperty("--player-shade-mid", veryBright ? ".74" : bright ? ".64" : ".52");
-        root.style.setProperty("--player-shade-bottom", veryBright ? ".90" : bright ? ".86" : ".82");
-        root.style.setProperty("--player-shade-base", veryBright ? ".36" : bright ? ".26" : ".14");
-        root.style.setProperty("--player-backdrop-opacity", veryBright ? ".40" : bright ? ".54" : ".68");
-        root.style.setProperty("--player-ink-rgb", veryBright ? "12 14 20" : bright ? "15 18 25" : "18 22 31");
-      }
+
     }
   } catch (error) {
     console.debug("Artwork palette extraction unavailable", error);
@@ -344,14 +383,13 @@ function parseEmbeddedCover(buffer) {
   return null;
 }
 async function fetchId3Cover(src) {
-  const probeEnd = 2 * 1024 * 1024 - 1;
-  const first = await fetch(src, { headers: { Range: "bytes=0-" + probeEnd }, cache: "force-cache" });
-  if (!first.ok && first.status !== 206) throw new Error("cover fetch failed: " + first.status);
-  let buffer = await first.arrayBuffer();
+  const headerResponse = await fetch(src, { headers: { Range: "bytes=0-9" }, cache: "force-cache" });
+  if (!headerResponse.ok && headerResponse.status !== 206) throw new Error("cover fetch failed: " + headerResponse.status);
+  let buffer = await headerResponse.arrayBuffer();
   let bytes = new Uint8Array(buffer);
   if (bytes.length < 10 || ascii(bytes, 0, 3) !== "ID3") return null;
   const tagBytes = 10 + synchsafe(bytes, 6);
-  if (tagBytes > buffer.byteLength && first.status === 206) {
+  if (buffer.byteLength < tagBytes) {
     const response = await fetch(src, { headers: { Range: "bytes=0-" + (tagBytes - 1) }, cache: "force-cache" });
     if (!response.ok && response.status !== 206) throw new Error("cover tag fetch failed: " + response.status);
     buffer = await response.arrayBuffer();
@@ -359,25 +397,42 @@ async function fetchId3Cover(src) {
   return parseEmbeddedCover(buffer);
 }
 function getCoverUrl(track) {
-  if (!track?.src) return Promise.resolve(null);
-  if (!coverCache.has(track.src)) {
-    coverCache.set(track.src, fetchId3Cover(track.src).then((blob) => blob ? URL.createObjectURL(blob) : null).catch((error) => {
+  const candidates = track?.srcCandidates?.length ? track.srcCandidates : (track?.src ? [track.src] : []);
+  if (!candidates.length) return Promise.resolve(null);
+  const cacheKey = candidates.join("\n");
+  if (!coverCache.has(cacheKey)) {
+    const request = (async () => {
+      let lastError = null;
+      for (const src of candidates) {
+        try {
+          const blob = await fetchId3Cover(src);
+          if (!blob) return null;
+          const url = URL.createObjectURL(blob);
+          coverObjectUrls.add(url);
+          return url;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || new Error("Embedded cover unavailable");
+    })().catch((error) => {
+      coverCache.delete(cacheKey);
       console.warn("Embedded cover unavailable", error);
       return null;
-    }));
+    });
+    coverCache.set(cacheKey, request);
   }
-  return coverCache.get(track.src);
+  return coverCache.get(cacheKey);
 }
-function getLyricsUrl(track) {
-  if (track?.lyrics) return track.lyrics;
-  if (!track?.src) return "";
-  return track.src.replace(/\.mp3(?=([?#]|$))/i, ".lrc");
+function getLyricsUrls(track) {
+  if (track?.lyricsCandidates?.length) return track.lyricsCandidates;
+  if (track?.lyrics) return [track.lyrics];
+  if (!track?.src) return [];
+  return [track.src.replace(/\.mp3(?=([?#]|$))/i, ".lrc")];
 }
-function getLyricsTranslationUrl(track) {
-  if (track?.lyricsTranslation) return track.lyricsTranslation;
-  const url = getLyricsUrl(track);
-  if (!url) return "";
-  return url.replace(/\.lrc(?=([?#]|$))/i, ".zh.lrc");
+function getLyricsTranslationUrls(track) {
+  if (track?.lyricsTranslation) return [track.lyricsTranslation];
+  return getLyricsUrls(track).map((url) => url.replace(/\.lrc(?=([?#]|$))/i, ".zh.lrc"));
 }
 function parseLrc(raw) {
   const entries = [];
@@ -397,19 +452,28 @@ function parseLrc(raw) {
 }
 function fetchLyricsFile(url, { quiet = false } = {}) {
   if (!url) return Promise.resolve([]);
-  if (!lyricsCache.has(url)) {
-    lyricsCache.set(url, fetch(url, { cache: "force-cache" })
+  let request = lyricsCache.get(url);
+  if (!request) {
+    request = fetch(url, { cache: "no-store" })
       .then((response) => {
         if (!response.ok) throw new Error("lyrics fetch failed: " + response.status);
         return response.text();
       })
-      .then(parseLrc)
-      .catch((error) => {
-        if (!quiet) console.warn("Lyrics unavailable", error);
-        return [];
-      }));
+      .then(parseLrc);
+    lyricsCache.set(url, request);
   }
-  return lyricsCache.get(url);
+  return request.catch((error) => {
+    lyricsCache.delete(url);
+    if (!quiet) console.warn("Lyrics unavailable", error);
+    return [];
+  });
+}
+async function firstAvailableLyrics(urls, options = {}) {
+  for (const url of urls) {
+    const entries = await fetchLyricsFile(url, options);
+    if (entries.length) return entries;
+  }
+  return [];
 }
 function mergeLyricTranslations(entries, translations) {
   if (!translations.length) return entries;
@@ -425,11 +489,9 @@ function mergeLyricTranslations(entries, translations) {
   });
 }
 async function getLyrics(track) {
-  const originalUrl = getLyricsUrl(track);
-  const translationUrl = getLyricsTranslationUrl(track);
   const [entries, translations] = await Promise.all([
-    fetchLyricsFile(originalUrl),
-    fetchLyricsFile(translationUrl, { quiet: true })
+    firstAvailableLyrics(getLyricsUrls(track)),
+    firstAvailableLyrics(getLyricsTranslationUrls(track), { quiet: true })
   ]);
   return mergeLyricTranslations(entries, translations);
 }
@@ -809,6 +871,7 @@ function fadeAudioVolume(target, duration, version = selectionVersion) {
 }
 function playCurrent({ fadeIn = false } = {}) {
   if (!tracks[activeIndex]?.src) { showToast(text("messages.emptyAudio")); return; }
+  playbackWanted = true;
   const version = selectionVersion;
   if (fadeIn) audio.volume = 0;
   else if (audio.volume < 0.999) audio.volume = 1;
@@ -817,6 +880,7 @@ function playCurrent({ fadeIn = false } = {}) {
   }).catch((error) => {
     if (version !== selectionVersion || error.name === "AbortError") return;
     audio.volume = 1;
+    playbackWanted = false;
     setPlaying(false);
     showToast(text(error.name === "NotAllowedError" ? "messages.blocked" : "messages.failed"));
   });
@@ -824,6 +888,9 @@ function playCurrent({ fadeIn = false } = {}) {
 async function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
   if (!tracks.length) return;
   desiredPlayerExpanded = Boolean(expanded);
+  playbackWanted = Boolean(autoplay);
+  activeSourceCandidateIndex = 0;
+  resetPlayerContrast();
   const wasPlaying = !audio.paused && !audio.ended && Boolean(audio.getAttribute("src"));
   selectionVersion += 1;
   const version = selectionVersion;
@@ -869,7 +936,8 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
     card.classList.toggle("active", i === activeIndex);
     card.setAttribute("aria-pressed", String(i === activeIndex));
   });
-  if (track.src) audio.src = track.src;
+  const sourceCandidates = track.srcCandidates?.length ? track.srcCandidates : (track.src ? [track.src] : []);
+  if (sourceCandidates.length) audio.src = sourceCandidates[activeSourceCandidateIndex];
   audio.load();
   setPlaying(false);
   updateMediaMetadata(track);
@@ -920,6 +988,10 @@ tracks.forEach((track, index) => {
     else loadCardCover(index);
   }
 });
+function pauseCurrent() {
+  playbackWanted = false;
+  audio.pause();
+}
 function moveTrack(offset) {
   if (activeIndex < 0) return;
   let nextIndex = activeIndex + offset;
@@ -932,10 +1004,10 @@ function moveTrack(offset) {
     expanded: document.body.classList.contains("player-expanded")
   });
 }
-$("playPause").addEventListener("click", () => audio.paused ? playCurrent() : audio.pause());
+$("playPause").addEventListener("click", () => audio.paused ? playCurrent() : pauseCurrent());
 $("previousTrack").addEventListener("click", () => moveTrack(-1));
 $("nextTrack").addEventListener("click", () => moveTrack(1));
-$("expandedPlayPause").addEventListener("click", () => audio.paused ? playCurrent() : audio.pause());
+$("expandedPlayPause").addEventListener("click", () => audio.paused ? playCurrent() : pauseCurrent());
 $("expandedPreviousTrack").addEventListener("click", () => moveTrack(-1));
 $("expandedNextTrack").addEventListener("click", () => moveTrack(1));
 $("expandPlayer").addEventListener("click", () => setPlayerMode(true));
@@ -961,13 +1033,28 @@ audio.addEventListener("ended", () => {
   const next = shuffleEnabled
     ? randomPlayableIndex(activeIndex)
     : tracks.findIndex((track, i) => i > activeIndex && track.src);
-  if (next >= 0 && next !== activeIndex) selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
-  else setPlaying(false);
+  if (next >= 0 && next !== activeIndex) {
+    selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
+  } else {
+    playbackWanted = false;
+    setPlaying(false);
+  }
 });
 audio.addEventListener("error", () => {
   if (!audio.getAttribute("src")) return;
+  const track = tracks[activeIndex];
+  const candidates = track?.srcCandidates?.length ? track.srcCandidates : (track?.src ? [track.src] : []);
+  if (activeSourceCandidateIndex + 1 < candidates.length) {
+    activeSourceCandidateIndex += 1;
+    audio.src = candidates[activeSourceCandidateIndex];
+    audio.load();
+    if (playbackWanted) playCurrent();
+    return;
+  }
+  playbackWanted = false;
   setPlaying(false);
   progress.disabled = true;
+  expandedProgress.disabled = true;
   $("playerNote").textContent = text("messages.failed");
   showToast(text("messages.failed"));
 });
@@ -1004,7 +1091,7 @@ expandedProgress.addEventListener("pointerup", () => { expandedScrubbing = false
 expandedProgress.addEventListener("pointercancel", () => { expandedScrubbing = false; updateProgress(); });
 expandedProgress.addEventListener("blur", () => { expandedScrubbing = false; updateProgress(); });
 if ("mediaSession" in navigator) {
-  const handlers = { play: playCurrent, pause: () => audio.pause(), previoustrack: () => moveTrack(-1), nexttrack: () => moveTrack(1), seekto: (event) => { if (Number.isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(event.seekTime, audio.duration)); } };
+  const handlers = { play: playCurrent, pause: pauseCurrent, previoustrack: () => moveTrack(-1), nexttrack: () => moveTrack(1), seekto: (event) => { if (Number.isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(event.seekTime, audio.duration)); } };
   Object.entries(handlers).forEach(([action, handler]) => { try { navigator.mediaSession.setActionHandler(action, handler); } catch (_) {} });
 }
 function setMotion(enabled) {
@@ -1059,4 +1146,10 @@ $("memoryModal").addEventListener("click", (event) => {
   if (event.target !== $("memoryModal")) return;
   const box = event.target.getBoundingClientRect();
   if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close();
+});
+
+
+window.addEventListener("pagehide", () => {
+  coverObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+  coverObjectUrls.clear();
 });
