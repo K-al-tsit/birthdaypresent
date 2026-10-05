@@ -289,7 +289,7 @@ footer {
   color: color-mix(in srgb, var(--text) 58%, transparent);
   font-size: .86rem;
   line-height: 1.7;
-  text-align: right;
+  text-align: left;
   text-wrap: pretty;
 }
 
