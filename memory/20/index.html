@@ -421,7 +421,7 @@
 
         <!-- 导航栏 -->
         <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
-            <a href="../../" class="return-21-link" aria-label="回到21岁页面">← <span>回到21岁</span></a>
+            <a href="../../" class="return-21-link" id="return21Link" aria-label="回到21岁页面">← <span>回到21岁</span></a>
             <div class="container mx-auto px-4 py-3 flex justify-center">
                 <ul class="flex space-x-6 text-love-pink">
                     <li><a href="#home" class="hover:text-love-pink/80 transition-colors duration-300"><i class="fa fa-home mr-1"></i>首页</a></li>
@@ -666,6 +666,14 @@
         });
         
     document.addEventListener('DOMContentLoaded', function() {
+    const return21Link = document.getElementById('return21Link');
+    if (return21Link && window.parent !== window) {
+        return21Link.addEventListener('click', function(event) {
+            event.preventDefault();
+            window.parent.postMessage({ type: 'close-birthday-archive' }, window.location.origin);
+        });
+    }
+
     const unlockBtn = document.getElementById('unlockBtn');
     const hiddenContent = document.getElementById('hiddenContent');
     
