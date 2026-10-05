@@ -1200,10 +1200,68 @@ const memoryArchiveDialog = $("memoryArchiveDialog");
 const memoryArchiveFrame = $("memoryArchiveFrame");
 let memoryArchiveHistoryActive = false;
 
+function archiveFrameUrl() {
+  try {
+    return new URL(memoryArchiveFrame.contentWindow.location.href);
+  } catch (_) {
+    return null;
+  }
+}
+function archiveRootUrl() {
+  return new URL(memoryArchiveFrame.dataset.src, location.href);
+}
+function currentPageRootPath() {
+  const url = new URL(location.href);
+  return url.pathname.endsWith("/index.html")
+    ? url.pathname.slice(0, -"index.html".length)
+    : url.pathname.replace(/[^/]*$/, "");
+}
+function resetArchiveFrameIfNeeded() {
+  const frameUrl = archiveFrameUrl();
+  const archiveUrl = archiveRootUrl();
+  if (
+    !frameUrl ||
+    frameUrl.origin !== location.origin ||
+    !frameUrl.pathname.startsWith(archiveUrl.pathname)
+  ) {
+    memoryArchiveFrame.setAttribute("src", memoryArchiveFrame.dataset.src);
+  }
+}
+function bindArchiveReturnLinks() {
+  let frameDocument;
+  try {
+    frameDocument = memoryArchiveFrame.contentDocument;
+  } catch (_) {
+    return;
+  }
+  if (!frameDocument || frameDocument.documentElement.dataset.parentReturnBound === "true") return;
+  frameDocument.documentElement.dataset.parentReturnBound = "true";
+  frameDocument.addEventListener("click", (event) => {
+    const link = event.target.closest?.("a[href]");
+    if (!link) return;
+    let destination;
+    try {
+      destination = new URL(link.href, memoryArchiveFrame.src);
+    } catch (_) {
+      return;
+    }
+    const mainRoot = currentPageRootPath();
+    const returnsToCurrent =
+      destination.origin === location.origin &&
+      (destination.pathname === mainRoot ||
+       destination.pathname === mainRoot + "index.html");
+    if (!returnsToCurrent) return;
+    event.preventDefault();
+    closeMemoryArchive();
+  }, true);
+}
+
 function openMemoryArchive(event) {
   event?.preventDefault();
   if (!memoryArchiveFrame.hasAttribute("src")) {
     memoryArchiveFrame.setAttribute("src", memoryArchiveFrame.dataset.src);
+  } else {
+    resetArchiveFrameIfNeeded();
   }
 
   const showArchive = () => {
@@ -1242,6 +1300,23 @@ window.addEventListener("popstate", () => {
   memoryArchiveHistoryActive = false;
   closeMemoryArchive({ fromHistory: true });
 });
+memoryArchiveFrame.addEventListener("load", () => {
+  const frameUrl = archiveFrameUrl();
+  const archiveUrl = archiveRootUrl();
+  if (
+    frameUrl &&
+    frameUrl.origin === location.origin &&
+    !frameUrl.pathname.startsWith(archiveUrl.pathname)
+  ) {
+    // A stale/cached 2025 page navigated the iframe back to 2026.
+    // Close the overlay immediately and restore the archive URL for next time.
+    closeMemoryArchive();
+    memoryArchiveFrame.setAttribute("src", memoryArchiveFrame.dataset.src);
+    return;
+  }
+  bindArchiveReturnLinks();
+});
+
 window.addEventListener("message", (event) => {
   if (event.origin !== location.origin) return;
   if (event.source !== memoryArchiveFrame.contentWindow) return;
