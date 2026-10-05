@@ -730,6 +730,21 @@ function updateProgress() {
   $("expandedDuration").textContent = duration;
   updateLyrics(audio.currentTime);
 }
+function centerActiveTrackOnMobile() {
+  if (activeIndex < 0 || !window.matchMedia("(max-width: 760px)").matches) return;
+  const card = grid.querySelector(`.track-card[data-track-index="${activeIndex}"]`);
+  if (!card) return;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.scrollIntoView({
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+        block: "center",
+        inline: "nearest"
+      });
+    });
+  });
+}
+
 function setPlayerMode(expanded, { focus = true } = {}) {
   const open = Boolean(expanded);
   desiredPlayerExpanded = open;
@@ -751,6 +766,7 @@ function setPlayerMode(expanded, { focus = true } = {}) {
   $("playerShell").setAttribute("aria-hidden", String(open));
   if (!open) {
     if (focus) $("expandPlayer").focus({ preventScroll: true });
+    if (wasOpen) centerActiveTrackOnMobile();
   } else if (focus) {
     $("minimizePlayer").focus({ preventScroll: true });
   }
