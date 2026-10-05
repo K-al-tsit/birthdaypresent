@@ -952,6 +952,25 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
     if (!track.src && notify) showToast(text("messages.emptySelection", { no: track.no }));
   }
 }
+async function warmTrackCovers() {
+  const queue = tracks
+    .map((track, index) => track.src ? index : -1)
+    .filter((index) => index >= 0);
+  const worker = async () => {
+    while (queue.length) {
+      const index = queue.shift();
+      if (!Number.isInteger(index)) continue;
+      await loadCardCover(index);
+    }
+  };
+  await Promise.all(Array.from({ length: 3 }, worker));
+}
+function scheduleTrackCoverWarmup() {
+  const start = () => warmTrackCovers().catch(() => {});
+  if ("requestIdleCallback" in window) requestIdleCallback(start, { timeout: 900 });
+  else setTimeout(start, 350);
+}
+
 tracks.forEach((track, index) => {
   const card = document.createElement("button");
   card.className = "track-card";
@@ -990,6 +1009,9 @@ tracks.forEach((track, index) => {
     else loadCardCover(index);
   }
 });
+if (document.readyState === "complete") scheduleTrackCoverWarmup();
+else window.addEventListener("load", scheduleTrackCoverWarmup, { once: true });
+
 function pauseCurrent() {
   playbackWanted = false;
   audio.pause();
