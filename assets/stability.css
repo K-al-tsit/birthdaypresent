@@ -208,7 +208,8 @@ footer {
   margin-top: .9em;
 }
 
-/* Keep the 2025 archive in the current document so music never has to unload. */
+/* Keep the 2025 archive in the current document so music never has to unload.
+   The iframe owns its own navigation; the host supplies only the full-viewport shell. */
 .memory-archive {
   width: 100vw;
   height: 100dvh;
@@ -218,56 +219,18 @@ footer {
   padding: 0;
   border: 0;
   background: #fff;
-  color: #1f2430;
   overflow: hidden;
 }
 .memory-archive[open] {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: block;
 }
 .memory-archive::backdrop {
   background: rgb(10 13 24 / .72);
 }
-.memory-archive-bar {
-  min-height: calc(3.25rem + env(safe-area-inset-top));
-  padding:
-    max(.45rem, env(safe-area-inset-top))
-    max(.8rem, calc(env(safe-area-inset-right) + .6rem))
-    .45rem
-    max(.8rem, calc(env(safe-area-inset-left) + .6rem));
-  display: grid;
-  grid-template-columns: minmax(6rem, 1fr) auto minmax(6rem, 1fr);
-  align-items: center;
-  gap: .75rem;
-  background: rgb(255 255 255 / .94);
-  border-bottom: 1px solid rgb(30 41 59 / .1);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.memory-archive-back {
-  justify-self: start;
-  min-height: 42px;
-  padding: .45rem .65rem;
-  border: 0;
-  border-radius: .55rem;
-  background: transparent;
-  color: #d86583;
-  font: inherit;
-  font-size: .82rem;
-  font-weight: 650;
-  cursor: pointer;
-}
-.memory-archive-title {
-  color: #59606e;
-  font-size: .75rem;
-  font-weight: 650;
-  letter-spacing: .08em;
-  white-space: nowrap;
-}
 .memory-archive-frame {
+  display: block;
   width: 100%;
   height: 100%;
-  min-height: 0;
   border: 0;
   background: #fff;
 }
@@ -288,14 +251,5 @@ footer {
     margin-top: 1.65rem;
     font-size: .98rem;
     line-height: 1.94;
-  }
-  .memory-archive-back span {
-    display: none;
-  }
-  .memory-archive-bar {
-    grid-template-columns: 44px 1fr 44px;
-  }
-  .memory-archive-title {
-    justify-self: center;
   }
 }
