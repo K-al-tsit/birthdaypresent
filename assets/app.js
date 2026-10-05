@@ -461,9 +461,11 @@ function fetchLyricsFile(url, { quiet = false } = {}) {
       })
       .then(parseLrc);
     lyricsCache.set(url, request);
+    request.finally(() => {
+      if (lyricsCache.get(url) === request) lyricsCache.delete(url);
+    }).catch(() => {});
   }
   return request.catch((error) => {
-    lyricsCache.delete(url);
     if (!quiet) console.warn("Lyrics unavailable", error);
     return [];
   });
