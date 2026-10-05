@@ -1,11 +1,6 @@
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script id="embedded-archive-prepaint">
-      if (new URLSearchParams(location.search).get('embedded') === '1') {
-        document.documentElement.dataset.embeddedArchive = 'true';
-      }
-    </script>
     <title>给我最爱的人 | 生日快乐</title>
     <!-- 网页标签标签页图标（favicon）改为GIF格式 -->
     <link rel="icon" href="mmexport1758232665833.gif" type="image/gif">
@@ -414,19 +409,6 @@
     .gif-container img { transition: none !important; }
   }
 </style>
-<style>
-  /* embedded archive shell cleanup */
-  html[data-embedded-archive="true"] #navbar,
-  html[data-embedded-archive="true"] .archive-yearline {
-    display: none !important;
-  }
-  html[data-embedded-archive="true"] #home {
-    padding-top: 0 !important;
-  }
-  html[data-embedded-archive="true"] body {
-    padding-top: 0 !important;
-  }
-</style>
 </head>
 <body data-archive-self-contained="true" class="font-main text-gray-800 overflow-x-hidden">
     <!-- 背景图片容器 -->
@@ -439,7 +421,7 @@
 
         <!-- 导航栏 -->
         <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
-            <a href="../../" class="return-21-link" id="return21Link" data-return-current aria-label="回到21岁页面">← <span>回到21岁</span></a>
+            <a href="../../" class="return-21-link" aria-label="回到21岁页面">← <span>回到21岁</span></a>
             <div class="container mx-auto px-4 py-3 flex justify-center">
                 <ul class="flex space-x-6 text-love-pink">
                     <li><a href="#home" class="hover:text-love-pink/80 transition-colors duration-300"><i class="fa fa-home mr-1"></i>首页</a></li>
@@ -583,7 +565,7 @@
         <section class="archive-yearline" aria-label="年份时间线">
             <span class="archive-year">20岁<small>去年</small></span>
             <span class="archive-line" aria-hidden="true"></span>
-            <a class="archive-year" href="../../" data-return-current>21岁<small>回到今年</small></a>
+            <a class="archive-year" href="../../">21岁<small>回到今年</small></a>
         </section>
         
 
@@ -684,17 +666,6 @@
         });
         
     document.addEventListener('DOMContentLoaded', function() {
-    const embeddedArchive = window.parent !== window && new URLSearchParams(window.location.search).get('embedded') === '1';
-    if (embeddedArchive) {
-        document.documentElement.dataset.embeddedArchive = 'true';
-        document.querySelectorAll('[data-return-current]').forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                window.parent.postMessage({ type: 'close-birthday-archive' }, window.location.origin);
-            });
-        });
-    }
-
     const unlockBtn = document.getElementById('unlockBtn');
     const hiddenContent = document.getElementById('hiddenContent');
     
