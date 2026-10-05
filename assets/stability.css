@@ -281,3 +281,41 @@ footer {
     white-space: nowrap;
   }
 }
+
+/* 2026-10-06 · understated QQ Music handoff beneath the closing signature. */
+.closing-qqmusic-note {
+  width: min(49rem, 100%);
+  margin: .85rem auto 0;
+  color: color-mix(in srgb, var(--text) 58%, transparent);
+  font-size: .86rem;
+  line-height: 1.7;
+  text-align: right;
+  text-wrap: pretty;
+}
+
+.closing-qqmusic-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .18em;
+  transition: opacity .18s ease;
+}
+
+.closing-qqmusic-note a:hover {
+  opacity: .72;
+}
+
+@media (hover: none) {
+  .closing-qqmusic-note a:active {
+    opacity: .62;
+  }
+}
+
+@media (max-width: 560px) {
+  .closing-qqmusic-note {
+    margin-top: .75rem;
+    font-size: .82rem;
+    line-height: 1.65;
+  }
+}
+
