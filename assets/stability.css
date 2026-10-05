@@ -209,7 +209,7 @@ footer {
 }
 
 /* Keep the 2025 archive in the current document so music never has to unload.
-   The host owns one toolbar; the embedded 2025 page hides its duplicate navbar. */
+   The archived page owns its own navbar; the parent only provides the modal shell. */
 .memory-archive {
   width: 100vw;
   height: 100dvh;
@@ -222,77 +222,15 @@ footer {
   overflow: hidden;
 }
 .memory-archive[open] {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  display: block;
 }
 .memory-archive::backdrop {
   background: rgb(10 13 24 / .72);
-}
-.memory-archive-toolbar {
-  min-height: calc(4rem + env(safe-area-inset-top));
-  padding:
-    max(.7rem, env(safe-area-inset-top))
-    max(1rem, calc(env(safe-area-inset-right) + .75rem))
-    .7rem
-    max(1rem, calc(env(safe-area-inset-left) + .75rem));
-  display: grid;
-  grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
-  align-items: center;
-  gap: 1rem;
-  background: rgb(255 255 255 / .96);
-  border-bottom: 1px solid rgb(15 23 42 / .08);
-  box-shadow: 0 6px 22px rgb(15 23 42 / .06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.memory-archive-back,
-.memory-archive-sections button {
-  min-height: 40px;
-  border: 0;
-  border-radius: .55rem;
-  background: transparent;
-  font: inherit;
-  cursor: pointer;
-}
-.memory-archive-back {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: .38rem;
-  padding: .45rem .55rem;
-  color: #df5f7c;
-  font-size: .84rem;
-  font-weight: 680;
-}
-.memory-archive-title {
-  justify-self: center;
-  color: #5b6473;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .09em;
-  white-space: nowrap;
-}
-.memory-archive-sections {
-  justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: .2rem;
-}
-.memory-archive-sections button {
-  padding: .42rem .6rem;
-  color: #5b6473;
-  font-size: .8rem;
-  font-weight: 620;
-}
-.memory-archive-back:hover,
-.memory-archive-sections button:hover {
-  background: rgb(15 23 42 / .045);
 }
 .memory-archive-frame {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 0;
   border: 0;
   background: #fff;
 }
@@ -315,27 +253,4 @@ footer {
     line-height: 1.94;
   }
 
-  .memory-archive-toolbar {
-    grid-template-columns: 44px 1fr auto;
-    gap: .45rem;
-  }
-  .memory-archive-back {
-    width: 44px;
-    justify-content: center;
-    padding-inline: 0;
-  }
-  .memory-archive-back > span:last-child {
-    display: none;
-  }
-  .memory-archive-title {
-    justify-self: start;
-    font-size: .72rem;
-  }
-  .memory-archive-sections {
-    gap: 0;
-  }
-  .memory-archive-sections button {
-    padding-inline: .45rem;
-    font-size: .74rem;
-  }
 }
