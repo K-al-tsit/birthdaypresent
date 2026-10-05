@@ -8,10 +8,10 @@
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="./cover.jpg" as="image" fetchpriority="high">
   <title>21 · 给禾呈的歌单</title>
-  <script src="./assets/content.js?v=20261005-2"></script>
+  <script src="./assets/content.js?v=20261005-3"></script>
   <script src="./assets/theme.js?v=20261005-2"></script>
   <link rel="stylesheet" href="./assets/styles.css?v=20261005-4">
-  <link rel="stylesheet" href="./assets/stability.css?v=20261005-1">
+  <link rel="stylesheet" href="./assets/stability.css?v=20261005-2">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -74,7 +74,7 @@
         <h2 class="story-address" data-copy="story.title">致禾呈</h2>
         <div class="story-copy">
           <p data-copy="story.bodyFirst">先不要着急哦，在听歌之前，先看看我写给你的生日祝福吧。</p>
-          <p data-copy="story.bodySecond">这里有我们一起听过的、有一听见就会想到你的，也有些只是在某个时刻忽然觉得很适合放在这里。它们不一定都在讲爱情，却刚好拼成了我眼里的这一年。</p>
+          <div class="story-body-long" data-editorial-copy="story.bodySecond"></div>
           <p class="story-signature" data-copy="story.signature"></p>
         </div>
       </div>
@@ -95,7 +95,7 @@
       <p class="section-kicker" data-copy="closing.kicker">AT THE END</p>
       <div class="closing-note-inner">
         <h2 data-copy="closing.title">写在最后</h2>
-        <p data-copy="closing.body">二十一岁生日快乐。希望以后再听见这些歌的时候，你想到的不只是今天，也会想到我们一起走过的这一年。至于以后还有多少首歌、多少个生日，我想和你慢慢听下去。</p>
+        <div class="closing-body-long" data-editorial-copy="closing.body"></div>
         <span class="closing-signature" data-copy="closing.signature">— 爱你的小梅</span>
       </div>
     </section>
@@ -235,11 +235,25 @@
       <p class="section-kicker" data-copy="memory.kicker">YOU FOUND IT</p>
       <h2 id="memoryTitle" data-copy="memory.title">想看看去年的祝福吗。</h2>
       <p data-copy="memory.body">也被我搬过来了哦</p>
-      <a class="primary-btn memory-link" href="./memory/20/" data-copy="memory.link">回到去年</a>
+      <a class="primary-btn memory-link" id="memoryArchiveLink" href="./memory/20/" data-copy="memory.link">回到去年</a>
     </div>
   </dialog>
 
-  <script src="./assets/app.js?v=20261005-8" defer></script>
+  <dialog class="memory-archive" id="memoryArchiveDialog" aria-label="2025年生日页面">
+    <div class="memory-archive-bar">
+      <button class="memory-archive-back" id="closeMemoryArchive" type="button" aria-label="回到21岁页面">← <span>回到21岁</span></button>
+      <span class="memory-archive-title">2025 · 20岁生日</span>
+      <span class="memory-archive-spacer" aria-hidden="true"></span>
+    </div>
+    <iframe
+      class="memory-archive-frame"
+      id="memoryArchiveFrame"
+      title="2025年生日页面"
+      data-src="./memory/20/?embedded=1&v=20261005-1"
+    ></iframe>
+  </dialog>
+
+  <script src="./assets/app.js?v=20261005-9" defer></script>
 </body>
 </html>
-<!-- edgeone-preview-trigger: 2026-10-05T18:31+08:00 -->
+<!-- edgeone-preview-trigger: 2026-10-05T18:42+08:00 -->
