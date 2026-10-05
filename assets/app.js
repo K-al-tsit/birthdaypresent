@@ -976,7 +976,7 @@ tracks.forEach((track, index) => {
     if (activeIndex === index) {
       if (!document.body.classList.contains("player-expanded")) expandPlayerFromCard(card);
       else if (audio.paused) playCurrent();
-      else audio.pause();
+      else pauseCurrent();
     } else {
       selectTrack(index, { autoplay: true, expanded: true });
       expandPlayerFromCard(card);
