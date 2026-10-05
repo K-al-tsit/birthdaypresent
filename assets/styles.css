@@ -2796,3 +2796,10 @@ body.sound-on .album-vinyl {
 .closing-note-inner > p {
   max-width: 49rem;
 }
+
+
+/* 2026-10-05 · keep play/pause glyph dark on pale artwork */
+.now-playing-play,
+.player-button {
+  color: rgb(var(--player-ink-rgb)) !important;
+}
