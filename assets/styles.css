@@ -2764,3 +2764,34 @@ body.sound-on .album-vinyl {
       rgb(var(--art-dark-rgb) / var(--player-shade-bottom))),
     rgb(var(--art-dark-rgb) / var(--player-shade-base));
 }
+
+
+/* 2026-10-05 · align editorial headings and copy to one centered reading measure */
+.story > .section-kicker,
+.story-address,
+.story h2.story-address,
+.story-copy,
+.closing-note > .section-kicker,
+.closing-note h2,
+.closing-note-inner > p {
+  width: min(49rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.story-address,
+.story h2.story-address {
+  max-width: 49rem;
+}
+
+.story-copy {
+  max-width: 49rem;
+}
+
+.closing-note h2 {
+  max-width: 49rem;
+}
+
+.closing-note-inner > p {
+  max-width: 49rem;
+}
