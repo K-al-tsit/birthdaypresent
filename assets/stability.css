@@ -271,128 +271,13 @@ footer {
   }
 }
 
-/* 2026-10-06 · mobile player controls: content view and playback order are separate axes. */
+/* 2026-10-06 · keep the original mobile mode row; use text instead of an icon for lyrics. */
 @media (max-width: 760px) {
-  .mobile-player-modes {
-    width: min(92vw, 25rem);
-    margin: .55rem auto .08rem;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: .65rem;
-  }
-
-  .mobile-player-modes > .mobile-detail-switch {
-    justify-self: stretch;
-  }
-
-  .mobile-player-modes > .mobile-playback-mode {
-    justify-self: end;
-  }
-
-  .mobile-detail-switch {
-    min-width: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(4.2rem, .7fr);
-    gap: .2rem;
-    padding: .22rem;
-    border: 1px solid rgb(255 255 255 / .11);
-    border-radius: 999px;
-    background: rgb(255 255 255 / .065);
-    box-shadow: inset 0 1px rgb(255 255 255 / .04);
-  }
-
-  .mobile-detail-button {
-    min-width: 0;
-    height: 44px;
-    padding: 0 .85rem;
-    border: 0;
-    border-radius: 999px;
-    background: transparent;
-    color: rgb(255 255 255 / .62);
+  .mobile-lyrics-button {
     font: inherit;
-    font-size: .79rem;
-    font-weight: 680;
+    font-size: .8rem;
+    font-weight: 700;
     letter-spacing: .01em;
     white-space: nowrap;
-    cursor: pointer;
-    transition: color .18s ease, background .18s ease, box-shadow .18s ease;
-  }
-
-  .mobile-detail-button.active {
-    color: #fff;
-    background: rgb(255 255 255 / .14);
-    box-shadow:
-      0 4px 16px rgb(0 0 0 / .12),
-      inset 0 0 0 1px rgb(255 255 255 / .06);
-  }
-
-  .mobile-playback-mode {
-    min-width: 6.85rem;
-    height: 48px;
-    padding: 0 .78rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .42rem;
-    border: 1px solid rgb(255 255 255 / .11);
-    border-radius: 999px;
-    background: rgb(255 255 255 / .065);
-    color: rgb(255 255 255 / .66);
-    font: inherit;
-    font-size: .74rem;
-    font-weight: 650;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: color .18s ease, background .18s ease, border-color .18s ease;
-  }
-
-  .mobile-playback-mode.active {
-    color: #fff;
-    border-color: rgb(var(--art-light-rgb) / .34);
-    background: rgb(var(--art-light-rgb) / .12);
-  }
-
-  .playback-mode-icon {
-    width: 19px;
-    height: 19px;
-    flex: 0 0 auto;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .mobile-playback-mode[data-mode="sequence"] .playback-mode-icon-shuffle,
-  .mobile-playback-mode[data-mode="shuffle"] .playback-mode-icon-sequence {
-    display: none;
   }
 }
-
-@media (max-width: 359px) {
-  .mobile-player-modes {
-    width: min(94vw, 20rem);
-    gap: .45rem;
-  }
-
-  .mobile-detail-switch {
-    grid-template-columns: minmax(0, 1.28fr) minmax(3.65rem, .72fr);
-  }
-
-  .mobile-detail-button {
-    padding-inline: .62rem;
-    font-size: .75rem;
-  }
-
-  .mobile-playback-mode {
-    width: 48px;
-    min-width: 48px;
-    padding: 0;
-  }
-
-  #mobilePlaybackModeText {
-    display: none;
-  }
-}
-
