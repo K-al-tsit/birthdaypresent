@@ -282,40 +282,51 @@ footer {
   }
 }
 
-/* 2026-10-06 · understated QQ Music handoff beneath the closing signature. */
-.closing-qqmusic-note {
-  width: min(49rem, 100%);
-  margin: .85rem auto 0;
-  color: color-mix(in srgb, var(--text) 58%, transparent);
-  font-size: .86rem;
-  line-height: 1.7;
-  text-align: left;
-  text-wrap: pretty;
+/* 2026-10-06 · centered QQ Music handoff between the tracklist and closing note. */
+.playlist-qqmusic-link {
+  margin: 3.25rem auto 0;
+  text-align: center;
 }
 
-.closing-qqmusic-note a {
+.playlist-qqmusic-link a {
+  display: inline-block;
   color: var(--accent);
+  font-size: .88rem;
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: .02em;
   text-decoration: underline;
   text-decoration-thickness: .08em;
-  text-underline-offset: .18em;
+  text-underline-offset: .22em;
   transition: opacity .18s ease;
 }
 
-.closing-qqmusic-note a:hover {
+.playlist-qqmusic-link a:hover {
   opacity: .72;
 }
 
+/* Keep the section boundary in the same visual position after inserting the link. */
+.playlist-section {
+  padding-bottom: 3.25rem;
+}
+
 @media (hover: none) {
-  .closing-qqmusic-note a:active {
+  .playlist-qqmusic-link a:active {
     opacity: .62;
   }
 }
 
 @media (max-width: 560px) {
-  .closing-qqmusic-note {
-    margin-top: .75rem;
-    font-size: .82rem;
-    line-height: 1.65;
+  .playlist-section {
+    padding-bottom: 1.45rem;
+  }
+
+  .playlist-qqmusic-link {
+    margin-top: 1.55rem;
+  }
+
+  .playlist-qqmusic-link a {
+    font-size: .84rem;
   }
 }
 
