@@ -1198,6 +1198,8 @@ $("memoryModal").addEventListener("click", (event) => {
 
 const memoryArchiveDialog = $("memoryArchiveDialog");
 const memoryArchiveFrame = $("memoryArchiveFrame");
+let memoryArchiveHistoryActive = false;
+
 function openMemoryArchive(event) {
   event?.preventDefault();
   if (!memoryArchiveFrame.hasAttribute("src")) {
@@ -1205,7 +1207,10 @@ function openMemoryArchive(event) {
   }
 
   const showArchive = () => {
-    if (!memoryArchiveDialog.open) memoryArchiveDialog.showModal();
+    if (memoryArchiveDialog.open) return;
+    history.pushState({ birthdayArchive: true }, "", location.href);
+    memoryArchiveHistoryActive = true;
+    memoryArchiveDialog.showModal();
   };
 
   if ($("memoryModal").open) {
@@ -1215,12 +1220,27 @@ function openMemoryArchive(event) {
     showArchive();
   }
 }
-function closeMemoryArchive() {
-  if (memoryArchiveDialog.open) memoryArchiveDialog.close();
+function closeMemoryArchive({ fromHistory = false } = {}) {
+  if (!memoryArchiveDialog.open) return;
+  if (memoryArchiveHistoryActive && !fromHistory) {
+    history.back();
+    return;
+  }
+  memoryArchiveHistoryActive = false;
+  memoryArchiveDialog.close();
 }
 $("memoryArchiveLink").addEventListener("click", openMemoryArchive);
+memoryArchiveDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeMemoryArchive();
+});
 memoryArchiveDialog.addEventListener("close", () => {
   requestAnimationFrame(() => $("memoryTrigger").focus({ preventScroll: true }));
+});
+window.addEventListener("popstate", () => {
+  if (!memoryArchiveHistoryActive) return;
+  memoryArchiveHistoryActive = false;
+  closeMemoryArchive({ fromHistory: true });
 });
 window.addEventListener("message", (event) => {
   if (event.origin !== location.origin) return;
