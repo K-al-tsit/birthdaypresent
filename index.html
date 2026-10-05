@@ -11,7 +11,7 @@
   <script src="./assets/content.js?v=20261005-3"></script>
   <script src="./assets/theme.js?v=20261005-2"></script>
   <link rel="stylesheet" href="./assets/styles.css?v=20261005-4">
-  <link rel="stylesheet" href="./assets/stability.css?v=20261005-5">
+  <link rel="stylesheet" href="./assets/stability.css?v=20261005-6">
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -240,15 +240,26 @@
   </dialog>
 
   <dialog class="memory-archive" id="memoryArchiveDialog" aria-label="2025年生日页面">
+    <div class="memory-archive-toolbar" role="navigation" aria-label="2025年页面导航">
+      <button class="memory-archive-back" id="closeMemoryArchive" type="button" aria-label="回到21岁">
+        <span aria-hidden="true">←</span>
+        <span>回到21岁</span>
+      </button>
+      <span class="memory-archive-title">2025 · 20岁生日</span>
+      <div class="memory-archive-sections" aria-label="去年页面章节">
+        <button type="button" data-archive-target="home">首页</button>
+        <button type="button" data-archive-target="message">祝福</button>
+      </div>
+    </div>
     <iframe
       class="memory-archive-frame"
       id="memoryArchiveFrame"
       title="2025年生日页面"
-      data-src="./memory/20/?embedded=1&v=20261005-5"
+      data-src="./memory/20/?embedded=1&v=20261005-6"
     ></iframe>
   </dialog>
 
-  <script src="./assets/app.js?v=20261005-13" defer></script>
+  <script src="./assets/app.js?v=20261005-14" defer></script>
 </body>
 </html>
-<!-- edgeone-preview-trigger: 2026-10-05T19:25+08:00 -->
+<!-- edgeone-preview-trigger: 2026-10-05T19:36+08:00 -->
