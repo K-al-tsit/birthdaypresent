@@ -1,0 +1,172 @@
+/*
+ * Authoritative stability layer.
+ * Keep structural/base visuals in styles.css; put cross-browser fixes and
+ * final responsive overrides here so later changes do not rely on a long
+ * chain of historical selector overrides.
+ */
+
+:root {
+  --player-shade-top: .24;
+  --player-shade-mid: .52;
+  --player-shade-bottom: .82;
+  --player-shade-base: .14;
+  --player-backdrop-opacity: .68;
+  --player-ink-rgb: 18 22 31;
+}
+
+/* One readable player contrast model for every artwork, including white covers. */
+:root[data-theme] .now-playing-backdrop img {
+  opacity: var(--player-backdrop-opacity);
+}
+:root[data-theme] .now-playing-shade {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(var(--player-ink-rgb) / var(--player-shade-top)),
+      rgb(var(--player-ink-rgb) / var(--player-shade-mid)) 48%,
+      rgb(var(--player-ink-rgb) / var(--player-shade-bottom))
+    ),
+    rgb(var(--player-ink-rgb) / var(--player-shade-base));
+}
+.player-shell {
+  background:
+    linear-gradient(135deg, rgb(var(--art-mid-rgb) / .24), transparent 68%),
+    rgb(var(--player-ink-rgb) / .96);
+  border-color: rgb(255 255 255 / .13);
+  box-shadow:
+    0 20px 60px rgb(0 0 0 / .34),
+    0 0 0 1px rgb(var(--art-warm-rgb) / .06);
+}
+.player-button,
+.now-playing-play {
+  color: rgb(var(--player-ink-rgb));
+}
+
+/* Safe-area protection for landscape iPhones and other cutout displays. */
+main {
+  width: min(
+    1180px,
+    calc(100% - 2.2rem - env(safe-area-inset-left) - env(safe-area-inset-right))
+  );
+}
+.topbar {
+  padding-left: max(clamp(1.25rem, 4vw, 4rem), calc(env(safe-area-inset-left) + .75rem));
+  padding-right: max(clamp(1.25rem, 4vw, 4rem), calc(env(safe-area-inset-right) + .75rem));
+}
+footer {
+  padding-left: max(1.2rem, calc(env(safe-area-inset-left) + .75rem));
+  padding-right: max(1.2rem, calc(env(safe-area-inset-right) + .75rem));
+}
+.player-shell {
+  width: min(
+    760px,
+    calc(100% - 1.25rem - env(safe-area-inset-left) - env(safe-area-inset-right))
+  );
+}
+
+/* Stable editorial reading measure. */
+.story > .section-kicker,
+.story-address,
+.story h2.story-address,
+.story-copy,
+.closing-note > .section-kicker,
+.closing-note h2,
+.closing-note-inner > p {
+  width: min(49rem, 100%);
+  max-width: 49rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Very narrow screens may wrap rather than silently crop the birthday line. */
+@media (max-width: 359px) {
+  main {
+    width: calc(100% - 1.4rem - env(safe-area-inset-left) - env(safe-area-inset-right));
+  }
+  .hero h1 .accent {
+    white-space: normal;
+    text-wrap: balance;
+    font-size: clamp(2.25rem, 13vw, 2.8rem);
+    line-height: 1.04;
+  }
+}
+
+/* Short desktop windows and modern phones in landscape: keep controls reachable. */
+@media (min-width: 761px) and (max-height: 720px) {
+  .now-playing-surface {
+    min-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+  .now-playing-header {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+  }
+  .now-playing-layout {
+    min-height: auto;
+    align-items: start;
+    padding-top: .35rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    grid-template-columns: minmax(170px, 300px) minmax(260px, 1fr);
+    gap: clamp(1.4rem, 5vw, 3.5rem);
+  }
+  .now-playing-artwork {
+    width: min(42vh, 20rem);
+    width: min(42dvh, 20rem);
+  }
+  .now-playing-meta {
+    margin-top: .7rem;
+  }
+  .now-playing-progress {
+    margin-top: .55rem;
+  }
+  .now-playing-controls {
+    margin-top: .2rem;
+  }
+  .now-playing-play {
+    width: 58px;
+    height: 58px;
+  }
+  .now-playing-side {
+    height: min(70vh, 31rem);
+    height: min(70dvh, 31rem);
+  }
+}
+
+/* Older/smaller landscape phones that still enter the <=760px mobile layout. */
+@media (max-width: 760px) and (orientation: landscape) and (max-height: 620px) {
+  .now-playing-surface {
+    min-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
+  .now-playing-layout {
+    height: auto;
+    min-height: calc(100dvh - 56px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow: visible;
+  }
+  .now-playing-primary {
+    --mobile-artwork-size: min(34dvh, 11rem);
+    --mobile-stage-height: calc(var(--mobile-artwork-size) + 4.25rem);
+    height: auto;
+    min-height: calc(100dvh - 70px);
+    align-content: start;
+    padding-bottom: max(.75rem, env(safe-area-inset-bottom));
+  }
+  .now-playing:not(.message-mode):not(.lyrics-mode) .now-playing-stage {
+    transform: none;
+  }
+  .mobile-player-modes,
+  .now-playing-progress,
+  .now-playing-controls {
+    margin-top: .1rem;
+  }
+}
+
+/* Keep the final mobile page width safe after the older <=560px rule. */
+@media (max-width: 560px) {
+  main {
+    width: calc(100% - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right));
+  }
+}
