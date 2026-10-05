@@ -254,3 +254,19 @@ footer {
   }
 
 }
+
+/* Touch devices can retain :hover after a tap. Keep idle cards visually stable. */
+@media (hover: none) {
+  .track-card:hover {
+    transform: none;
+    border-color: var(--line);
+    background: linear-gradient(145deg, var(--panel), var(--surface));
+  }
+
+  .track-card.active,
+  .track-card.active:hover {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: inset 3px 0 var(--accent);
+  }
+}
