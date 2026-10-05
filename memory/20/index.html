@@ -1,6 +1,11 @@
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script id="embedded-archive-prepaint">
+      if (new URLSearchParams(location.search).get('embedded') === '1') {
+        document.documentElement.dataset.embeddedArchive = 'true';
+      }
+    </script>
     <title>给我最爱的人 | 生日快乐</title>
     <!-- 网页标签标签页图标（favicon）改为GIF格式 -->
     <link rel="icon" href="mmexport1758232665833.gif" type="image/gif">
