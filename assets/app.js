@@ -784,17 +784,6 @@ function syncPlaybackModes() {
   desktopSequence.classList.toggle("active", !shuffleEnabled);
   desktopSequence.setAttribute("aria-pressed", String(!shuffleEnabled));
 
-  const legacyShuffle = $("mobileShuffleMode");
-  const legacySequence = $("mobileSequenceMode");
-  if (legacyShuffle) {
-    legacyShuffle.classList.toggle("active", shuffleEnabled);
-    legacyShuffle.setAttribute("aria-pressed", String(shuffleEnabled));
-  }
-  if (legacySequence) {
-    legacySequence.classList.toggle("active", !shuffleEnabled);
-    legacySequence.setAttribute("aria-pressed", String(!shuffleEnabled));
-  }
-
   const mobileMode = $("mobilePlaybackMode");
   const mobileModeText = $("mobilePlaybackModeText");
   if (mobileMode) {
@@ -1147,9 +1136,7 @@ $("expandPlayer").addEventListener("click", () => {
 $("minimizePlayer").addEventListener("click", () => setPlayerMode(false));
 $("desktopShuffleMode").addEventListener("click", () => setShuffleEnabled(true));
 $("desktopSequenceMode").addEventListener("click", () => setShuffleEnabled(false));
-$("mobileShuffleMode")?.addEventListener("click", () => setShuffleEnabled(true));
-$("mobileSequenceMode")?.addEventListener("click", () => setShuffleEnabled(false));
-$("mobilePlaybackMode")?.addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
+$("mobilePlaybackMode").addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
 $("messageMode").addEventListener("click", () => setMobileDetailMode("message"));
 $("mobileLyricsMode").addEventListener("click", () => setMobileDetailMode("lyrics"));
 $("desktopMessageTab").addEventListener("click", () => setDesktopSideMode("message"));
