@@ -170,3 +170,132 @@ footer {
     width: calc(100% - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right));
   }
 }
+
+
+/* Editorial copy: semantic paragraphs with restrained spacing instead of blank-line height. */
+.story-body-long {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.35vw, 1.08rem);
+  line-height: 2.02;
+  letter-spacing: .012em;
+}
+.story-body-long > p,
+.closing-body-long > p {
+  margin: 0;
+  text-wrap: pretty;
+}
+.story-body-long > p + p {
+  margin-top: .9em;
+}
+.story-body-long > .editorial-coda {
+  margin-top: 1.35em;
+  color: color-mix(in srgb, var(--text) 88%, var(--muted));
+  font-weight: 560;
+  line-height: 1.62;
+  white-space: pre-line;
+}
+
+.closing-body-long {
+  width: min(49rem, 100%);
+  max-width: 49rem;
+  margin: 2.25rem auto 0;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.45vw, 1.12rem);
+  line-height: 2.02;
+  letter-spacing: .01em;
+}
+.closing-body-long > p + p {
+  margin-top: .9em;
+}
+
+/* Keep the 2025 archive in the current document so music never has to unload. */
+.memory-archive {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #1f2430;
+  overflow: hidden;
+}
+.memory-archive[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.memory-archive::backdrop {
+  background: rgb(10 13 24 / .72);
+}
+.memory-archive-bar {
+  min-height: calc(3.25rem + env(safe-area-inset-top));
+  padding:
+    max(.45rem, env(safe-area-inset-top))
+    max(.8rem, calc(env(safe-area-inset-right) + .6rem))
+    .45rem
+    max(.8rem, calc(env(safe-area-inset-left) + .6rem));
+  display: grid;
+  grid-template-columns: minmax(6rem, 1fr) auto minmax(6rem, 1fr);
+  align-items: center;
+  gap: .75rem;
+  background: rgb(255 255 255 / .94);
+  border-bottom: 1px solid rgb(30 41 59 / .1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.memory-archive-back {
+  justify-self: start;
+  min-height: 42px;
+  padding: .45rem .65rem;
+  border: 0;
+  border-radius: .55rem;
+  background: transparent;
+  color: #d86583;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+.memory-archive-title {
+  color: #59606e;
+  font-size: .75rem;
+  font-weight: 650;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.memory-archive-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+
+@media (max-width: 560px) {
+  .story-body-long {
+    font-size: .98rem;
+    line-height: 1.94;
+  }
+  .story-body-long > p + p,
+  .closing-body-long > p + p {
+    margin-top: .78em;
+  }
+  .story-body-long > .editorial-coda {
+    margin-top: 1.15em;
+  }
+  .closing-body-long {
+    margin-top: 1.65rem;
+    font-size: .98rem;
+    line-height: 1.94;
+  }
+  .memory-archive-back span {
+    display: none;
+  }
+  .memory-archive-bar {
+    grid-template-columns: 44px 1fr 44px;
+  }
+  .memory-archive-title {
+    justify-self: center;
+  }
+}
