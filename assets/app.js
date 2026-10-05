@@ -176,6 +176,10 @@ let expandedScrubbing = false;
 let motionEnabled = false;
 let audioFadeToken = 0;
 let shuffleEnabled = false;
+let shuffleQueue = [];
+let shuffleHistory = [];
+let shuffleHistoryIndex = -1;
+let playerReturnToTrackOnClose = false;
 let mobileDetailMode = null;
 let desktopSideMode = "message";
 let desiredPlayerExpanded = false;
@@ -766,25 +770,96 @@ function setPlayerMode(expanded, { focus = true } = {}) {
   $("playerShell").setAttribute("aria-hidden", String(open));
   if (!open) {
     if (focus) $("expandPlayer").focus({ preventScroll: true });
-    if (wasOpen) centerActiveTrackOnMobile();
+    if (wasOpen && playerReturnToTrackOnClose) centerActiveTrackOnMobile();
+    playerReturnToTrackOnClose = false;
   } else if (focus) {
     $("minimizePlayer").focus({ preventScroll: true });
   }
 }
 function syncPlaybackModes() {
-  ["desktopShuffleMode", "mobileShuffleMode"].forEach((id) => {
-    const button = $(id);
-    button.classList.toggle("active", shuffleEnabled);
-    button.setAttribute("aria-pressed", String(shuffleEnabled));
-  });
-  ["desktopSequenceMode", "mobileSequenceMode"].forEach((id) => {
-    const button = $(id);
-    button.classList.toggle("active", !shuffleEnabled);
-    button.setAttribute("aria-pressed", String(!shuffleEnabled));
-  });
+  const desktopShuffle = $("desktopShuffleMode");
+  const desktopSequence = $("desktopSequenceMode");
+  desktopShuffle.classList.toggle("active", shuffleEnabled);
+  desktopShuffle.setAttribute("aria-pressed", String(shuffleEnabled));
+  desktopSequence.classList.toggle("active", !shuffleEnabled);
+  desktopSequence.setAttribute("aria-pressed", String(!shuffleEnabled));
+
+  const legacyShuffle = $("mobileShuffleMode");
+  const legacySequence = $("mobileSequenceMode");
+  if (legacyShuffle) {
+    legacyShuffle.classList.toggle("active", shuffleEnabled);
+    legacyShuffle.setAttribute("aria-pressed", String(shuffleEnabled));
+  }
+  if (legacySequence) {
+    legacySequence.classList.toggle("active", !shuffleEnabled);
+    legacySequence.setAttribute("aria-pressed", String(!shuffleEnabled));
+  }
+
+  const mobileMode = $("mobilePlaybackMode");
+  const mobileModeText = $("mobilePlaybackModeText");
+  if (mobileMode) {
+    const modeKey = shuffleEnabled ? "player.shuffleMode" : "player.sequenceMode";
+    mobileMode.classList.toggle("active", shuffleEnabled);
+    mobileMode.setAttribute("aria-pressed", String(shuffleEnabled));
+    mobileMode.setAttribute("aria-label", text(modeKey));
+    mobileMode.dataset.mode = shuffleEnabled ? "shuffle" : "sequence";
+    if (mobileModeText) mobileModeText.textContent = text(modeKey);
+  }
+}
+function playableTrackIndices() {
+  return tracks
+    .map((track, index) => track.src ? index : -1)
+    .filter((index) => index >= 0);
+}
+function shuffledIndices(items) {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
+}
+function resetShuffleSession(currentIndex = activeIndex) {
+  const playable = playableTrackIndices();
+  const hasCurrent = currentIndex >= 0 && tracks[currentIndex]?.src;
+  shuffleHistory = hasCurrent ? [currentIndex] : [];
+  shuffleHistoryIndex = hasCurrent ? 0 : -1;
+  shuffleQueue = shuffledIndices(playable.filter((index) => index !== currentIndex));
+}
+function nextShuffleIndex() {
+  if (shuffleHistoryIndex >= 0 && shuffleHistoryIndex < shuffleHistory.length - 1) {
+    shuffleHistoryIndex += 1;
+    return shuffleHistory[shuffleHistoryIndex];
+  }
+  if (!shuffleQueue.length) {
+    const currentIndex = shuffleHistory[shuffleHistoryIndex] ?? activeIndex;
+    shuffleQueue = shuffledIndices(playableTrackIndices().filter((index) => index !== currentIndex));
+  }
+  if (!shuffleQueue.length) return -1;
+  const nextIndex = shuffleQueue.shift();
+  shuffleHistory = shuffleHistory.slice(0, shuffleHistoryIndex + 1);
+  shuffleHistory.push(nextIndex);
+  shuffleHistoryIndex = shuffleHistory.length - 1;
+  return nextIndex;
+}
+function previousShuffleIndex() {
+  if (shuffleHistoryIndex <= 0) return -1;
+  shuffleHistoryIndex -= 1;
+  return shuffleHistory[shuffleHistoryIndex];
 }
 function setShuffleEnabled(enabled) {
-  shuffleEnabled = Boolean(enabled);
+  const next = Boolean(enabled);
+  if (shuffleEnabled === next) {
+    syncPlaybackModes();
+    return;
+  }
+  shuffleEnabled = next;
+  if (shuffleEnabled) resetShuffleSession(activeIndex);
+  else {
+    shuffleQueue = [];
+    shuffleHistory = [];
+    shuffleHistoryIndex = -1;
+  }
   syncPlaybackModes();
 }
 function applyMobileDetailMode(mode) {
@@ -874,16 +949,6 @@ function setDesktopSideMode(mode) {
   }
   if (lyricsOpen) requestAnimationFrame(() => updateLyrics(audio.currentTime, true));
 }
-function randomPlayableIndex(exclude = -1) {
-  const candidates = tracks
-    .map((track, index) => track.src ? index : -1)
-    .filter((index) => index >= 0 && index !== exclude);
-  if (!candidates.length) return exclude >= 0 && tracks[exclude]?.src ? exclude : -1;
-  return candidates[Math.floor(Math.random() * candidates.length)];
-}
-function expandPlayerFromCard() {
-  setPlayerMode(true);
-}
 function fadeAudioVolume(target, duration, version = selectionVersion) {
   const token = ++audioFadeToken;
   const start = audio.volume;
@@ -924,7 +989,7 @@ function playCurrent({ fadeIn = false } = {}) {
     showToast(text(error.name === "NotAllowedError" ? "messages.blocked" : "messages.failed"));
   });
 }
-async function selectTrack(index, { autoplay = false, notify = true, expanded = true } = {}) {
+async function selectTrack(index, { autoplay = false, notify = true, expanded = true, shuffleNavigation = false } = {}) {
   if (!tracks.length) return;
   desiredPlayerExpanded = Boolean(expanded);
   playbackWanted = Boolean(autoplay);
@@ -946,6 +1011,7 @@ async function selectTrack(index, { autoplay = false, notify = true, expanded = 
   try { audio.currentTime = 0; } catch (_) {}
   activeIndex = (index + tracks.length) % tracks.length;
   const track = tracks[activeIndex];
+  if (shuffleEnabled && !shuffleNavigation) resetShuffleSession(activeIndex);
   audio.removeAttribute("src");
   scrubbing = false;
   expandedScrubbing = false;
@@ -1034,13 +1100,13 @@ tracks.forEach((track, index) => {
     card.append(span);
   });
   card.addEventListener("click", () => {
+    playerReturnToTrackOnClose = true;
     if (activeIndex === index) {
-      if (!document.body.classList.contains("player-expanded")) expandPlayerFromCard(card);
+      if (!document.body.classList.contains("player-expanded")) setPlayerMode(true);
       else if (audio.paused) playCurrent();
       else pauseCurrent();
     } else {
       selectTrack(index, { autoplay: true, expanded: true });
-      expandPlayerFromCard(card);
     }
   });
   grid.append(card);
@@ -1058,15 +1124,15 @@ function pauseCurrent() {
 }
 function moveTrack(offset) {
   if (activeIndex < 0) return;
-  let nextIndex = activeIndex + offset;
-  if (shuffleEnabled && offset > 0) {
-    const randomIndex = randomPlayableIndex(activeIndex);
-    if (randomIndex >= 0) nextIndex = randomIndex;
+  const autoplay = !audio.paused;
+  const expanded = document.body.classList.contains("player-expanded");
+  if (shuffleEnabled) {
+    const nextIndex = offset > 0 ? nextShuffleIndex() : previousShuffleIndex();
+    if (nextIndex < 0) return;
+    selectTrack(nextIndex, { autoplay, expanded, shuffleNavigation: true });
+    return;
   }
-  selectTrack(nextIndex, {
-    autoplay: !audio.paused,
-    expanded: document.body.classList.contains("player-expanded")
-  });
+  selectTrack(activeIndex + offset, { autoplay, expanded });
 }
 $("playPause").addEventListener("click", () => audio.paused ? playCurrent() : pauseCurrent());
 $("previousTrack").addEventListener("click", () => moveTrack(-1));
@@ -1074,12 +1140,16 @@ $("nextTrack").addEventListener("click", () => moveTrack(1));
 $("expandedPlayPause").addEventListener("click", () => audio.paused ? playCurrent() : pauseCurrent());
 $("expandedPreviousTrack").addEventListener("click", () => moveTrack(-1));
 $("expandedNextTrack").addEventListener("click", () => moveTrack(1));
-$("expandPlayer").addEventListener("click", () => setPlayerMode(true));
+$("expandPlayer").addEventListener("click", () => {
+  playerReturnToTrackOnClose = false;
+  setPlayerMode(true);
+});
 $("minimizePlayer").addEventListener("click", () => setPlayerMode(false));
 $("desktopShuffleMode").addEventListener("click", () => setShuffleEnabled(true));
-$("mobileShuffleMode").addEventListener("click", () => setShuffleEnabled(true));
 $("desktopSequenceMode").addEventListener("click", () => setShuffleEnabled(false));
-$("mobileSequenceMode").addEventListener("click", () => setShuffleEnabled(false));
+$("mobileShuffleMode")?.addEventListener("click", () => setShuffleEnabled(true));
+$("mobileSequenceMode")?.addEventListener("click", () => setShuffleEnabled(false));
+$("mobilePlaybackMode")?.addEventListener("click", () => setShuffleEnabled(!shuffleEnabled));
 $("messageMode").addEventListener("click", () => setMobileDetailMode("message"));
 $("mobileLyricsMode").addEventListener("click", () => setMobileDetailMode("lyrics"));
 $("desktopMessageTab").addEventListener("click", () => setDesktopSideMode("message"));
@@ -1095,10 +1165,14 @@ audio.addEventListener("waiting", () => { $("playerNote").textContent = text("pl
 audio.addEventListener("playing", () => { $("playerNote").textContent = tracks[activeIndex].note; });
 audio.addEventListener("ended", () => {
   const next = shuffleEnabled
-    ? randomPlayableIndex(activeIndex)
+    ? nextShuffleIndex()
     : tracks.findIndex((track, i) => i > activeIndex && track.src);
   if (next >= 0 && next !== activeIndex) {
-    selectTrack(next, { autoplay: true, expanded: document.body.classList.contains("player-expanded") });
+    selectTrack(next, {
+      autoplay: true,
+      expanded: document.body.classList.contains("player-expanded"),
+      shuffleNavigation: shuffleEnabled
+    });
   } else {
     playbackWanted = false;
     setPlaying(false);
