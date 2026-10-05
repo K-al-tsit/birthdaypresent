@@ -2733,3 +2733,12 @@ body.sound-on .album-vinyl {
     letter-spacing: -.052em;
   }
 }
+
+
+/* 2026-10-05 · lift the mobile note panel slightly for a tighter reading layout */
+@media (max-width: 760px) {
+  .now-playing.message-mode .now-playing-message-mobile {
+    position: relative;
+    top: -1.35rem;
+  }
+}
