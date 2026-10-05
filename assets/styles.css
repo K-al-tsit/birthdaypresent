@@ -2742,3 +2742,25 @@ body.sound-on .album-vinyl {
     top: -1.35rem;
   }
 }
+
+
+/* 2026-10-05 · dynamic player contrast for pale album artwork */
+:root {
+  --player-shade-top: .20;
+  --player-shade-mid: .55;
+  --player-shade-bottom: .90;
+  --player-shade-base: .12;
+  --player-backdrop-opacity: .72;
+}
+.now-playing-backdrop img {
+  opacity: var(--player-backdrop-opacity);
+}
+:root[data-theme="dusk"] .now-playing-shade,
+:root:not([data-theme="dusk"]) .now-playing-shade {
+  background:
+    linear-gradient(180deg,
+      rgb(var(--art-dark-rgb) / var(--player-shade-top)),
+      rgb(var(--art-dark-rgb) / var(--player-shade-mid)) 48%,
+      rgb(var(--art-dark-rgb) / var(--player-shade-bottom))),
+    rgb(var(--art-dark-rgb) / var(--player-shade-base));
+}
