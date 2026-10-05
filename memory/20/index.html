@@ -409,6 +409,19 @@
     .gif-container img { transition: none !important; }
   }
 </style>
+<style>
+  /* embedded archive shell cleanup */
+  html[data-embedded-archive="true"] #navbar,
+  html[data-embedded-archive="true"] .archive-yearline {
+    display: none !important;
+  }
+  html[data-embedded-archive="true"] #home {
+    padding-top: 0 !important;
+  }
+  html[data-embedded-archive="true"] body {
+    padding-top: 0 !important;
+  }
+</style>
 </head>
 <body data-archive-self-contained="true" class="font-main text-gray-800 overflow-x-hidden">
     <!-- 背景图片容器 -->
